@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "negosud", "negosud\negosud.csproj", "{71467CF7-6835-4287-AE93-F87117665E2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NegoSudSql", "NegoSudSql\NegoSudSql.csproj", "{96EBC93E-023D-42D8-820E-4D937D299AAC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NegoSudPostgreSql", "NegoSudPostgreSql\NegoSudPostgreSql.csproj", "{96EBC93E-023D-42D8-820E-4D937D299AAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
