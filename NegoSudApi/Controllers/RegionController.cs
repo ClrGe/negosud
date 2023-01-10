@@ -8,7 +8,7 @@ namespace NegoSudApi.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    
+
     public class RegionController : ControllerBase
     {
         private readonly IRegionService _RegionService;
@@ -24,7 +24,7 @@ namespace NegoSudApi.Controllers
         [HttpGet("id")]
         public async Task<IActionResult> GetRegion(int id)
         {
-            Region? region = await _regionService.GetRegionAsync(id);
+            Region? region = await _regionService.GetRegion(id);
 
             if ( == null)
             {
@@ -38,7 +38,7 @@ namespace NegoSudApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRegions()
         {
-            var regions = await _regionService.GetRegionsAsync();
+            var regions = await _regionService.GetRegions();
 
             if (regions == null)
             {
@@ -53,7 +53,7 @@ namespace NegoSudApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Region>> AddRegion(Region Region)
         {
-            Region? region = await _regionService.AddRegionAsync(Region);
+            Region? region = await _regionService.AddRegions(Region);
 
             if (region == null)
             {
@@ -73,7 +73,7 @@ namespace NegoSudApi.Controllers
                 return BadRequest();
             }
 
-            Region? region = await _regionService.UpdateRegionAsync(Region);
+            Region? region = await _regionService.UpdateRegion(Region);
 
             if (region == null)
             {
@@ -88,7 +88,7 @@ namespace NegoSudApi.Controllers
         [HttpDelete("id")]
         public async Task<IActionResult> DeleteRegion(int id)
         {
-            Region? region = await _regionService.GetRegionAsync(id);
+            Region? region = await _regionService.GetRegion(id);
 
             if(region == null)
             {

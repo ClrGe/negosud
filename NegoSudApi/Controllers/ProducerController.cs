@@ -8,7 +8,7 @@ namespace NegoSudApi.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    
+
     public class ProducerController : ControllerBase
     {
         private readonly IProducerService _ProducerService;
@@ -24,7 +24,7 @@ namespace NegoSudApi.Controllers
         [HttpGet("id")]
         public async Task<IActionResult> GetProducer(int id)
         {
-            Producer? producer = await _producerProducer.GetProducerAsync(id);
+            Producer? producer = await _producerProducer.GetProducer(id);
 
             if ( == null)
             {
@@ -38,7 +38,7 @@ namespace NegoSudApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProducers()
         {
-            var producers = await _producerProducer.GetProducersAsync();
+            var producers = await _producerProducer.GetProducers();
 
             if (producers == null)
             {
@@ -53,7 +53,7 @@ namespace NegoSudApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Producer>> AddProducer(Producer Producer)
         {
-            Producer? producer = await _producerProducer.AddProducerAsync(Producer);
+            Producer? producer = await _producerProducer.AddProducer(Producer);
 
             if (producer == null)
             {
@@ -73,7 +73,7 @@ namespace NegoSudApi.Controllers
                 return BadRequest();
             }
 
-            Producer? producer = await _producerProducer.UpdateProducerAsync(Producer);
+            Producer? producer = await _producerProducer.UpdateProducer(Producer);
 
             if (producer == null)
             {
@@ -88,7 +88,7 @@ namespace NegoSudApi.Controllers
         [HttpDelete("id")]
         public async Task<IActionResult> DeleteProducer(int id)
         {
-            Producer? producer = await _producerProducer.GetProducerAsync(id);
+            Producer? producer = await _producerProducer.GetProducer(id);
 
             if(producer == null)
             {
