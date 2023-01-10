@@ -1,4 +1,4 @@
-﻿namespace NegoSudApi.Models;
+namespace NegoSudApi.Models;
 
 public class BottleGrape : IModelBase
 {
