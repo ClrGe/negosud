@@ -15,16 +15,13 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-<<<<<<< HEAD
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.1">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-=======
       <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
       <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
->>>>>>> origin/main
       <PackageReference Include="Npgsql" Version="7.0.1" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.1" />
     </ItemGroup>

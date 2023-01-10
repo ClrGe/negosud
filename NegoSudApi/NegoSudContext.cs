@@ -22,7 +22,7 @@ public class NegoSudContext : DbContext
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("Host=localhost;Database=;Database=NegoSud.Database;Username=postgres;Password=3538;TrustServerCertificate=True;ApplicationName=NegoSud;LoadTableComposites=True").UseSnakeCaseNamingConvention();
+        optionsBuilder.UseNpgsql().UseSnakeCaseNamingConvention();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
