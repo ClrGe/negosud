@@ -10,10 +10,7 @@ public class Bottle : IModelBase
     public int Year_Produced { get; set; }
     public decimal Alcohol_Percentage { get; set; }
     public decimal Current_Price { get; set; }
-    public int Grape_Id { get; set; }
     public int Producer_Id { get; set; }
-    public int Inventory_Id { get; set; }
-    
     public DateTime Created_at { get; set; }
     public DateTime Updated_at { get; set; }
     public string Created_By { get; set; }

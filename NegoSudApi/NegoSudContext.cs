@@ -29,7 +29,6 @@ public class NegoSudContext : DbContext
     {
         modelBuilder.Entity<Bottle>(entity =>
         {
-            entity.Property(b => b.Picture).HasColumnType("Image");
             entity.HasKey(b => new {b.Id, b.Producer_Id});
             entity.Property(p => p.Created_By).HasMaxLength(200);
             entity.Property(p => p.Updated_at).HasMaxLength(200);
@@ -39,20 +38,22 @@ public class NegoSudContext : DbContext
         
         modelBuilder.Entity<BottleGrape>(entity =>
         {
-            
             entity.Property(p => p.Created_By).HasMaxLength(200);
             entity.Property(p => p.Updated_at).HasMaxLength(200);
             entity.Property(t => t.Created_at).HasPrecision(0);
             entity.Property(t => t.Updated_at).HasPrecision(0);
             entity.HasKey(k => new {k.Bottle_Id, k.Grape_Id});
-            
+
             entity.HasOne(k => k.Bottle)
                 .WithMany(k => k.Grapes)
-                .HasForeignKey(k => k.Bottle_Id);
+                .HasForeignKey(k => k.Bottle_Id)
+                .HasPrincipalKey(k => k.Id);
             
             entity.HasOne(k => k.Grape)
                 .WithMany(k => k.Bottles)
-                .HasForeignKey(k => k.Grape_Id);
+                .HasForeignKey(k => k.Grape_Id)
+                .HasPrincipalKey(k => k.Id);
+            
         });
         
         modelBuilder.Entity<Country>(entity =>
@@ -115,11 +116,13 @@ public class NegoSudContext : DbContext
             
             entity.HasOne(k => k.Bottle)
                 .WithMany(k => k.Locations)
-                .HasForeignKey(k => k.Bottle_Id);
+                .HasForeignKey(k => k.Bottle_Id)
+                .HasPrincipalKey(k => k.Id);
             
             entity.HasOne(k => k.Location)
                 .WithMany(k => k.Bottles)
-                .HasForeignKey(k => k.Location_Id);
+                .HasForeignKey(k => k.Location_Id)
+                .HasPrincipalKey(k => k.Id);
         });
     }
 }
