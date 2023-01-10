@@ -1,4 +1,4 @@
-﻿namespace NegoSudPostgreSql.Models;
+﻿namespace NegoSudApi.Models;
 
 public class Bottle
 {
@@ -14,7 +14,7 @@ public class Bottle
     public int Producer_Id { get; set; }
     public int Inventory_Id { get; set; }
     
-    public virtual Inventory Inventory { get; set; }
+    public virtual Storage Inventory { get; set; }
     public virtual ICollection<Grape> Grapes { get;  } = new List<Grape>();
     public virtual ICollection<Producer> Producers { get;  } = new List<Producer>();
 }

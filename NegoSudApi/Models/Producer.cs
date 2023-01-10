@@ -1,4 +1,4 @@
-﻿namespace NegoSudPostgreSql.Models;
+﻿namespace NegoSudApi.Models;
 
 public class Producer
 {

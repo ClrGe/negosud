@@ -1,6 +1,6 @@
-﻿namespace NegoSudPostgreSql.Models;
+﻿namespace NegoSudApi.Models;
 
-public class Inventory
+public class Storage
 {
     public int Id { get; set; }
     public int Location_Id { get; set; }
