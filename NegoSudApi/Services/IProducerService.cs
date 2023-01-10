@@ -13,6 +13,6 @@ namespace NegoSudApi.Services
         // update existing producer
         Task<Producer?> UpdateProducer(Producer author);
         // delete producer matching id
-        Task<Producer?> DeleteProducer(Producer author);
+        Task<bool?> DeleteProducer(Producer author);
     }
 }

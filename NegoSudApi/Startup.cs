@@ -11,7 +11,7 @@ namespace NegoSudApi
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
         {
@@ -28,7 +28,13 @@ namespace NegoSudApi
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "NegosudWebAPI", Version = "v1" }));
             // Register service
             services.AddScoped<IGrapeService, GrapeService>();
-            services.AddDbContext<NegoSudContext>();
+            
+            var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext");
+            
+            services.AddDbContext<NegoSudContext>(options => options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
+            
+            
+            
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

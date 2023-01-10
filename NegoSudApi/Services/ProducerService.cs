@@ -47,7 +47,7 @@ namespace NegoSudApi.Services
             {
                 await _context.Producers.AddAsync(producer);
                 await _context.SaveChangesAsync();
-                return await _context.Producers.FindAsync(producer.Id); /
+                return await _context.Producers.FindAsync(producer.Id);
             }
             catch (Exception ex)
             {
@@ -76,14 +76,14 @@ namespace NegoSudApi.Services
         {
             try
             {
-                Producer? producer = await _context.Producers.FindAsync(producer.Id);
+                Producer? producerResult = await _context.Producers.FindAsync(producer.Id);
 
-                if (producer == null)
+                if (producerResult == null)
                 {
                     return false;
                 }
 
-                _context.Producers.Remove(producer);
+                _context.Producers.Remove(producerResult);
                 await _context.SaveChangesAsync();
 
                 return true;

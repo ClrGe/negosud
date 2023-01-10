@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services;
 
-namespace NegoSudApi.Controllers
+namespace NegoSudApi.Controllers;
 
-{
+
 
     [ApiController]
     [Route("api/[controller]")]
@@ -15,18 +15,17 @@ namespace NegoSudApi.Controllers
 
         public ProducerController(IProducerService producerService)
         {
-            _producerProducer = producerService;
+            _ProducerService = producerService;
         }
 
 
-// method to return a producer matching query
-
+        // method to return a producer matching query
         [HttpGet("id")]
         public async Task<IActionResult> GetProducer(int id)
         {
-            Producer? producer = await _producerProducer.GetProducer(id);
+            Producer? producer = await _ProducerService.GetProducer(id);
 
-            if ( == null)
+            if ( producer== null)
             {
                 return StatusCode(StatusCodes.Status404NotFound, $"404 No match for query");
             }
@@ -34,11 +33,11 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, producer);
         }
 
-// method to return all existing producers
+        // method to return all existing producers
         [HttpGet]
         public async Task<IActionResult> GetProducers()
         {
-            var producers = await _producerProducer.GetProducers();
+            var producers = await _ProducerService.GetProducers();
 
             if (producers == null)
             {
@@ -48,23 +47,21 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, producers);
         }
 
-// method to add a new producer to the database
-
+        // method to add a new producer to the database
         [HttpPost]
         public async Task<ActionResult<Producer>> AddProducer(Producer Producer)
         {
-            Producer? producer = await _producerProducer.AddProducer(Producer);
+            Producer? producer = await _ProducerService.AddProducer(Producer);
 
             if (producer == null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error while adding a new producer. No changes were made");
             }
 
-            return StatusCode(StatusCodes.Status200OK, grape);
+            return StatusCode(StatusCodes.Status200OK, producer);
         }
 
-// update existing record matching query
-
+        // update existing record matching query
         [HttpPut("id")]
         public async Task<IActionResult> UpdateProducer(int id, Producer Producer)
         {
@@ -73,7 +70,7 @@ namespace NegoSudApi.Controllers
                 return BadRequest();
             }
 
-            Producer? producer = await _producerProducer.UpdateProducer(Producer);
+            Producer? producer = await _ProducerService.UpdateProducer(Producer);
 
             if (producer == null)
             {
@@ -82,24 +79,23 @@ namespace NegoSudApi.Controllers
 
             return StatusCode(StatusCodes.Status200OK, producer);
         }
-
-// delete individual producer matching query 
-
+        
+        // delete individual producer matching query 
         [HttpDelete("id")]
         public async Task<IActionResult> DeleteProducer(int id)
         {
-            Producer? producer = await _producerProducer.GetProducer(id);
+            Producer? producer = await _ProducerService.GetProducer(id);
 
             if(producer == null)
             {
                 return StatusCode(StatusCodes.Status404NotFound, $"No producer matching query");
             }
 
-            await _producerProducer.DeleteProducer(id);
+            await _ProducerService.DeleteProducer(producer);
 
             return StatusCode(StatusCodes.Status200OK, $"Producer deleted with success");
         }
     
     }
 
-}
+
