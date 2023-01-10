@@ -9,10 +9,10 @@ public class NegoSudContext : DbContext
     {
     }
 
-    public NegoSudContext(DbContextOptions<NegoSudContext> options) : base (options)
+    public NegoSudContext(DbContextOptions<NegoSudContext> options) : base(options)
     {
     }
-    
+
     public virtual DbSet<Bottle> Bottles { get; set; }
     public virtual DbSet<Country> Countries { get; set; }
     public virtual DbSet<Grape> Grapes { get; set; }
