@@ -28,6 +28,7 @@ namespace NegoSudApi
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "NegosudWebAPI", Version = "v1" }));
             // Register service
             services.AddScoped<IGrapeService, GrapeService>();
+            services.AddDbContext<NegoSudContext>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
