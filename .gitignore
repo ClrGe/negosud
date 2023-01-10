@@ -365,3 +365,4 @@ FodyWeavers.xsd
 
 # CUSTOM RULES
 .idea/
+/NegoSudApi/appsettings.json
