@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using NegoSudApi.Services;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -25,6 +26,7 @@ namespace NegoSudApi
                 options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.Request;
             });
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "NegosudWebAPI", Version = "v1" }));
+            // Register service
             services.AddScoped<IGrapeService, GrapeService>();
         }
 
@@ -36,6 +38,7 @@ namespace NegoSudApi
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "NegosudWebAPI");
+                    c.RoutePrefix = string.Empty;
                 });
             }
             app.UseHttpLogging();
