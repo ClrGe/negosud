@@ -8,6 +8,9 @@
 
     <ItemGroup>
       <PackageReference Include="EFCore.NamingConventions" Version="7.0.0" />
+      <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
+      <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
       <PackageReference Include="Npgsql" Version="7.0.1" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.1" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
