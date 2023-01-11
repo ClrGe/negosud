@@ -95,7 +95,7 @@ namespace NegoSudApi.Services
                 Grape? grape = await _context.Grapes.FindAsync(grapeId);
                 if (grape != null)
                 {
-                    return await _context.Bottles.Include(b => b.Grapes).Where(b => b.Id == grapeId).ToListAsync();
+                    return await _context.Bottles.Include(b => b.Grapes).Where(b => b.Id == grapeId).ToListAsync(); // TODO : refaire les includes
                 }
                
                 return Enumerable.Empty<Bottle>();

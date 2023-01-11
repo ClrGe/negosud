@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Server.IIS.Core;
+using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
 
 namespace NegoSudApi.Services
@@ -94,7 +95,7 @@ namespace NegoSudApi.Services
                 Location? location = await _context.Locations.FindAsync(locationId);
                 if (location != null)
                 {
-                    return await _context.Bottles.Where(x => x.Inventory.Locations.Contains(location)).ToListAsync();
+                    return await _context.Bottles.Include(x => x.Locations).Where(x => x.Id == locationId).ToListAsync();
                 }
                 else
                 {
@@ -110,22 +111,23 @@ namespace NegoSudApi.Services
         //</inheritdoc>
         public async Task<IEnumerable<Storage>?> GetStoragesAsync(int locationId)
         {
-            try
-            {
-                Location? location = await _context.Locations.FindAsync(locationId);
-                if(location != null)
-                {
-                    return await _context.Inventories.Where(x => x.Location_Id== location.Id).ToListAsync();
-                }
-                else
-                {
-                    return Enumerable.Empty<Storage>();
-                }
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            throw new NotImplementedException();
+            //try
+            //{
+            //    Location? location = await _context.Locations.FindAsync(locationId);
+            //    if(location != null)
+            //    {
+            //        return await _context.Inventories.Where(x => x.Location_Id== location.Id).ToListAsync();
+            //    }
+            //    else
+            //    {
+            //        return Enumerable.Empty<Storage>();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return null;
+            //}
         }
     }
 }
