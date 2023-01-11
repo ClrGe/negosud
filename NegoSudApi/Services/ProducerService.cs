@@ -14,7 +14,7 @@ namespace NegoSudApi.Services
             _context = context;
         }
 
-        public async Task<Producer?> GetProducer(int id)
+        public async Task<Producer?> GetProducerAsync(int id)
 
         {
             try
@@ -27,7 +27,7 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<IEnumerable<Producer>?> GetProducers()
+        public async Task<IEnumerable<Producer>?> GetProducersAsync()
 
         {
             try
@@ -40,7 +40,7 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<Producer?> AddProducer(Producer producer)
+        public async Task<Producer?> AddProducerAsync(Producer producer)
 
         {
             try
@@ -55,7 +55,7 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<Producer?> UpdateProducer(Producer producer)
+        public async Task<Producer?> UpdateProducerAsync(Producer producer)
 
         {
             try
@@ -71,7 +71,7 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<bool?> DeleteProducer(Producer producer)
+        public async Task<bool?> DeleteProducerAsync(Producer producer)
 
         {
             try

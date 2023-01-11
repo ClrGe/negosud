@@ -5,14 +5,14 @@ namespace NegoSudApi.Services
     public interface IProducerService
     {
         // return producer maching id
-        Task<Producer?> GetProducer(int id);
+        Task<Producer?> GetProducerAsync(int id);
         // return * producers
-        Task<IEnumerable<Producer>?> GetProducers();
+        Task<IEnumerable<Producer>?> GetProducersAsync();
         // add a new producer
-        Task<Producer?> AddProducer(Producer author);
+        Task<Producer?> AddProducerAsync(Producer author);
         // update existing producer
-        Task<Producer?> UpdateProducer(Producer author);
+        Task<Producer?> UpdateProducerAsync(Producer author);
         // delete producer matching id
-        Task<bool?> DeleteProducer(Producer author);
+        Task<bool?> DeleteProducerAsync(Producer author);
     }
 }

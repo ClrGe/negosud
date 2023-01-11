@@ -16,7 +16,7 @@ namespace NegoSudApi.Services
             _context = context;
         }
 
-        public async Task<Region?> GetRegion(int id)
+        public async Task<Region?> GetRegionAsync(int id)
 
         {
             try
@@ -29,7 +29,7 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<IEnumerable<Region>?> GetRegions()
+        public async Task<IEnumerable<Region>?> GetRegionsAsync()
 
         {
             try
@@ -42,7 +42,7 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<Region?> AddRegions(Region region)
+        public async Task<Region?> AddRegionAsync(Region region)
 
         {
             try
@@ -57,7 +57,7 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<Region?> UpdateRegion(Region region)
+        public async Task<Region?> UpdateRegionAsync(Region region)
 
         {
             try
@@ -73,7 +73,7 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<bool?> DeleteRegion(Region region)
+        public async Task<bool?> DeleteRegionAsync(Region region)
 
         {
             try

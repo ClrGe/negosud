@@ -45,9 +45,9 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Location>> PostLocation(Location model)
+        public async Task<ActionResult<Location>> AddLocation(Location model)
         {
-            Location? location = await _locationService.PostLocation(model);
+            Location? location = await _locationService.AddLocation(model);
             if (location == null)
             {
                 return StatusCode(StatusCodes.Status404NotFound);
@@ -56,14 +56,14 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLocation(int locationId, Location model)
+        public async Task<IActionResult> UpdateGrape(int locationId, Location model)
         {
             if (locationId != model.Id)
             {
                 return BadRequest();
             }
 
-            Location? location = await _locationService.PutLocation(model);
+            Location? location = await _locationService.UpdateGrape(model);
             if (location == null)
             {
                 return StatusCode(StatusCodes.Status404NotFound);
