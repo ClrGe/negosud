@@ -1,16 +1,12 @@
-﻿using System.Data;
-using System.Runtime.CompilerServices;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
-using Npgsql;
 
 namespace NegoSudApi.Services
 {
     public class GrapeService : IGrapeService
     {
-        private readonly NegoSudContext _context;
-        public GrapeService(NegoSudContext context) 
+        private readonly NegoSudDbContext _context;
+        public GrapeService(NegoSudDbContext context) 
         {
             _context = context;
         }
@@ -95,7 +91,7 @@ namespace NegoSudApi.Services
                 Grape? grape = await _context.Grapes.FindAsync(grapeId);
                 if (grape != null)
                 {
-                    return await _context.Bottles.Include(b => b.Grapes).Where(b => b.Id == grapeId).ToListAsync();
+                    return await _context.Bottles.Include(b => b.BottleGrapes).Where(b => b.Id == grapeId).ToListAsync();
                 }
                
                 return Enumerable.Empty<Bottle>();
