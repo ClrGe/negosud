@@ -38,9 +38,9 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostGrape(Grape model)
+        public async Task<IActionResult> AddGrape(Grape model)
         {
-            Grape? grape = await _grapeService.PostGrape(model);
+            Grape? grape = await _grapeService.AddGrape(model);
             if(grape == null)
             {
                 return StatusCode(StatusCodes.Status404NotFound);
@@ -49,14 +49,14 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpPut("id")]
-        public async Task<IActionResult> PutGrape(int grapeId, Grape model)
+        public async Task<IActionResult> UpdateGrape(int grapeId, Grape model)
         {
             if(grapeId != model.Id)
             {
                 return BadRequest();
             }
 
-            Grape? grape = await _grapeService.PutGrape(model);
+            Grape? grape = await _grapeService.UpdateGrape(model);
             if (grape == null)
             {
                 return StatusCode(StatusCodes.Status404NotFound);

@@ -15,7 +15,7 @@ namespace NegoSudApi.Services
             _context = context;
         }
 
-        public async Task<Grape?> GetGrape(int grapeId)
+        public async Task<Grape?> GetGrapeAsync(int grapeId)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<IEnumerable<Grape>?> GetGrapes()
+        public async Task<IEnumerable<Grape>?> GetGrapesAsync()
         {
             try
             {
@@ -39,7 +39,7 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<Grape?> PostGrape(Grape model)
+        public async Task<Grape?> AddGrapeAsync(Grape model)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<Grape?> PutGrape(Grape model)
+        public async Task<Grape?> UpdateGrapeAsync(Grape model)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace NegoSudApi.Services
             
         }
 
-        public async Task DeleteGrape(int grapeId)
+        public async Task DeleteGrapeAsync(int grapeId)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace NegoSudApi.Services
             }
         }
 
-        public  Task<IEnumerable<BottleGrape>?> GetBottleGrapes(int grapeId) => throw new NotImplementedException();
+        public  Task<IEnumerable<BottleGrape>?> GetBottleGrapesAsync(int grapeId) => throw new NotImplementedException();
 
         public async Task<IEnumerable<Bottle>?> GetBottles(int grapeId) 
         {

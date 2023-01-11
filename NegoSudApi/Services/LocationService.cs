@@ -12,7 +12,7 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task<Location?> GetLocation(int locationId)
+        public async Task<Location?> GetLocationAsync(int locationId)
         {
             try
             {
@@ -25,7 +25,7 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task<IEnumerable<Location>?> GetLocations()
+        public async Task<IEnumerable<Location>?> GetLocationsAsync()
         {
             try
             {
@@ -38,7 +38,7 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task<Location?> PostLocation(Location model)
+        public async Task<Location?> AddLocationAsync(Location model)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task<Location?> PutLocation(Location model)
+        public async Task<Location?> UpdateGrapeAsync(Location model)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task DeleteLocation(int locationId)
+        public async Task DeleteLocationAsync(int locationId)
         {
             try
             {
@@ -87,7 +87,7 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task<IEnumerable<Bottle>?> GetBottles(int locationId)
+        public async Task<IEnumerable<Bottle>?> GetBottlesAsync(int locationId)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task<IEnumerable<Storage>?> GetStorages(int locationId)
+        public async Task<IEnumerable<Storage>?> GetStoragesAsync(int locationId)
         {
             try
             {

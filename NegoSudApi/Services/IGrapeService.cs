@@ -4,12 +4,12 @@ namespace NegoSudApi.Services
 {
     public interface IGrapeService
     {
-        public Task<Grape?> GetGrape(int grapeId);
-        public Task<IEnumerable<Grape>?> GetGrapes();
-        public Task<Grape?> PostGrape(Grape model);
-        public Task<Grape?> PutGrape(Grape model);
-        public Task DeleteGrape(int grapeId);
-        public Task<IEnumerable<BottleGrape>?> GetBottleGrapes(int grapeId);
-        public Task<IEnumerable<Bottle>?> GetBottles(int grapeId);
+        public Task<Grape?> GetGrapeAsync(int grapeId);
+        public Task<IEnumerable<Grape>?> GetGrapesAsync();
+        public Task<Grape?> AddGrapeAsync(Grape model);
+        public Task<Grape?> UpdateGrapeAsync(Grape model);
+        public Task DeleteGrapeAsync(int grapeId);
+        public Task<IEnumerable<BottleGrape>?> GetBottleGrapesAsync(int grapeId);
+        public Task<IEnumerable<Bottle>?> GetBottlesAsync(int grapeId);
     }
 }
