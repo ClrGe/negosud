@@ -11,6 +11,7 @@ namespace NegoSudApi.Services
             _context = context;
         }
 
+        //</inheritdoc>
         public async Task<Location?> GetLocation(int locationId)
         {
             try
@@ -23,6 +24,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>
         public async Task<IEnumerable<Location>?> GetLocations()
         {
             try
@@ -35,6 +37,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>
         public async Task<Location?> PostLocation(Location model)
         {
             try
@@ -50,6 +53,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>
         public async Task<Location?> PutLocation(Location model)
         {
             try
@@ -64,6 +68,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>
         public async Task DeleteLocation(int locationId)
         {
             try
@@ -81,6 +86,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>
         public async Task<IEnumerable<Bottle>?> GetBottles(int locationId)
         {
             try
@@ -101,6 +107,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>
         public async Task<IEnumerable<Storage>?> GetStorages(int locationId)
         {
             try
