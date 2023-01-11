@@ -23,7 +23,7 @@ namespace NegoSudApi
                 options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.Request;
             });
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "NegoSudWebAPI", Version = "v1" }));
-            // TODO : Register all the services
+
             services.AddScoped<IGrapeService, GrapeService>();
             services.AddScoped<IBottleService, BottleService>();
             services.AddScoped<ICountryService, CountryService>();
@@ -47,15 +47,17 @@ namespace NegoSudApi
                     c.RoutePrefix = string.Empty;
                 });
             }
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            else
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "NegoSudWebAPI");
-                c.RoutePrefix = string.Empty;
-            });
-            app.UseHttpLogging();
-
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "NegoSudWebAPI");
+                    c.RoutePrefix = string.Empty;
+                });
+                app.UseHttpLogging();
+            }
+            
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseSession();
