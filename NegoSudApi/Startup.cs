@@ -55,9 +55,9 @@ namespace NegoSudApi
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "NegoSudWebAPI");
                     c.RoutePrefix = string.Empty;
                 });
-                app.UseHttpLogging();
             }
-            
+            app.UseHttpLogging();
+
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseSession();
