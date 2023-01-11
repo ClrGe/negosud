@@ -5,10 +5,6 @@ namespace NegoSudApi;
 
 public class NegoSudContext : DbContext
 {
-    public NegoSudContext()
-    {
-    }
-
     public NegoSudContext(DbContextOptions<NegoSudContext> options) : base(options)
     {
     }
@@ -19,16 +15,12 @@ public class NegoSudContext : DbContext
     public virtual DbSet<Location> Locations { get; set; }
     public virtual DbSet<Producer> Producers { get; set; }
     public virtual DbSet<Region> Regions { get; set; }
-    
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseNpgsql().UseSnakeCaseNamingConvention();
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Bottle>(entity =>
         {
+            entity.ToTable(nameof(Bottle));
             entity.HasKey(b => new {b.Id, b.Producer_Id});
             entity.Property(p => p.Created_By).HasMaxLength(200);
             entity.Property(p => p.Updated_at).HasMaxLength(200);
@@ -38,6 +30,7 @@ public class NegoSudContext : DbContext
         
         modelBuilder.Entity<BottleGrape>(entity =>
         {
+            entity.ToTable(nameof(BottleGrape));
             entity.Property(p => p.Created_By).HasMaxLength(200);
             entity.Property(p => p.Updated_at).HasMaxLength(200);
             entity.Property(t => t.Created_at).HasPrecision(0);
@@ -58,6 +51,7 @@ public class NegoSudContext : DbContext
         
         modelBuilder.Entity<Country>(entity =>
         {
+            entity.ToTable(nameof(Country));
             entity.Property(p => p.Created_By).HasMaxLength(200);
             entity.Property(p => p.Updated_at).HasMaxLength(200);
             entity.Property(t => t.Created_at).HasPrecision(0);
@@ -69,6 +63,7 @@ public class NegoSudContext : DbContext
 
         modelBuilder.Entity<Grape>(entity =>
         {
+            entity.ToTable(nameof(Grape));
             entity.Property(p => p.Created_By).HasMaxLength(200);
             entity.Property(p => p.Updated_at).HasMaxLength(200);
             entity.Property(t => t.Created_at).HasPrecision(0);
@@ -78,6 +73,7 @@ public class NegoSudContext : DbContext
         
         modelBuilder.Entity<Location>(entity =>
         {
+            entity.ToTable(nameof(Location));
             entity.Property(p => p.Created_By).HasMaxLength(200);
             entity.Property(p => p.Updated_at).HasMaxLength(200);
             entity.Property(t => t.Created_at).HasPrecision(0);
@@ -87,6 +83,7 @@ public class NegoSudContext : DbContext
         
         modelBuilder.Entity<Producer>(entity =>
         {
+            entity.ToTable(nameof(Producer));
             entity.Property(p => p.Created_By).HasMaxLength(200);
             entity.Property(p => p.Updated_at).HasMaxLength(200);
             entity.Property(t => t.Created_at).HasPrecision(0);
@@ -97,6 +94,7 @@ public class NegoSudContext : DbContext
 
         modelBuilder.Entity<Region>(entity =>
         {
+            entity.ToTable(nameof(Region));
             entity.Property(p => p.Created_By).HasMaxLength(200);
             entity.Property(p => p.Updated_at).HasMaxLength(200);
             entity.Property(t => t.Created_at).HasPrecision(0);
@@ -107,7 +105,7 @@ public class NegoSudContext : DbContext
 
         modelBuilder.Entity<Storage>(entity =>
         {
-            
+            entity.ToTable(nameof(Storage));
             entity.Property(p => p.Created_By).HasMaxLength(200);
             entity.Property(p => p.Updated_at).HasMaxLength(200);
             entity.Property(t => t.Created_at).HasPrecision(0);

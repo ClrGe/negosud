@@ -2,9 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services;
 
-namespace NegoSudApi.Controllers
+namespace NegoSudApi.Controllers;
 
-{
 
     [ApiController]
     [Route("api/[controller]")]
@@ -15,18 +14,17 @@ namespace NegoSudApi.Controllers
 
         public RegionController(IRegionService regionService)
         {
-            _regionService = regionService;
+            _RegionService = regionService;
         }
 
 
-// method to return a region matching query
-
+        // method to return a region matching query
         [HttpGet("id")]
         public async Task<IActionResult> GetRegion(int id)
         {
-            Region? region = await _regionService.GetRegion(id);
+            Region? region = await _RegionService.GetRegion(id);
 
-            if ( == null)
+            if ( region== null)
             {
                 return StatusCode(StatusCodes.Status404NotFound, $"404 No match for query");
             }
@@ -34,11 +32,11 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, region);
         }
 
-// method to return all existing regions
+        // method to return all existing regions
         [HttpGet]
         public async Task<IActionResult> GetRegions()
         {
-            var regions = await _regionService.GetRegions();
+            var regions = await _RegionService.GetRegions();
 
             if (regions == null)
             {
@@ -48,23 +46,21 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, regions);
         }
 
-// method to add a new region to the database
-
+        // method to add a new region to the database
         [HttpPost]
         public async Task<ActionResult<Region>> AddRegion(Region Region)
         {
-            Region? region = await _regionService.AddRegions(Region);
+            Region? region = await _RegionService.AddRegions(Region);
 
             if (region == null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error while adding a new region. No changes were made");
             }
 
-            return StatusCode(StatusCodes.Status200OK, grape);
+            return StatusCode(StatusCodes.Status200OK, region);
         }
 
-// update existing record matching query
-
+        // update existing record matching query
         [HttpPut("id")]
         public async Task<IActionResult> UpdateRegion(int id, Region Region)
         {
@@ -73,7 +69,7 @@ namespace NegoSudApi.Controllers
                 return BadRequest();
             }
 
-            Region? region = await _regionService.UpdateRegion(Region);
+            Region? region = await _RegionService.UpdateRegion(Region);
 
             if (region == null)
             {
@@ -83,23 +79,22 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, region);
         }
 
-// delete individual region matching query 
-
+        // delete individual region matching query 
         [HttpDelete("id")]
         public async Task<IActionResult> DeleteRegion(int id)
         {
-            Region? region = await _regionService.GetRegion(id);
+            Region? region = await _RegionService.GetRegion(id);
 
             if(region == null)
             {
                 return StatusCode(StatusCodes.Status404NotFound, $"No region matching query");
             }
 
-            await _regionService.DeleteRegion(id);
+            await _RegionService.DeleteRegion(region);
 
             return StatusCode(StatusCodes.Status200OK, $"Region deleted with success");
         }
     
     }
 
-}
+

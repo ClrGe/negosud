@@ -72,7 +72,7 @@ namespace NegoSudApi.Services
 
                 if (dbBottle == null)
                 {
-                    return (false, "Bottle could not be found");
+                    return false;
                 }
 
                 _context.Bottles.Remove(Bottle);
