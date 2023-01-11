@@ -49,7 +49,7 @@ namespace NegoSudApi.Services
             {
                 await _context.Regions.AddAsync(region);
                 await _context.SaveChangesAsync();
-                return await _context.Regions.FindAsync(region.Id); /
+                return await _context.Regions.FindAsync(region.Id);
             }
             catch (Exception ex)
             {
@@ -78,7 +78,7 @@ namespace NegoSudApi.Services
         {
             try
             {
-                Region? region = await _context.Regions.FindAsync(region.Id);
+                Region? regionResult = await _context.Regions.FindAsync(region.Id);
 
                 if (region == null)
                 {

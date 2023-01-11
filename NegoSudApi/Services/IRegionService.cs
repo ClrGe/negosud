@@ -13,6 +13,6 @@ namespace NegoSudApi.Services
         // update existing region
         Task<Region?> UpdateRegion(Region author);
         // delete region matching id
-        Task<Region?> DeleteRegion(Region author);
+        Task<bool?> DeleteRegion(Region author);
     }
 }

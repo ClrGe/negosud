@@ -1,5 +1,8 @@
 ﻿namespace NegoSudApi.Models;
 
+/// <summary>
+/// This interface describe the creation time and user, as much as the updated time and by who
+/// </summary>
 public interface IModelBase
 {
     public DateTime Created_at { get; set; }
