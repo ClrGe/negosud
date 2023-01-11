@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Server.IIS.Core;
+using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
 
 namespace NegoSudApi.Services
 {
     public class LocationService : ILocationService
     {
-        private readonly NegoSudContext _context;
-        public LocationService(NegoSudContext context)
+        private readonly NegoSudDbContext _context;
+        public LocationService(NegoSudDbContext context)
         {
             _context = context;
         }
@@ -94,7 +95,7 @@ namespace NegoSudApi.Services
                 Location? location = await _context.Locations.FindAsync(locationId);
                 if (location != null)
                 {
-                    return await _context.Bottles.Where(x => x.Inventory.Locations.Contains(location)).ToListAsync();
+                    return await _context.Bottles.Include(x => x.BottleLocations).Where(x => x.Id == locationId).ToListAsync(); // TODO : Refaire les includes
                 }
                 else
                 {
@@ -108,24 +109,25 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task<IEnumerable<Storage>?> GetStoragesAsync(int locationId)
+        public async Task<IEnumerable<BottleLocation>?> GetStoragesAsync(int locationId)
         {
-            try
-            {
-                Location? location = await _context.Locations.FindAsync(locationId);
-                if(location != null)
-                {
-                    return await _context.Inventories.Where(x => x.Location_Id== location.Id).ToListAsync();
-                }
-                else
-                {
-                    return Enumerable.Empty<Storage>();
-                }
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            throw new NotImplementedException();
+            //try
+            //{
+            //    Location? location = await _context.Locations.FindAsync(locationId);
+            //    if(location != null)
+            //    {
+            //        return await _context.Inventories.Where(x => x.Location_Id== location.Id).ToListAsync();
+            //    }
+            //    else
+            //    {
+            //        return Enumerable.Empty<Storage>();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return null;
+            //}
         }
     }
 }

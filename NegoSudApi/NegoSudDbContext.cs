@@ -118,7 +118,7 @@ public class NegoSudDbContext : DbContext
                 .HasPrincipalKey(k => k.Id);
             
             entity.HasOne(k => k.Location)
-                .WithMany(k => k.Bottles)
+                .WithMany(k => k.BottleLocations)
                 .HasForeignKey(k => k.Location_Id)
                 .HasPrincipalKey(k => k.Id);
         });
