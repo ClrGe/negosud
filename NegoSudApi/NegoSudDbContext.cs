@@ -21,20 +21,20 @@ public class NegoSudDbContext : DbContext
         modelBuilder.Entity<Bottle>(entity =>
         {
             entity.ToTable(nameof(Bottle));
-            entity.HasKey(b => new {b.Id, b.Producer_Id});
+            entity.HasKey(b => b.Id);
             entity.Property(p => p.Created_By).HasMaxLength(200);
-            entity.Property(p => p.Updated_at).HasMaxLength(200);
-            entity.Property(t => t.Created_at).HasPrecision(0);
-            entity.Property(t => t.Updated_at).HasPrecision(0);
+            entity.Property(p => p.Updated_By).HasMaxLength(200);
+            entity.Property(t => t.Created_At).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.Updated_At).HasPrecision(0).ValueGeneratedOnUpdate();
         });
         
         modelBuilder.Entity<BottleGrape>(entity =>
         {
             entity.ToTable(nameof(BottleGrape));
             entity.Property(p => p.Created_By).HasMaxLength(200);
-            entity.Property(p => p.Updated_at).HasMaxLength(200);
-            entity.Property(t => t.Created_at).HasPrecision(0);
-            entity.Property(t => t.Updated_at).HasPrecision(0);
+            entity.Property(p => p.Updated_By).HasMaxLength(200);
+            entity.Property(t => t.Created_At).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.Updated_At).HasPrecision(0).ValueGeneratedOnUpdate();
             entity.HasKey(k => new {k.Bottle_Id, k.Grape_Id});
 
             entity.HasOne(k => k.Bottle)
@@ -53,9 +53,9 @@ public class NegoSudDbContext : DbContext
         {
             entity.ToTable(nameof(Country));
             entity.Property(p => p.Created_By).HasMaxLength(200);
-            entity.Property(p => p.Updated_at).HasMaxLength(200);
-            entity.Property(t => t.Created_at).HasPrecision(0);
-            entity.Property(t => t.Updated_at).HasPrecision(0);
+            entity.Property(p => p.Updated_By).HasMaxLength(200);
+            entity.Property(t => t.Created_At).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.Updated_At).HasPrecision(0).ValueGeneratedOnUpdate();
             entity.HasKey(k => k.Id);
 
             entity.HasMany(k => k.Regions).WithOne(k => k.Country);
@@ -65,9 +65,9 @@ public class NegoSudDbContext : DbContext
         {
             entity.ToTable(nameof(Grape));
             entity.Property(p => p.Created_By).HasMaxLength(200);
-            entity.Property(p => p.Updated_at).HasMaxLength(200);
-            entity.Property(t => t.Created_at).HasPrecision(0);
-            entity.Property(t => t.Updated_at).HasPrecision(0);
+            entity.Property(p => p.Updated_By).HasMaxLength(200);
+            entity.Property(t => t.Created_At).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.Updated_At).HasPrecision(0).ValueGeneratedOnUpdate();
             entity.HasKey(k => k.Id);
         });
         
@@ -75,9 +75,9 @@ public class NegoSudDbContext : DbContext
         {
             entity.ToTable(nameof(Location));
             entity.Property(p => p.Created_By).HasMaxLength(200);
-            entity.Property(p => p.Updated_at).HasMaxLength(200);
-            entity.Property(t => t.Created_at).HasPrecision(0);
-            entity.Property(t => t.Updated_at).HasPrecision(0);
+            entity.Property(p => p.Updated_By).HasMaxLength(200);
+            entity.Property(t => t.Created_At).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.Updated_At).HasPrecision(0).ValueGeneratedOnUpdate();
             entity.HasKey(k => k.Id);
         });
         
@@ -85,9 +85,9 @@ public class NegoSudDbContext : DbContext
         {
             entity.ToTable(nameof(Producer));
             entity.Property(p => p.Created_By).HasMaxLength(200);
-            entity.Property(p => p.Updated_at).HasMaxLength(200);
-            entity.Property(t => t.Created_at).HasPrecision(0);
-            entity.Property(t => t.Updated_at).HasPrecision(0);
+            entity.Property(p => p.Updated_By).HasMaxLength(200);
+            entity.Property(t => t.Created_At).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.Updated_At).HasPrecision(0).ValueGeneratedOnUpdate();
             entity.HasKey(k => k.Id);
             entity.HasMany(k => k.Bottles).WithOne(k => k.Producer);
         });
@@ -96,9 +96,9 @@ public class NegoSudDbContext : DbContext
         {
             entity.ToTable(nameof(Region));
             entity.Property(p => p.Created_By).HasMaxLength(200);
-            entity.Property(p => p.Updated_at).HasMaxLength(200);
-            entity.Property(t => t.Created_at).HasPrecision(0);
-            entity.Property(t => t.Updated_at).HasPrecision(0);
+            entity.Property(p => p.Updated_By).HasMaxLength(200);
+            entity.Property(t => t.Created_At).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.Updated_At).HasPrecision(0).ValueGeneratedOnUpdate();
             entity.HasKey(k => k.Id);
             entity.HasMany(k => k.Producers).WithOne(k => k.Region);
         });
@@ -107,9 +107,9 @@ public class NegoSudDbContext : DbContext
         {
             entity.ToTable(nameof(BottleLocation));
             entity.Property(p => p.Created_By).HasMaxLength(200);
-            entity.Property(p => p.Updated_at).HasMaxLength(200);
-            entity.Property(t => t.Created_at).HasPrecision(0);
-            entity.Property(t => t.Updated_at).HasPrecision(0);
+            entity.Property(p => p.Updated_By).HasMaxLength(200);
+            entity.Property(t => t.Created_At).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.Updated_At).HasPrecision(0).ValueGeneratedOnUpdate();
             entity.HasKey(k => new {k.Bottle_Id, k.Location_Id});
             
             entity.HasOne(k => k.Bottle)
