@@ -40,13 +40,13 @@ public class BottleService : IBottleService
     }
 
     //</inheritdoc>  
-    public async Task<Bottle?> AddBottleAsync(Bottle Bottle)
+    public async Task<Bottle?> AddBottleAsync(Bottle bottle)
     {
         try
         {
-            await _context.Bottles.AddAsync(Bottle);
+            await _context.Bottles.AddAsync(bottle);
             await _context.SaveChangesAsync();
-            return await _context.Bottles.FindAsync(Bottle.Id); // Auto ID from DB
+            return await _context.Bottles.FindAsync(bottle.Id); // Auto ID from DB
         }
         catch (Exception ex)
         {
@@ -55,14 +55,14 @@ public class BottleService : IBottleService
     }
 
     //</inheritdoc>  
-    public async Task<Bottle?> UpdateBottleAsync(Bottle Bottle)
+    public async Task<Bottle?> UpdateBottleAsync(Bottle bottle)
     {
         try
         {
-            _context.Entry(Bottle).State = EntityState.Modified;
+            _context.Entry(bottle).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return Bottle;
+            return bottle;
         }
         catch (Exception ex)
         {

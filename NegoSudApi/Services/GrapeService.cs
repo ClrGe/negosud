@@ -14,11 +14,11 @@ public class GrapeService : IGrapeService
     }
 
     //</inheritdoc>
-    public async Task<Grape?> GetGrapeAsync(int grapeId)
+    public async Task<Grape?> GetGrapeAsync(int id)
     {
         try
         {
-            return await _context.Grapes.FindAsync(grapeId);
+            return await _context.Grapes.FindAsync(id);
         }
         catch (Exception ex)
         {
@@ -40,13 +40,13 @@ public class GrapeService : IGrapeService
     }
 
     //</inheritdoc>
-    public async Task<Grape?> AddGrapeAsync(Grape model)
+    public async Task<Grape?> AddGrapeAsync(Grape grape)
     {
         try
         {
-            await _context.Grapes.AddAsync(model);
+            await _context.Grapes.AddAsync(grape);
             await _context.SaveChangesAsync();
-            return await _context.Grapes.FirstOrDefaultAsync(x => x.Id == model.Id);
+            return await _context.Grapes.FirstOrDefaultAsync(x => x.Id == grape.Id);
 
         }
         catch (Exception ex)
@@ -56,13 +56,13 @@ public class GrapeService : IGrapeService
     }
 
     //</inheritdoc>
-    public async Task<Grape?> UpdateGrapeAsync(Grape model)
+    public async Task<Grape?> UpdateGrapeAsync(Grape grape)
     {
         try
         {
-            _context.Entry(model).State = EntityState.Modified;
+            _context.Entry(grape).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return model;
+            return grape;
         }
         catch (Exception ex)
         {
@@ -72,11 +72,11 @@ public class GrapeService : IGrapeService
     }
 
     //</inheritdoc>
-    public async Task DeleteGrapeAsync(int grapeId)
+    public async Task DeleteGrapeAsync(int id)
     {
         try
         {
-            Grape? grape = await _context.Grapes.FindAsync(grapeId);
+            Grape? grape = await _context.Grapes.FindAsync(id);
             if (grape != null)
             {
                 _context.Grapes.Remove(grape);
@@ -89,14 +89,14 @@ public class GrapeService : IGrapeService
         }
     }
 
-    public async Task<IEnumerable<Bottle>?> GetBottlesAsync(int grapeId)
+    public async Task<IEnumerable<Bottle>?> GetBottlesAsync(int id)
     {
         try
         {
-            Grape? grape = await _context.Grapes.FindAsync(grapeId);
+            Grape? grape = await _context.Grapes.FindAsync(id);
             if (grape != null)
             {
-                return await _context.Bottles.Include(b => b.BottleGrapes).Where(b => b.Id == grapeId).ToListAsync();
+                return await _context.Bottles.Include(b => b.BottleGrapes).Where(b => b.Id == id).ToListAsync();
             }
 
             return Enumerable.Empty<Bottle>();

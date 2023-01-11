@@ -14,11 +14,11 @@ public class LocationService : ILocationService
     }
 
     //</inheritdoc>
-    public async Task<Location?> GetLocationAsync(int locationId)
+    public async Task<Location?> GetLocationAsync(int id)
     {
         try
         {
-            return await _context.Locations.FindAsync(locationId);
+            return await _context.Locations.FindAsync(id);
         }
         catch (Exception ex)
         {
@@ -40,13 +40,13 @@ public class LocationService : ILocationService
     }
 
     //</inheritdoc>
-    public async Task<Location?> AddLocationAsync(Location model)
+    public async Task<Location?> AddLocationAsync(Location location)
     {
         try
         {
-            await _context.Locations.AddAsync(model);
+            await _context.Locations.AddAsync(location);
             await _context.SaveChangesAsync();
-            return await _context.Locations.FirstOrDefaultAsync(x => x.Id == model.Id);
+            return await _context.Locations.FirstOrDefaultAsync(x => x.Id == location.Id);
 
         }
         catch (Exception ex)
@@ -56,13 +56,13 @@ public class LocationService : ILocationService
     }
 
     //</inheritdoc>
-    public async Task<Location?> UpdateGrapeAsync(Location model)
+    public async Task<Location?> UpdateGrapeAsync(Location location)
     {
         try
         {
-            _context.Entry(model).State = EntityState.Modified;
+            _context.Entry(location).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return model;
+            return location;
         }
         catch (Exception ex)
         {
@@ -71,11 +71,11 @@ public class LocationService : ILocationService
     }
 
     //</inheritdoc>
-    public async Task DeleteLocationAsync(int locationId)
+    public async Task DeleteLocationAsync(int id)
     {
         try
         {
-            Location? location = await _context.Locations.FindAsync(locationId);
+            Location? location = await _context.Locations.FindAsync(id);
             if (location != null)
             {
                 _context.Locations.Remove(location);
@@ -89,14 +89,14 @@ public class LocationService : ILocationService
     }
 
     //</inheritdoc>
-    public async Task<IEnumerable<Bottle>?> GetBottlesAsync(int locationId)
+    public async Task<IEnumerable<Bottle>?> GetBottlesAsync(int id)
     {
         try
         {
-            Location? location = await _context.Locations.FindAsync(locationId);
+            Location? location = await _context.Locations.FindAsync(id);
             if (location != null)
             {
-                return await _context.Bottles.Include(x => x.BottleLocations).Where(x => x.Id == locationId)
+                return await _context.Bottles.Include(x => x.BottleLocations).Where(x => x.Id == id)
                     .ToListAsync(); // TODO : Refaire les includes
             }
             else
@@ -111,7 +111,7 @@ public class LocationService : ILocationService
     }
 
     //</inheritdoc>
-    public async Task<IEnumerable<BottleLocation>?> GetBottleLocationAsync(int locationId)
+    public async Task<IEnumerable<BottleLocation>?> GetBottleLocationAsync(int id)
     {
         throw new NotImplementedException();
         //try
