@@ -39,13 +39,6 @@ namespace NegoSudApi.Services.Interfaces
         public Task DeleteGrapeAsync(int id);
 
         /// <summary>
-        /// Get an IEnumerable of BottleGrapes entities from the database by GrapeID
-        /// </summary>
-        /// <param name="id">The Grape's id</param>
-        /// <returns></returns>
-        public Task<IEnumerable<BottleGrape>?> GetBottleGrapesAsync(int id);
-
-        /// <summary>
         /// Get an IEnumerable of Bottles entities from the database by GrapeID
         /// </summary>
         /// <param name="id">The Grape's id</param>
