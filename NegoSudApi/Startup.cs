@@ -20,7 +20,7 @@ namespace NegoSudApi
             services.AddHttpLogging((options) => {
                 options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.Request;
             });
-            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "NegosudWebAPI", Version = "v1" }));
+            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "NegoSudWebAPI", Version = "v1" }));
             // TODO : Register all the services
             services.AddScoped<IGrapeService, GrapeService>();
             
