@@ -3,9 +3,9 @@ using NegoSudApi.Models;
 
 namespace NegoSudApi;
 
-public class NegoSudContext : DbContext
+public class NegoSudDbContext : DbContext
 {
-    public NegoSudContext(DbContextOptions<NegoSudContext> options) : base(options)
+    public NegoSudDbContext(DbContextOptions<NegoSudDbContext> options) : base(options)
     {
     }
 

@@ -5,8 +5,8 @@ namespace NegoSudApi.Services
 {
     public class CountryService : ICountryService
     {
-        private readonly NegoSudContext _context;
-        public CountryService(NegoSudContext context)
+        private readonly NegoSudDbContext _context;
+        public CountryService(NegoSudDbContext context)
         {
             _context = context;
         }

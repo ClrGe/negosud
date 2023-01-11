@@ -26,7 +26,7 @@ namespace NegoSudApi.Controllers;
 
             if ( region== null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, $"404 No match for query");
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
             return StatusCode(StatusCodes.Status200OK, region);
@@ -40,7 +40,7 @@ namespace NegoSudApi.Controllers;
 
             if (regions == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, "Oops, no match");
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
             return StatusCode(StatusCodes.Status200OK, regions);
@@ -54,7 +54,7 @@ namespace NegoSudApi.Controllers;
 
             if (region == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error while adding a new region. No changes were made");
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
             return StatusCode(StatusCodes.Status200OK, region);
@@ -73,7 +73,7 @@ namespace NegoSudApi.Controllers;
 
             if (region == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, $"No match");
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
             return StatusCode(StatusCodes.Status200OK, region);
@@ -87,7 +87,7 @@ namespace NegoSudApi.Controllers;
 
             if(region == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, $"No region matching query");
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
             await _RegionService.DeleteRegion(region);

@@ -27,7 +27,7 @@ namespace NegoSudApi.Controllers;
 
             if ( producer== null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, $"404 No match for query");
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
             return StatusCode(StatusCodes.Status200OK, producer);
@@ -41,7 +41,7 @@ namespace NegoSudApi.Controllers;
 
             if (producers == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, "Oops, no match");
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
             return StatusCode(StatusCodes.Status200OK, producers);
@@ -55,7 +55,7 @@ namespace NegoSudApi.Controllers;
 
             if (producer == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error while adding a new producer. No changes were made");
+                return StatusCode(StatusCodes.SStatus204NoContent, $"No match for query");
             }
 
             return StatusCode(StatusCodes.Status200OK, producer);
@@ -74,7 +74,7 @@ namespace NegoSudApi.Controllers;
 
             if (producer == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, $"No match");
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
             return StatusCode(StatusCodes.Status200OK, producer);
@@ -88,7 +88,7 @@ namespace NegoSudApi.Controllers;
 
             if(producer == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, $"No producer matching query");
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
             await _ProducerService.DeleteProducer(producer);

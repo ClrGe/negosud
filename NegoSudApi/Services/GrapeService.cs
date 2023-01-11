@@ -1,16 +1,12 @@
-﻿using System.Data;
-using System.Runtime.CompilerServices;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
-using Npgsql;
 
 namespace NegoSudApi.Services
 {
     public class GrapeService : IGrapeService
     {
-        private readonly NegoSudContext _context;
-        public GrapeService(NegoSudContext context) 
+        private readonly NegoSudDbContext _context;
+        public GrapeService(NegoSudDbContext context) 
         {
             _context = context;
         }

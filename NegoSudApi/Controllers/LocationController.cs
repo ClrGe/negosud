@@ -28,7 +28,7 @@ namespace NegoSudApi.Controllers
             IEnumerable<Location>? locations = await _locationService.GetLocations();
             if (locations == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, locations.ToList());
         }
@@ -39,7 +39,7 @@ namespace NegoSudApi.Controllers
             Location? location = await  _locationService.GetLocation(locationId);
             if (location == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, location);
         }
@@ -50,7 +50,7 @@ namespace NegoSudApi.Controllers
             Location? location = await _locationService.AddLocation(model);
             if (location == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, location);
         }
@@ -66,7 +66,7 @@ namespace NegoSudApi.Controllers
             Location? location = await _locationService.UpdateGrape(model);
             if (location == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, location);
         }        
@@ -77,10 +77,10 @@ namespace NegoSudApi.Controllers
             Location? location = await _locationService.GetLocation(locationId);
             if (location == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             await _locationService.DeleteLocation(locationId);
-            return StatusCode(StatusCodes.Status200OK);
+            return StatusCode(StatusCodes.Status200OK, $"Deleted");
         }
 
         [HttpGet("bottles/{id}")]
@@ -89,12 +89,12 @@ namespace NegoSudApi.Controllers
             Location? location = await _locationService.GetLocation(locationId);
             if (location == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             IEnumerable<Bottle>? bottles = await _locationService.GetBottles(locationId);
             if (bottles == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, bottles);
         }
@@ -105,12 +105,12 @@ namespace NegoSudApi.Controllers
             Location? location = await _locationService.GetLocation(locationId);
             if (location == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            IEnumerable<BottleLocation>? storages = await _locationService.GetStorages(locationId);
+            IEnumerable<Storage>? storages = await _locationService.GetStorages(locationId);
             if (storages == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, storages);
         }
