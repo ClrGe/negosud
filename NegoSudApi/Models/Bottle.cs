@@ -16,7 +16,7 @@ public class Bottle : IModelBase
     public string Created_By { get; set; }
     public string Updated_By { get; set; }
 
-    public virtual ICollection<Storage> Locations { get; set; }
-    public virtual ICollection<BottleGrape> Grapes { get; set; }
+    public virtual ICollection<BottleLocation> BottleLocations { get; set; }
+    public virtual ICollection<BottleGrape> BottleGrapes { get; set; }
     public virtual  Producer Producer { get; set; }
 }

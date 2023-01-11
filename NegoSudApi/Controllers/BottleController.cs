@@ -22,7 +22,7 @@ namespace NegoSudApi.Controllers
 
             if (bottles == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, "No bottles in database");
+                return StatusCode(StatusCodes.Status204NoContent, "No bottles in database");
             }
 
             return StatusCode(StatusCodes.Status200OK, bottles);
@@ -35,23 +35,23 @@ namespace NegoSudApi.Controllers
 
             if (bottle == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, $"No Bottle found for id: {id}");
+                return StatusCode(StatusCodes.Status204NoContent, $"No Bottle found for id: {id}");
             }
 
             return StatusCode(StatusCodes.Status200OK, bottle);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Bottle>> AddBottleAsync(Bottle Bottle)
+        public async Task<ActionResult<Bottle>> AddBottle(Bottle bottle)
         {
-            var dbBottle = await _bottleService.AddBottleAsync(Bottle);
+            Bottle? dbBottle = await _bottleService.AddBottleAsync(bottle);
 
             if (dbBottle == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"{Bottle.Full_Name} could not be added.");
+                return StatusCode(StatusCodes.Status204NoContent, $"{bottle.Full_Name} could not be added.");
             }
 
-            return CreatedAtAction("GetBottle", new { id = Bottle.Id }, Bottle);
+            return CreatedAtAction("GetBottle", new Bottle() { Id = dbBottle.Id });
         }
 
         [HttpPut("id")]
@@ -66,7 +66,7 @@ namespace NegoSudApi.Controllers
 
             if (dbBottle == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"{bottle.Full_Name} could not be updated");
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query - could not update");
             }
 
             return NoContent();
@@ -79,7 +79,7 @@ namespace NegoSudApi.Controllers
 
             if (status == false)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"{bottle.Full_Name} could not be deleted");
+                return StatusCode(StatusCodes.Status204NoContent, $"{Bottle.Full_Name} could not be deleted");
             }
 
             return StatusCode(StatusCodes.Status200OK);

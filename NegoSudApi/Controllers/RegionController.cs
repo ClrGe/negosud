@@ -22,11 +22,11 @@ namespace NegoSudApi.Controllers;
         [HttpGet("id")]
         public async Task<IActionResult> GetRegion(int id)
         {
-            Region? region = await _RegionService.GetRegion(id);
+            Region? region = await _RegionService.GetRegionAsync(id);
 
             if ( region== null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, $"404 No match for query");
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
             return StatusCode(StatusCodes.Status200OK, region);
@@ -36,11 +36,11 @@ namespace NegoSudApi.Controllers;
         [HttpGet]
         public async Task<IActionResult> GetRegions()
         {
-            var regions = await _RegionService.GetRegions();
+            var regions = await _RegionService.GetRegionsAsync();
 
             if (regions == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, "Oops, no match");
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
             return StatusCode(StatusCodes.Status200OK, regions);
@@ -50,11 +50,11 @@ namespace NegoSudApi.Controllers;
         [HttpPost]
         public async Task<ActionResult<Region>> AddRegion(Region Region)
         {
-            Region? region = await _RegionService.AddRegions(Region);
+            Region? region = await _RegionService.AddRegionAsync(Region);
 
             if (region == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error while adding a new region. No changes were made");
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
             return StatusCode(StatusCodes.Status200OK, region);
@@ -69,11 +69,11 @@ namespace NegoSudApi.Controllers;
                 return BadRequest();
             }
 
-            Region? region = await _RegionService.UpdateRegion(Region);
+            Region? region = await _RegionService.UpdateRegionAsync(Region);
 
             if (region == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, $"No match");
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
             return StatusCode(StatusCodes.Status200OK, region);
@@ -83,14 +83,14 @@ namespace NegoSudApi.Controllers;
         [HttpDelete("id")]
         public async Task<IActionResult> DeleteRegion(int id)
         {
-            Region? region = await _RegionService.GetRegion(id);
+            Region? region = await _RegionService.GetRegionAsync(id);
 
             if(region == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, $"No region matching query");
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
-            await _RegionService.DeleteRegion(region);
+            await _RegionService.DeleteRegionAsync(region);
 
             return StatusCode(StatusCodes.Status200OK, $"Region deleted with success");
         }

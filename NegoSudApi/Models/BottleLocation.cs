@@ -1,6 +1,6 @@
 ﻿namespace NegoSudApi.Models;
 
-public class Storage : IModelBase
+public class BottleLocation : IModelBase
 {
     public int Location_Id { get; set; }
     public int Bottle_Id { get; set; }
