@@ -38,7 +38,7 @@ public class NegoSudContext : DbContext
             entity.HasKey(k => new {k.Bottle_Id, k.Grape_Id});
 
             entity.HasOne(k => k.Bottle)
-                .WithMany(k => k.Grapes)
+                .WithMany(k => k.BottleGrapes)
                 .HasForeignKey(k => k.Bottle_Id)
                 .HasPrincipalKey(k => k.Id);
             
@@ -103,9 +103,9 @@ public class NegoSudContext : DbContext
             entity.HasMany(k => k.Producers).WithOne(k => k.Region);
         });
 
-        modelBuilder.Entity<Storage>(entity =>
+        modelBuilder.Entity<BottleLocation>(entity =>
         {
-            entity.ToTable(nameof(Storage));
+            entity.ToTable(nameof(BottleLocation));
             entity.Property(p => p.Created_By).HasMaxLength(200);
             entity.Property(p => p.Updated_at).HasMaxLength(200);
             entity.Property(t => t.Created_at).HasPrecision(0);
@@ -113,7 +113,7 @@ public class NegoSudContext : DbContext
             entity.HasKey(k => new {k.Bottle_Id, k.Location_Id});
             
             entity.HasOne(k => k.Bottle)
-                .WithMany(k => k.Locations)
+                .WithMany(k => k.BottleLocations)
                 .HasForeignKey(k => k.Bottle_Id)
                 .HasPrincipalKey(k => k.Id);
             
