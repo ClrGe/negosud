@@ -39,22 +39,12 @@ namespace NegoSudApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, NegoSudDbContext dbContext)
         {
             app.UseSwagger();
-            if (env.IsDevelopment())
+            app.UseSwaggerUI(c =>
             {
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "NegoSudWebDevAPI");
-                    c.RoutePrefix = string.Empty;
-                });
-            }
-            else
-            {
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "NegoSudWebAPI");
-                    c.RoutePrefix = string.Empty;
-                });
-            }
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "NegoSudWebAPI");
+                c.RoutePrefix = string.Empty;
+            });
+            
             app.UseHttpLogging();
 
             app.UseHttpsRedirection();
