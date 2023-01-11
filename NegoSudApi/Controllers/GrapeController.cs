@@ -9,27 +9,27 @@ namespace NegoSudApi.Controllers
     public class GrapeController : ControllerBase
     {
         private readonly IGrapeService _grapeService;
-        public GrapeController(IGrapeService grapeService) 
+        public GrapeController(IGrapeService grapeService)
         {
             _grapeService = grapeService;
         }
 
-        [HttpGet("id")]
-        public async Task<IActionResult> GetGrape(int grapeId)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetGrapeAsync(int id)
         {
-            Grape? grape = await _grapeService.GetGrapeAsync(grapeId);
-            if(grape == null)
+            Grape? grape = await _grapeService.GetGrapeAsync(id);
+            if (grape == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            return StatusCode(StatusCodes.Status200OK, grape);            
+            return StatusCode(StatusCodes.Status200OK, grape);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetGrapes()
+        public async Task<IActionResult> GetGrapesAsync()
         {
             IEnumerable<Grape>? grapes = await _grapeService.GetGrapesAsync();
-            if(grapes == null)
+            if (grapes == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
@@ -37,20 +37,20 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddGrape(Grape model)
+        public async Task<IActionResult> AddGrapeAsync(Grape model)
         {
             Grape? grape = await _grapeService.AddGrapeAsync(model);
-            if(grape == null)
+            if (grape == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, grape);
         }
 
-        [HttpPut("id")]
-        public async Task<IActionResult> UpdateGrape(int grapeId, Grape model)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateGrapeAsync(int id, Grape model)
         {
-            if(grapeId != model.Id)
+            if (id != model.Id)
             {
                 return BadRequest();
             }
@@ -63,28 +63,28 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, grape);
         }
 
-        [HttpDelete("id")]
-        public async Task<IActionResult> DeleteGrape(int grapeId)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteGrapeAsync(int id)
         {
-            Grape? grape = await _grapeService.GetGrapeAsync(grapeId);
-            if(grape == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
-            }
-            await _grapeService.DeleteGrapeAsync(grapeId);
-            return StatusCode(StatusCodes.Status200OK);
-        }
-
-        [HttpGet("bottles/{id}")]
-        public async Task<IActionResult> GetBottles(int grapeId)
-        {
-            Grape? grape = await _grapeService.GetGrapeAsync(grapeId);
+            Grape? grape = await _grapeService.GetGrapeAsync(id);
             if (grape == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            IEnumerable<Bottle>? bottles = await _grapeService.GetBottlesAsync(grapeId);
-            if(bottles == null)
+            await _grapeService.DeleteGrapeAsync(id);
+            return StatusCode(StatusCodes.Status200OK);
+        }
+
+        [HttpGet("bottles/{id}")]
+        public async Task<IActionResult> GetBottlesAsync(int id)
+        {
+            Grape? grape = await _grapeService.GetGrapeAsync(id);
+            if (grape == null)
+            {
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            }
+            IEnumerable<Bottle>? bottles = await _grapeService.GetBottlesAsync(id);
+            if (bottles == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
@@ -92,14 +92,14 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpGet("bottleGrapes/{id}")]
-        public async Task<IActionResult> GetBottleGrapes(int grapeId)
+        public async Task<IActionResult> GetBottleGrapesAsync(int id)
         {
-            Grape? grape = await _grapeService.GetGrapeAsync(grapeId);
+            Grape? grape = await _grapeService.GetGrapeAsync(id);
             if (grape == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            IEnumerable<BottleGrape>? bottleGrapes = await _grapeService.GetBottleGrapesAsync(grapeId);
+            IEnumerable<BottleGrape>? bottleGrapes = await _grapeService.GetBottleGrapesAsync(id);
             if (bottleGrapes == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");

@@ -56,7 +56,7 @@ namespace NegoSudApi.Services
             }
             catch (Exception ex)
             {
-                return null; 
+                return null;
             }
         }
 
@@ -73,7 +73,7 @@ namespace NegoSudApi.Services
             }
             catch (Exception ex)
             {
-                return null; 
+                return null;
             }
         }
 

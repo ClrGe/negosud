@@ -14,9 +14,9 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCountries()
+        public async Task<IActionResult> GetCountriesAsync()
         {
-            var countries = await _countryService.GetCountriesAsync();
+            IEnumerable<Country>? countries = await _countryService.GetCountriesAsync();
 
             if (countries == null)
             {
@@ -26,8 +26,8 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, countries);
         }
 
-        [HttpGet("id")]
-        public async Task<IActionResult> GetCountry(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCountryAsync(int id)
         {
             Country? country = await _countryService.GetCountryAsync(id);
 
@@ -40,27 +40,27 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Country>> AddCountry(Country Country)
+        public async Task<ActionResult<Country>> AddCountryAsync(Country country)
         {
-            var dbCountry = await _countryService.AddCountryAsync(Country);
+            Country? dbCountry = await _countryService.AddCountryAsync(country);
 
             if (dbCountry == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match - could not add content.");
             }
 
-            return CreatedAtAction("GetCountry", new { id = Country.Id }, Country);
+            return CreatedAtAction("GetCountry", dbCountry);
         }
 
-        [HttpPut("id")]
-        public async Task<IActionResult> UpdateCountry(int id, Country Country)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCountryAsync(int id, Country country)
         {
-            if (id != Country.Id)
+            if (id != country.Id)
             {
                 return BadRequest();
             }
 
-            Country? dbCountry = await _countryService.UpdateCountryAsync(Country);
+            Country? dbCountry = await _countryService.UpdateCountryAsync(country);
 
             if (dbCountry == null)
             {
@@ -70,11 +70,10 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCountry);
         }
 
-        [HttpDelete("id")]
-        public async Task<IActionResult> DeleteCountry(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCountryAsync(int id)
         {
-            var Country = await _countryService.GetCountryAsync(id);
-            bool? status = await _countryService.DeleteCountryAsync(Country);
+            bool? status = await _countryService.DeleteCountryAsync(id);
 
             if (status == false)
             {

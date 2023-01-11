@@ -28,7 +28,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, bottles);
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetBottleAsync(int id)
         {
             Bottle? bottle = await _bottleService.GetBottleAsync(id);
@@ -51,10 +51,10 @@ namespace NegoSudApi.Controllers
                 return StatusCode(StatusCodes.Status204NoContent, $"{bottle.Full_Name} could not be added.");
             }
 
-            return CreatedAtAction("GetBottle", new Bottle() { Id = dbBottle.Id });
+            return CreatedAtAction("GetBottle", bottle);
         }
 
-        [HttpPut("id")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBottleAsync(int id, Bottle bottle)
         {
             if (id != bottle.Id)
@@ -72,14 +72,14 @@ namespace NegoSudApi.Controllers
             return NoContent();
         }
 
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBottleAsync(int id)
         {
             bool? status = await _bottleService.DeleteBottleAsync(id);
 
             if (status == false)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"{Bottle.Full_Name} could not be deleted");
+                return StatusCode(StatusCodes.Status204NoContent, $"No Bottle found for id: {id} - could not be deleted");
             }
 
             return StatusCode(StatusCodes.Status200OK);
