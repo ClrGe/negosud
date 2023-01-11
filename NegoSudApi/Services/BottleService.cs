@@ -2,94 +2,94 @@
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Services
+namespace NegoSudApi.Services;
+
+public class BottleService : IBottleService
 {
-    public class BottleService : IBottleService
+    private readonly NegoSudDbContext _context;
+
+    public BottleService(NegoSudDbContext context)
     {
-        private readonly NegoSudDbContext _context;
-        public BottleService(NegoSudDbContext context)
+        _context = context;
+    }
+
+    //</inheritdoc>  
+    public async Task<IEnumerable<Bottle>?> GetBottlesAsync()
+    {
+        try
         {
-            _context = context;
+            return await _context.Bottles.ToListAsync();
         }
-
-        //</inheritdoc>  
-        public async Task<IEnumerable<Bottle>?> GetBottlesAsync()
+        catch (Exception ex)
         {
-            try
-            {
-                return await _context.Bottles.ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            return null;
         }
+    }
 
-        //</inheritdoc>  
-        public async Task<Bottle?> GetBottleAsync(int id)
+    //</inheritdoc>  
+    public async Task<Bottle?> GetBottleAsync(int id)
+    {
+        try
         {
-            try
-            {
-                return await _context.Bottles.FindAsync(id);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            return await _context.Bottles.FindAsync(id);
         }
-
-        //</inheritdoc>  
-        public async Task<Bottle?> AddBottleAsync(Bottle Bottle)
+        catch (Exception ex)
         {
-            try
-            {
-                await _context.Bottles.AddAsync(Bottle);
-                await _context.SaveChangesAsync();
-                return await _context.Bottles.FindAsync(Bottle.Id); // Auto ID from DB
-            }
-            catch (Exception ex)
-            {
-                return null; // An error occured
-            }
+            return null;
         }
+    }
 
-        //</inheritdoc>  
-        public async Task<Bottle?> UpdateBottleAsync(Bottle Bottle)
+    //</inheritdoc>  
+    public async Task<Bottle?> AddBottleAsync(Bottle Bottle)
+    {
+        try
         {
-            try
-            {
-                _context.Entry(Bottle).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-
-                return Bottle;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            await _context.Bottles.AddAsync(Bottle);
+            await _context.SaveChangesAsync();
+            return await _context.Bottles.FindAsync(Bottle.Id); // Auto ID from DB
         }
-
-        //</inheritdoc>  
-        public async Task<bool?> DeleteBottleAsync(int id)
+        catch (Exception ex)
         {
-            try
-            {
-                var dbBottle = await _context.Bottles.FindAsync(id);
+            return null; // An error occured
+        }
+    }
 
-                if (dbBottle == null)
-                {
-                    return false;
-                }
+    //</inheritdoc>  
+    public async Task<Bottle?> UpdateBottleAsync(Bottle Bottle)
+    {
+        try
+        {
+            _context.Entry(Bottle).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
-                _context.Bottles.Remove(dbBottle);
-                await _context.SaveChangesAsync();
+            return Bottle;
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+    }
 
-                return true;
-            }
-            catch (Exception ex)
+    //</inheritdoc>  
+    public async Task<bool?> DeleteBottleAsync(int id)
+    {
+        try
+        {
+            var dbBottle = await _context.Bottles.FindAsync(id);
+
+            if (dbBottle == null)
             {
                 return false;
             }
+
+            _context.Bottles.Remove(dbBottle);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            return false;
         }
     }
 }

@@ -2,95 +2,95 @@
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Services
+namespace NegoSudApi.Services;
+
+public class CountryService : ICountryService
 {
-    public class CountryService : ICountryService
+    private readonly NegoSudDbContext _context;
+
+    public CountryService(NegoSudDbContext context)
     {
-        private readonly NegoSudDbContext _context;
-        public CountryService(NegoSudDbContext context)
+        _context = context;
+    }
+
+    //</inheritdoc>    
+    public async Task<IEnumerable<Country>?> GetCountriesAsync()
+    {
+        try
         {
-            _context = context;
+            return await _context.Countries.ToListAsync();
         }
-
-        //</inheritdoc>    
-        public async Task<IEnumerable<Country>?> GetCountriesAsync()
+        catch (Exception ex)
         {
-            try
-            {
-                return await _context.Countries.ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            return null;
         }
+    }
 
-        //</inheritdoc>    
-        public async Task<Country?> GetCountryAsync(int id)
+    //</inheritdoc>    
+    public async Task<Country?> GetCountryAsync(int id)
+    {
+        try
         {
-            try
-            {
-                return await _context.Countries.Include(c => c.Regions).FirstOrDefaultAsync(c => c.Id == id);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            return await _context.Countries.Include(c => c.Regions).FirstOrDefaultAsync(c => c.Id == id);
         }
-
-        //</inheritdoc>    
-        public async Task<Country?> AddCountryAsync(Country country)
+        catch (Exception ex)
         {
-            try
-            {
-                await _context.Countries.AddAsync(country);
-                await _context.SaveChangesAsync();
-                return await _context.Countries.FindAsync(country.Id); // Auto ID from DB
-            }
-            catch (Exception ex)
-            {
-                return null; // An error occured
-            }
+            return null;
         }
+    }
 
-        //</inheritdoc>    
-        public async Task<Country?> UpdateCountryAsync(Country country)
+    //</inheritdoc>    
+    public async Task<Country?> AddCountryAsync(Country country)
+    {
+        try
         {
-            try
-            {
-                _context.Entry(country).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-
-                return country;
-            }
-            catch (Exception ex)
-            {
-                return null; // An error occured
-            }
+            await _context.Countries.AddAsync(country);
+            await _context.SaveChangesAsync();
+            return await _context.Countries.FindAsync(country.Id); // Auto ID from DB
         }
-
-        //</inheritdoc>    
-        public async Task<bool?> DeleteCountryAsync(int id)
+        catch (Exception ex)
         {
-            try
-            {
-                var dbCountry = await _context.Countries.FindAsync(id);
+            return null; // An error occured
+        }
+    }
 
-                if (dbCountry == null)
-                {
-                    return false;
-                }
+    //</inheritdoc>    
+    public async Task<Country?> UpdateCountryAsync(Country country)
+    {
+        try
+        {
+            _context.Entry(country).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
-                _context.Countries.Remove(dbCountry);
-                await _context.SaveChangesAsync();
+            return country;
+        }
+        catch (Exception ex)
+        {
+            return null; // An error occured
+        }
+    }
 
-                return true;
-            }
-            catch (Exception ex)
+    //</inheritdoc>    
+    public async Task<bool?> DeleteCountryAsync(int id)
+    {
+        try
+        {
+            var dbCountry = await _context.Countries.FindAsync(id);
+
+            if (dbCountry == null)
             {
                 return false;
             }
+
+            _context.Countries.Remove(dbCountry);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
-        
+        catch (Exception ex)
+        {
+            return false;
+        }
     }
+
 }

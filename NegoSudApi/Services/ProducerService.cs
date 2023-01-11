@@ -2,102 +2,95 @@ using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Services
+namespace NegoSudApi.Services;
 
+public class ProducerService : IProducerService
 {
-    public class ProducerService : IProducerService
+
+    private readonly NegoSudDbContext _context;
+
+    public ProducerService(NegoSudDbContext context)
     {
+        _context = context;
+    }
 
-        private readonly NegoSudDbContext _context;
-
-        public ProducerService(NegoSudDbContext context)
+    //</inheritdoc> 
+    public async Task<Producer?> GetProducerAsync(int id)
+    {
+        try
         {
-            _context = context;
+            return await _context.Producers.FindAsync(id);
         }
-
-        //</inheritdoc> 
-        public async Task<Producer?> GetProducerAsync(int id)
-
+        catch (Exception ex)
         {
-            try
-            {
-                return await _context.Producers.FindAsync(id);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            return null;
         }
+    }
 
-        //</inheritdoc> 
-        public async Task<IEnumerable<Producer>?> GetProducersAsync()
-
+    //</inheritdoc> 
+    public async Task<IEnumerable<Producer>?> GetProducersAsync()
+    {
+        try
         {
-            try
-            {
-                return await _context.Producers.ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            return await _context.Producers.ToListAsync();
         }
-
-        //</inheritdoc> 
-        public async Task<Producer?> AddProducerAsync(Producer producer)
-
+        catch (Exception ex)
         {
-            try
-            {
-                await _context.Producers.AddAsync(producer);
-                await _context.SaveChangesAsync();
-                return await _context.Producers.FindAsync(producer.Id);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            return null;
         }
+    }
 
-        //</inheritdoc> 
-        public async Task<Producer?> UpdateProducerAsync(Producer producer)
-
+    //</inheritdoc> 
+    public async Task<Producer?> AddProducerAsync(Producer producer)
+    {
+        try
         {
-            try
-            {
-                _context.Entry(producer).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-
-                return producer;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            await _context.Producers.AddAsync(producer);
+            await _context.SaveChangesAsync();
+            return await _context.Producers.FindAsync(producer.Id);
         }
-
-        //</inheritdoc> 
-        public async Task<bool?> DeleteProducerAsync(int id)
-
+        catch (Exception ex)
         {
-            try
-            {
-                Producer? producerResult = await _context.Producers.FindAsync(id);
+            return null;
+        }
+    }
 
-                if (producerResult == null)
-                {
-                    return false;
-                }
+    //</inheritdoc> 
+    public async Task<Producer?> UpdateProducerAsync(Producer producer)
+    {
+        try
+        {
+            _context.Entry(producer).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
-                _context.Producers.Remove(producerResult);
-                await _context.SaveChangesAsync();
+            return producer;
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+    }
 
-                return true;
-            }
-            catch (Exception ex)
+    //</inheritdoc> 
+    public async Task<bool?> DeleteProducerAsync(int id)
+    {
+        try
+        {
+            Producer? producerResult = await _context.Producers.FindAsync(id);
+
+            if (producerResult == null)
             {
                 return false;
             }
+
+            _context.Producers.Remove(producerResult);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            return false;
         }
     }
 }
