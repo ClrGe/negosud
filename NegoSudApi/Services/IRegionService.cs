@@ -5,14 +5,14 @@ namespace NegoSudApi.Services
     public interface IRegionService
     {
         // return region maching id
-        Task<Region?> GetRegion(int id);
+        Task<Region?> GetRegionAsync(int id);
         // return * regions
-        Task<IEnumerable<Region>?> GetRegions();
+        Task<IEnumerable<Region>?> GetRegionsAsync();
         // add a new region
-        Task<Region?> AddRegions(Region author);
+        Task<Region?> AddRegionAsync(Region author);
         // update existing region
-        Task<Region?> UpdateRegion(Region author);
+        Task<Region?> UpdateRegionAsync(Region author);
         // delete region matching id
-        Task<bool?> DeleteRegion(Region author);
+        Task<bool?> DeleteRegionAsync(Region author);
     }
 }
