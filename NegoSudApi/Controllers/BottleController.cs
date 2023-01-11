@@ -16,7 +16,7 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetBottles()
+        public async Task<IActionResult> GetBottlesAsync()
         {
             var bottles = await _bottleService.GetBottlesAsync();
 
@@ -29,7 +29,7 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpGet("id")]
-        public async Task<IActionResult> GetBottle(int id)
+        public async Task<IActionResult> GetBottleAsync(int id)
         {
             Bottle? bottle = await _bottleService.GetBottleAsync(id);
 
@@ -42,7 +42,7 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Bottle>> AddBottle(Bottle Bottle)
+        public async Task<ActionResult<Bottle>> AddBottleAsync(Bottle Bottle)
         {
             var dbBottle = await _bottleService.AddBottleAsync(Bottle);
 
@@ -55,32 +55,31 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpPut("id")]
-        public async Task<IActionResult> UpdateBottle(int id, Bottle Bottle)
+        public async Task<IActionResult> UpdateBottleAsync(int id, Bottle bottle)
         {
-            if (id != Bottle.Id)
+            if (id != bottle.Id)
             {
                 return BadRequest();
             }
 
-            Bottle? dbBottle = await _bottleService.UpdateBottleAsync(Bottle);
+            Bottle? dbBottle = await _bottleService.UpdateBottleAsync(bottle);
 
             if (dbBottle == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"{Bottle.Full_Name} could not be updated");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"{bottle.Full_Name} could not be updated");
             }
 
             return NoContent();
         }
 
         [HttpDelete("id")]
-        public async Task<IActionResult> DeleteBottle(int id)
+        public async Task<IActionResult> DeleteBottleAsync(int id)
         {
-            var Bottle = await _bottleService.GetBottleAsync(id);
-            bool? status = await _bottleService.DeleteBottleAsync(Bottle);
+            bool? status = await _bottleService.DeleteBottleAsync(id);
 
             if (status == false)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"{Bottle.Full_Name} could not be deleted");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"{bottle.Full_Name} could not be deleted");
             }
 
             return StatusCode(StatusCodes.Status200OK);

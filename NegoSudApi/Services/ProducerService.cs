@@ -14,6 +14,7 @@ namespace NegoSudApi.Services
             _context = context;
         }
 
+        //</inheritdoc> 
         public async Task<Producer?> GetProducerAsync(int id)
 
         {
@@ -27,6 +28,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc> 
         public async Task<IEnumerable<Producer>?> GetProducersAsync()
 
         {
@@ -40,6 +42,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc> 
         public async Task<Producer?> AddProducerAsync(Producer producer)
 
         {
@@ -55,6 +58,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc> 
         public async Task<Producer?> UpdateProducerAsync(Producer producer)
 
         {
@@ -71,12 +75,13 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<bool?> DeleteProducerAsync(Producer producer)
+        //</inheritdoc> 
+        public async Task<bool?> DeleteProducerAsync(int id)
 
         {
             try
             {
-                Producer? producerResult = await _context.Producers.FindAsync(producer.Id);
+                Producer? producerResult = await _context.Producers.FindAsync(id);
 
                 if (producerResult == null)
                 {

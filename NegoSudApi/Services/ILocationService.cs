@@ -28,11 +28,11 @@ namespace NegoSudApi.Services
         /// <returns></returns>
         public Task<Location?> UpdateGrapeAsync(Location model);
         /// <summary>
-        /// Delete a Location entity in the database
+        /// Delete a Location entity from the database
         /// </summary>
         /// <param name="locationId">The entity id</param>
         /// <returns></returns>
-        public Task DeleteLocation(int locationId);
+        public Task DeleteLocationAsync(int locationId);
         /// <summary>
         /// Get an IEnumerable of Bottle entity from the database by their location
         /// </summary>

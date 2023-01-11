@@ -11,6 +11,7 @@ namespace NegoSudApi.Services
             _context = context;
         }
 
+        //</inheritdoc>  
         public async Task<IEnumerable<Bottle>?> GetBottlesAsync()
         {
             try
@@ -23,6 +24,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>  
         public async Task<Bottle?> GetBottleAsync(int id)
         {
             try
@@ -35,6 +37,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>  
         public async Task<Bottle?> AddBottleAsync(Bottle Bottle)
         {
             try
@@ -49,6 +52,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>  
         public async Task<Bottle?> UpdateBottleAsync(Bottle Bottle)
         {
             try
@@ -64,18 +68,19 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<bool?> DeleteBottleAsync(Bottle Bottle)
+        //</inheritdoc>  
+        public async Task<bool?> DeleteBottleAsync(int id)
         {
             try
             {
-                var dbBottle = await _context.Bottles.FindAsync(Bottle.Id);
+                var dbBottle = await _context.Bottles.FindAsync(id);
 
                 if (dbBottle == null)
                 {
                     return false;
                 }
 
-                _context.Bottles.Remove(Bottle);
+                _context.Bottles.Remove(dbBottle);
                 await _context.SaveChangesAsync();
 
                 return true;
