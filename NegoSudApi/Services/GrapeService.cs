@@ -86,16 +86,14 @@ namespace NegoSudApi.Services
             }
         }
 
-        public  Task<IEnumerable<BottleGrape>?> GetBottleGrapesAsync(int grapeId) => throw new NotImplementedException();
-
-        public async Task<IEnumerable<Bottle>?> GetBottles(int grapeId) 
+        public async Task<IEnumerable<Bottle>?> GetBottlesAsync(int grapeId) 
         {
             try
             {
                 Grape? grape = await _context.Grapes.FindAsync(grapeId);
                 if (grape != null)
                 {
-                    return await _context.Bottles.Include(b => b.Grapes).Where(b => b.Id == grapeId).ToListAsync();
+                    return await _context.Bottles.Include(b => b.BottleGrapes).Where(b => b.Id == grapeId).ToListAsync();
                 }
                
                 return Enumerable.Empty<Bottle>();

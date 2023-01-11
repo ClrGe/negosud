@@ -3,7 +3,7 @@ using NegoSudApi.Models;
 
 namespace NegoSudApi.Services
 {
-    public class CountryService
+    public class CountryService : ICountryService
     {
         private readonly NegoSudContext _context;
         public CountryService(NegoSudContext context)
@@ -27,7 +27,7 @@ namespace NegoSudApi.Services
         {
             try
             {
-                return await _context.Countries.FindAsync(id);
+                return await _context.Countries.Include(c => c.Regions).FirstOrDefaultAsync(c => c.Id == id);
             }
             catch (Exception ex)
             {
@@ -85,5 +85,6 @@ namespace NegoSudApi.Services
                 return false;
             }
         }
+        
     }
 }

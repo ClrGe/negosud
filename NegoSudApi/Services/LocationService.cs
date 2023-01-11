@@ -108,7 +108,7 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task<IEnumerable<Storage>?> GetStoragesAsync(int locationId)
+        public async Task<IEnumerable<BottleLocation>?> GetStoragesAsync(int locationId)
         {
             try
             {
@@ -119,7 +119,7 @@ namespace NegoSudApi.Services
                 }
                 else
                 {
-                    return Enumerable.Empty<Storage>();
+                    return Enumerable.Empty<BottleLocation>();
                 }
             }
             catch (Exception ex)

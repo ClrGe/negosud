@@ -9,7 +9,6 @@ namespace NegoSudApi.Services
         public Task<Grape?> AddGrapeAsync(Grape model);
         public Task<Grape?> UpdateGrapeAsync(Grape model);
         public Task DeleteGrapeAsync(int grapeId);
-        public Task<IEnumerable<BottleGrape>?> GetBottleGrapesAsync(int grapeId);
         public Task<IEnumerable<Bottle>?> GetBottlesAsync(int grapeId);
     }
 }

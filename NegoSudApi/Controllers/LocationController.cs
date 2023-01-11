@@ -107,7 +107,7 @@ namespace NegoSudApi.Controllers
             {
                 return StatusCode(StatusCodes.Status404NotFound);
             }
-            IEnumerable<Storage>? storages = await _locationService.GetStorages(locationId);
+            IEnumerable<BottleLocation>? storages = await _locationService.GetStorages(locationId);
             if (storages == null)
             {
                 return StatusCode(StatusCodes.Status404NotFound);
