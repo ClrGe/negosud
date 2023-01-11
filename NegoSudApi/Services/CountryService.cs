@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services
 {
@@ -11,6 +12,7 @@ namespace NegoSudApi.Services
             _context = context;
         }
 
+        //</inheritdoc>    
         public async Task<IEnumerable<Country>?> GetCountriesAsync()
         {
             try
@@ -23,6 +25,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>    
         public async Task<Country?> GetCountryAsync(int id)
         {
             try
@@ -35,6 +38,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>    
         public async Task<Country?> AddCountryAsync(Country country)
         {
             try
@@ -49,6 +53,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>    
         public async Task<Country?> UpdateCountryAsync(Country country)
         {
             try
@@ -64,18 +69,19 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<bool?> DeleteCountryAsync(Country country)
+        //</inheritdoc>    
+        public async Task<bool?> DeleteCountryAsync(int id)
         {
             try
             {
-                var dbCountry = await _context.Countries.FindAsync(country.Id);
+                var dbCountry = await _context.Countries.FindAsync(id);
 
                 if (dbCountry == null)
                 {
                     return false;
                 }
 
-                _context.Countries.Remove(country);
+                _context.Countries.Remove(dbCountry);
                 await _context.SaveChangesAsync();
 
                 return true;

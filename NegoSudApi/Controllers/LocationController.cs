@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NegoSudApi;
 using NegoSudApi.Models;
-using NegoSudApi.Services;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers
 {
@@ -23,7 +23,7 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Location>>> GetLocations()
+        public async Task<ActionResult<IEnumerable<Location>>> GetLocationsAsync()
         {
             IEnumerable<Location>? locations = await _locationService.GetLocationsAsync();
             if (locations == null)
@@ -34,9 +34,9 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Location>> GetLocation(int locationId)
+        public async Task<ActionResult<Location>> GetLocationAsync(int locationId)
         {
-            Location? location = await  _locationService.GetLocationAsync(locationId);
+            Location? location = await _locationService.GetLocationAsync(locationId);
             if (location == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
@@ -45,7 +45,7 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Location>> AddLocation(Location model)
+        public async Task<ActionResult<Location>> AddLocationAsync(Location model)
         {
             Location? location = await _locationService.AddLocationAsync(model);
             if (location == null)
@@ -56,7 +56,7 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateGrape(int locationId, Location model)
+        public async Task<IActionResult> UpdateGrapeAsync(int locationId, Location model)
         {
             if (locationId != model.Id)
             {
@@ -69,10 +69,10 @@ namespace NegoSudApi.Controllers
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, location);
-        }        
+        }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLocation(int locationId)
+        public async Task<IActionResult> DeleteLocationAsync(int locationId)
         {
             Location? location = await _locationService.GetLocationAsync(locationId);
             if (location == null)
@@ -84,7 +84,7 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpGet("bottles/{id}")]
-        public async Task<IActionResult> GetBottles(int locationId)
+        public async Task<IActionResult> GetBottlesAsync(int locationId)
         {
             Location? location = await _locationService.GetLocationAsync(locationId);
             if (location == null)
@@ -99,15 +99,15 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, bottles);
         }
 
-        [HttpGet("storage/{id}")]
-        public async Task<IActionResult> GetStorages(int locationId)
+        [HttpGet("bottleLocations/{id}")]
+        public async Task<IActionResult> GetBottleLocationsAsync(int locationId)
         {
             Location? location = await _locationService.GetLocationAsync(locationId);
             if (location == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            IEnumerable<BottleLocation>? storages = await _locationService.GetStoragesAsync(locationId);
+            IEnumerable<BottleLocation>? storages = await _locationService.GetBottleLocationAsync(locationId);
             if (storages == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");

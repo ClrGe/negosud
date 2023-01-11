@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
-using NegoSudApi.Services;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers
 {
@@ -16,7 +16,7 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetBottles()
+        public async Task<IActionResult> GetBottlesAsync()
         {
             var bottles = await _bottleService.GetBottlesAsync();
 
@@ -28,8 +28,8 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, bottles);
         }
 
-        [HttpGet("id")]
-        public async Task<IActionResult> GetBottle(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetBottleAsync(int id)
         {
             Bottle? bottle = await _bottleService.GetBottleAsync(id);
 
@@ -51,18 +51,18 @@ namespace NegoSudApi.Controllers
                 return StatusCode(StatusCodes.Status204NoContent, $"{bottle.Full_Name} could not be added.");
             }
 
-            return CreatedAtAction("GetBottle", new Bottle() { Id = dbBottle.Id });
+            return CreatedAtAction("GetBottle", bottle);
         }
 
-        [HttpPut("id")]
-        public async Task<IActionResult> UpdateBottle(int id, Bottle Bottle)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBottleAsync(int id, Bottle bottle)
         {
-            if (id != Bottle.Id)
+            if (id != bottle.Id)
             {
                 return BadRequest();
             }
 
-            Bottle? dbBottle = await _bottleService.UpdateBottleAsync(Bottle);
+            Bottle? dbBottle = await _bottleService.UpdateBottleAsync(bottle);
 
             if (dbBottle == null)
             {
@@ -72,15 +72,14 @@ namespace NegoSudApi.Controllers
             return NoContent();
         }
 
-        [HttpDelete("id")]
-        public async Task<IActionResult> DeleteBottle(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBottleAsync(int id)
         {
-            var Bottle = await _bottleService.GetBottleAsync(id);
-            bool? status = await _bottleService.DeleteBottleAsync(Bottle);
+            bool? status = await _bottleService.DeleteBottleAsync(id);
 
             if (status == false)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"{Bottle.Full_Name} could not be deleted");
+                return StatusCode(StatusCodes.Status204NoContent, $"No Bottle found for id: {id} - could not be deleted");
             }
 
             return StatusCode(StatusCodes.Status200OK);

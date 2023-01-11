@@ -1,16 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services
 {
     public class GrapeService : IGrapeService
     {
         private readonly NegoSudDbContext _context;
-        public GrapeService(NegoSudDbContext context) 
+        public GrapeService(NegoSudDbContext context)
         {
             _context = context;
         }
 
+        //</inheritdoc>
         public async Task<Grape?> GetGrapeAsync(int grapeId)
         {
             try
@@ -23,6 +25,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>      
         public async Task<IEnumerable<Grape>?> GetGrapesAsync()
         {
             try
@@ -35,6 +38,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>
         public async Task<Grape?> AddGrapeAsync(Grape model)
         {
             try
@@ -50,6 +54,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>
         public async Task<Grape?> UpdateGrapeAsync(Grape model)
         {
             try
@@ -62,15 +67,16 @@ namespace NegoSudApi.Services
             {
                 return null;
             }
-            
+
         }
 
+        //</inheritdoc>
         public async Task DeleteGrapeAsync(int grapeId)
         {
             try
             {
                 Grape? grape = await _context.Grapes.FindAsync(grapeId);
-                if(grape != null)
+                if (grape != null)
                 {
                     _context.Grapes.Remove(grape);
                     await _context.SaveChangesAsync();
@@ -91,14 +97,14 @@ namespace NegoSudApi.Services
                 {
                     return await _context.Bottles.Include(b => b.BottleGrapes).Where(b => b.Id == grapeId).ToListAsync();
                 }
-               
+
                 return Enumerable.Empty<Bottle>();
             }
             catch (Exception ex)
             {
                 return null;
             }
-            
+
         }
     }
 }

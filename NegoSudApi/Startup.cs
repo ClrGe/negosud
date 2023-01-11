@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NegoSudApi.Services;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi
 {
@@ -17,15 +18,21 @@ namespace NegoSudApi
         {
             services.AddMvc();
             services.AddSession();
-            services.AddHttpLogging((options) => {
+            services.AddHttpLogging((options) =>
+            {
                 options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.Request;
             });
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "NegoSudWebAPI", Version = "v1" }));
             // TODO : Register all the services
             services.AddScoped<IGrapeService, GrapeService>();
-            
+            services.AddScoped<IBottleService, BottleService>();
+            services.AddScoped<ICountryService, CountryService>();
+            services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<IProducerService, ProducerService>();
+            services.AddScoped<IRegionService, RegionService>();
+
             var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext");
-            
+
             services.AddDbContext<NegoSudDbContext>(options => options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
         }
 
@@ -40,7 +47,7 @@ namespace NegoSudApi
                     c.RoutePrefix = string.Empty;
                 });
             }
-            
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -54,7 +61,7 @@ namespace NegoSudApi
             app.UseSession();
 
             app.UseRouting();
-            dbContext.Database.EnsureCreated();
+            //dbContext.Database.EnsureCreated();
         }
     }
 }

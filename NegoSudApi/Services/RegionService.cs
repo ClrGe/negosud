@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services
 
@@ -16,6 +17,7 @@ namespace NegoSudApi.Services
             _context = context;
         }
 
+        //</inheritdoc> 
         public async Task<Region?> GetRegionAsync(int id)
 
         {
@@ -29,6 +31,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc> 
         public async Task<IEnumerable<Region>?> GetRegionsAsync()
 
         {
@@ -42,6 +45,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc> 
         public async Task<Region?> AddRegionAsync(Region region)
 
         {
@@ -53,10 +57,11 @@ namespace NegoSudApi.Services
             }
             catch (Exception ex)
             {
-                return null; 
+                return null;
             }
         }
 
+        //</inheritdoc> 
         public async Task<Region?> UpdateRegionAsync(Region region)
 
         {
@@ -69,23 +74,24 @@ namespace NegoSudApi.Services
             }
             catch (Exception ex)
             {
-                return null; 
+                return null;
             }
         }
 
-        public async Task<bool?> DeleteRegionAsync(Region region)
+        //</inheritdoc> 
+        public async Task<bool?> DeleteRegionAsync(int id)
 
         {
             try
             {
-                Region? regionResult = await _context.Regions.FindAsync(region.Id);
+                Region? regionResult = await _context.Regions.FindAsync(id);
 
-                if (region == null)
+                if (regionResult == null)
                 {
                     return false;
                 }
 
-                _context.Regions.Remove(region);
+                _context.Regions.Remove(regionResult);
                 await _context.SaveChangesAsync();
 
                 return true;

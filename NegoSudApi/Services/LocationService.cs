@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Server.IIS.Core;
 using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services
 {
@@ -109,7 +110,7 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task<IEnumerable<BottleLocation>?> GetStoragesAsync(int locationId)
+        public async Task<IEnumerable<BottleLocation>?> GetBottleLocationAsync(int locationId)
         {
             throw new NotImplementedException();
             //try
