@@ -25,7 +25,7 @@ namespace NegoSudApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Location>>> GetLocations()
         {
-            IEnumerable<Location>? locations = await _locationService.GetLocationsAsync();
+            IEnumerable<Location>? locations = await _locationService.GetLocations();
             if (locations == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
@@ -36,7 +36,7 @@ namespace NegoSudApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Location>> GetLocation(int locationId)
         {
-            Location? location = await  _locationService.GetLocationAsync(locationId);
+            Location? location = await  _locationService.GetLocation(locationId);
             if (location == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
@@ -47,7 +47,7 @@ namespace NegoSudApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Location>> AddLocation(Location model)
         {
-            Location? location = await _locationService.AddLocationAsync(model);
+            Location? location = await _locationService.AddLocation(model);
             if (location == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
@@ -63,7 +63,7 @@ namespace NegoSudApi.Controllers
                 return BadRequest();
             }
 
-            Location? location = await _locationService.UpdateGrapeAsync(model);
+            Location? location = await _locationService.UpdateGrape(model);
             if (location == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
@@ -74,24 +74,24 @@ namespace NegoSudApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLocation(int locationId)
         {
-            Location? location = await _locationService.GetLocationAsync(locationId);
+            Location? location = await _locationService.GetLocation(locationId);
             if (location == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            await _locationService.DeleteLocationAsync(locationId);
+            await _locationService.DeleteLocation(locationId);
             return StatusCode(StatusCodes.Status200OK, $"Deleted");
         }
 
         [HttpGet("bottles/{id}")]
         public async Task<IActionResult> GetBottles(int locationId)
         {
-            Location? location = await _locationService.GetLocationAsync(locationId);
+            Location? location = await _locationService.GetLocation(locationId);
             if (location == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            IEnumerable<Bottle>? bottles = await _locationService.GetBottlesAsync(locationId);
+            IEnumerable<Bottle>? bottles = await _locationService.GetBottles(locationId);
             if (bottles == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
@@ -102,12 +102,12 @@ namespace NegoSudApi.Controllers
         [HttpGet("storage/{id}")]
         public async Task<IActionResult> GetStorages(int locationId)
         {
-            Location? location = await _locationService.GetLocationAsync(locationId);
+            Location? location = await _locationService.GetLocation(locationId);
             if (location == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            IEnumerable<BottleLocation>? storages = await _locationService.GetStoragesAsync(locationId);
+            IEnumerable<Storage>? storages = await _locationService.GetStorages(locationId);
             if (storages == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");

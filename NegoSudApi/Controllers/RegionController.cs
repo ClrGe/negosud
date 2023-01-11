@@ -22,7 +22,7 @@ namespace NegoSudApi.Controllers;
         [HttpGet("id")]
         public async Task<IActionResult> GetRegion(int id)
         {
-            Region? region = await _RegionService.GetRegionAsync(id);
+            Region? region = await _RegionService.GetRegion(id);
 
             if ( region== null)
             {
@@ -36,7 +36,7 @@ namespace NegoSudApi.Controllers;
         [HttpGet]
         public async Task<IActionResult> GetRegions()
         {
-            var regions = await _RegionService.GetRegionsAsync();
+            var regions = await _RegionService.GetRegions();
 
             if (regions == null)
             {
@@ -50,7 +50,7 @@ namespace NegoSudApi.Controllers;
         [HttpPost]
         public async Task<ActionResult<Region>> AddRegion(Region Region)
         {
-            Region? region = await _RegionService.AddRegionAsync(Region);
+            Region? region = await _RegionService.AddRegions(Region);
 
             if (region == null)
             {
@@ -69,7 +69,7 @@ namespace NegoSudApi.Controllers;
                 return BadRequest();
             }
 
-            Region? region = await _RegionService.UpdateRegionAsync(Region);
+            Region? region = await _RegionService.UpdateRegion(Region);
 
             if (region == null)
             {
@@ -83,14 +83,14 @@ namespace NegoSudApi.Controllers;
         [HttpDelete("id")]
         public async Task<IActionResult> DeleteRegion(int id)
         {
-            Region? region = await _RegionService.GetRegionAsync(id);
+            Region? region = await _RegionService.GetRegion(id);
 
             if(region == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
-            await _RegionService.DeleteRegionAsync(region);
+            await _RegionService.DeleteRegion(region);
 
             return StatusCode(StatusCodes.Status200OK, $"Region deleted with success");
         }

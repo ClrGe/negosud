@@ -42,16 +42,16 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Bottle>> AddBottle(Bottle bottle)
+        public async Task<ActionResult<Bottle>> AddBottle(Bottle Bottle)
         {
-            Bottle? dbBottle = await _bottleService.AddBottleAsync(bottle);
+            Bottle? bottle = await _bottleService.AddBottleAsync(Bottle);
 
-            if (dbBottle == null)
+            if (bottle == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"{bottle.Full_Name} could not be added.");
+                return StatusCode(StatusCodes.Status204NoContent, $"{Bottle.Full_Name} could not be added.");
             }
 
-            return CreatedAtAction("GetBottle", new Bottle() { Id = dbBottle.Id });
+            return CreatedAtAction("GetBottle", new { id = Bottle.Id }, Bottle);
         }
 
         [HttpPut("id")]

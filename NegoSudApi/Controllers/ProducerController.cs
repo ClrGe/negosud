@@ -23,7 +23,7 @@ namespace NegoSudApi.Controllers;
         [HttpGet("id")]
         public async Task<IActionResult> GetProducer(int id)
         {
-            Producer? producer = await _ProducerService.GetProducerAsync(id);
+            Producer? producer = await _ProducerService.GetProducer(id);
 
             if ( producer== null)
             {
@@ -37,7 +37,7 @@ namespace NegoSudApi.Controllers;
         [HttpGet]
         public async Task<IActionResult> GetProducers()
         {
-            var producers = await _ProducerService.GetProducersAsync();
+            var producers = await _ProducerService.GetProducers();
 
             if (producers == null)
             {
@@ -51,11 +51,11 @@ namespace NegoSudApi.Controllers;
         [HttpPost]
         public async Task<ActionResult<Producer>> AddProducer(Producer Producer)
         {
-            Producer? producer = await _ProducerService.AddProducerAsync(Producer);
+            Producer? producer = await _ProducerService.AddProducer(Producer);
 
             if (producer == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+                return StatusCode(StatusCodes.SStatus204NoContent, $"No match for query");
             }
 
             return StatusCode(StatusCodes.Status200OK, producer);
@@ -70,7 +70,7 @@ namespace NegoSudApi.Controllers;
                 return BadRequest();
             }
 
-            Producer? producer = await _ProducerService.UpdateProducerAsync(Producer);
+            Producer? producer = await _ProducerService.UpdateProducer(Producer);
 
             if (producer == null)
             {
@@ -84,14 +84,14 @@ namespace NegoSudApi.Controllers;
         [HttpDelete("id")]
         public async Task<IActionResult> DeleteProducer(int id)
         {
-            Producer? producer = await _ProducerService.GetProducerAsync(id);
+            Producer? producer = await _ProducerService.GetProducer(id);
 
             if(producer == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
 
-            await _ProducerService.DeleteProducerAsync(producer);
+            await _ProducerService.DeleteProducer(producer);
 
             return StatusCode(StatusCodes.Status200OK, $"Producer deleted with success");
         }
