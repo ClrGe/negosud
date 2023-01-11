@@ -26,20 +26,27 @@ namespace NegoSudApi
             
             var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext");
             
-            services.AddDbContext<NegoSudContext>(options => options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
+            services.AddDbContext<NegoSudDbContext>(options => options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, NegoSudContext dataContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, NegoSudDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "NegoSudWebAPI");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "NegoSudWebDevAPI");
                     c.RoutePrefix = string.Empty;
                 });
             }
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "NegoSudWebAPI");
+                c.RoutePrefix = string.Empty;
+            });
             app.UseHttpLogging();
 
             app.UseHttpsRedirection();
@@ -47,7 +54,7 @@ namespace NegoSudApi
             app.UseSession();
 
             app.UseRouting();
-            dataContext.Database.EnsureCreated();
+            dbContext.Database.EnsureCreated();
         }
     }
 }

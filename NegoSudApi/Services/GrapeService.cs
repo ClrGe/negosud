@@ -5,8 +5,8 @@ namespace NegoSudApi.Services
 {
     public class GrapeService : IGrapeService
     {
-        private readonly NegoSudContext _context;
-        public GrapeService(NegoSudContext context) 
+        private readonly NegoSudDbContext _context;
+        public GrapeService(NegoSudDbContext context) 
         {
             _context = context;
         }

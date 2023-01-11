@@ -5,8 +5,8 @@ namespace NegoSudApi.Services
 {
     public class BottleService : IBottleService
     {
-        private readonly NegoSudContext _context;
-        public BottleService(NegoSudContext context)
+        private readonly NegoSudDbContext _context;
+        public BottleService(NegoSudDbContext context)
         {
             _context = context;
         }

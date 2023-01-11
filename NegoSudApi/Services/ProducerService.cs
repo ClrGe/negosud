@@ -7,9 +7,9 @@ namespace NegoSudApi.Services
     public class ProducerService : IProducerService
     {
 
-        private readonly NegoSudContext _context;
+        private readonly NegoSudDbContext _context;
 
-        public ProducerService(NegoSudContext context)
+        public ProducerService(NegoSudDbContext context)
         {
             _context = context;
         }

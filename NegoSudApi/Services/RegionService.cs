@@ -9,9 +9,9 @@ namespace NegoSudApi.Services
 
     {
 
-        private readonly NegoSudContext _context;
+        private readonly NegoSudDbContext _context;
 
-        public RegionService(NegoSudContext context)
+        public RegionService(NegoSudDbContext context)
         {
             _context = context;
         }
