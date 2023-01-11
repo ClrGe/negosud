@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services
 {
-    public class CountryService
+    public class CountryService : ICountryService
     {
         private readonly NegoSudDbContext _context;
         public CountryService(NegoSudDbContext context)

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
-using NegoSudApi.Services;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers
 {

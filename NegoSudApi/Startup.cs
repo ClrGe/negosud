@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NegoSudApi.Services;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi
 {
@@ -24,6 +25,11 @@ namespace NegoSudApi
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "NegoSudWebAPI", Version = "v1" }));
             // TODO : Register all the services
             services.AddScoped<IGrapeService, GrapeService>();
+            services.AddScoped<IBottleService, BottleService>();
+            services.AddScoped<ICountryService, CountryService>();
+            services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<IProducerService, ProducerService>();
+            services.AddScoped<IRegionService, RegionService>();
 
             var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext");
 

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NegoSudApi;
 using NegoSudApi.Models;
-using NegoSudApi.Services;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers
 {
