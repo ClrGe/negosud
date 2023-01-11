@@ -16,7 +16,7 @@ namespace NegoSudApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddSession();
             services.AddHttpLogging((options) =>
             {
@@ -57,7 +57,7 @@ namespace NegoSudApi
             app.UseHttpLogging();
 
             app.UseHttpsRedirection();
-
+            app.UseMvc();
             app.UseSession();
 
             app.UseRouting();
