@@ -42,7 +42,7 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Bottle> AddBottle(Bottle Bottle)
+        public async Task<ActionResult<Bottle>> AddBottle(Bottle Bottle)
         {
             Bottle? bottle = await _bottleService.AddBottleAsync(Bottle);
 
