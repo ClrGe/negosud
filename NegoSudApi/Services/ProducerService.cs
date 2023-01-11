@@ -8,10 +8,12 @@ public class ProducerService : IProducerService
 {
 
     private readonly NegoSudDbContext _context;
+    private readonly ILogger _logger;
 
-    public ProducerService(NegoSudDbContext context)
+    public ProducerService(NegoSudDbContext context, ILogger logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     //</inheritdoc> 
@@ -23,8 +25,10 @@ public class ProducerService : IProducerService
         }
         catch (Exception ex)
         {
-            return null;
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
+
+        return null;
     }
 
     //</inheritdoc> 
@@ -36,8 +40,10 @@ public class ProducerService : IProducerService
         }
         catch (Exception ex)
         {
-            return null;
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
+
+        return null;
     }
 
     //</inheritdoc> 
@@ -51,8 +57,10 @@ public class ProducerService : IProducerService
         }
         catch (Exception ex)
         {
-            return null;
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
+
+        return null;
     }
 
     //</inheritdoc> 
@@ -67,8 +75,10 @@ public class ProducerService : IProducerService
         }
         catch (Exception ex)
         {
-            return null;
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
+
+        return null;
     }
 
     //</inheritdoc> 
@@ -90,7 +100,9 @@ public class ProducerService : IProducerService
         }
         catch (Exception ex)
         {
-            return false;
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
+
+        return null;
     }
 }

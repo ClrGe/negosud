@@ -5,94 +5,110 @@ using NegoSudApi.Services.Interfaces;
 namespace NegoSudApi.Services;
 
 public class RegionService : IRegionService
+{
 
+    private readonly NegoSudDbContext _context;
+    private readonly ILogger _logger;
+
+    public RegionService(NegoSudDbContext context, ILogger logger)
     {
+        _context = context;
+        _logger = logger;
+    }
 
-        private readonly NegoSudDbContext _context;
-
-        public RegionService(NegoSudDbContext context)
+    //</inheritdoc> 
+    public async Task<Region?> GetRegionAsync(int id)
+    {
+        try
         {
-            _context = context;
+            return await _context.Regions.FindAsync(id);
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
 
-        //</inheritdoc> 
-        public async Task<Region?> GetRegionAsync(int id)
+        return null;
+    }
+
+    //</inheritdoc> 
+    public async Task<IEnumerable<Region>?> GetRegionsAsync()
+    {
+        try
         {
-            try
-            {
-                return await _context.Regions.FindAsync(id);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            return await _context.Regions.ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
 
-        //</inheritdoc> 
-        public async Task<IEnumerable<Region>?> GetRegionsAsync()
+        return null;
+    }
+
+    //</inheritdoc> 
+    public async Task<Region?> AddRegionAsync(Region region)
+    {
+        try
         {
-            try
+            await _context.Regions.AddAsync(region);
+            if (region.Country.Id != null)
             {
-                return await _context.Regions.ToListAsync();
+                var country = region.Country;
+                _context.Countries.Attach(country);
             }
-            catch (Exception ex)
-            {
-                return null;
-            }
+
+            await _context.SaveChangesAsync();
+            return await _context.Regions.FindAsync(region.Id);
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
 
-        //</inheritdoc> 
-        public async Task<Region?> AddRegionAsync(Region region)
+        return null;
+    }
+
+    //</inheritdoc> 
+    public async Task<Region?> UpdateRegionAsync(Region region)
+    {
+        try
         {
-            try
-            {
-                await _context.Regions.AddAsync(region);
-                
-                await _context.SaveChangesAsync();
-                return await _context.Regions.FindAsync(region.Id);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            _context.Entry(region).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return region;
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
 
-        //</inheritdoc> 
-        public async Task<Region?> UpdateRegionAsync(Region region)
+        return null;
+    }
+
+    //</inheritdoc> 
+    public async Task<bool?> DeleteRegionAsync(int id)
+    {
+        try
         {
-            try
-            {
-                _context.Entry(region).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-
-                return region;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-
-        //</inheritdoc> 
-        public async Task<bool?> DeleteRegionAsync(int id)
-        {
-            try
-            {
-                Region? regionResult = await _context.Regions.FindAsync(id);
-                if (regionResult == null)
-                {
-                    return false;
-                }
-
-                _context.Regions.Remove(regionResult);
-                await _context.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception ex)
+            Region? regionResult = await _context.Regions.FindAsync(id);
+            if (regionResult == null)
             {
                 return false;
             }
+
+            _context.Regions.Remove(regionResult);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Debug, ex.ToString());
+        }
+
+        return null;
     }
+}
 

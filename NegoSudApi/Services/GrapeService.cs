@@ -7,10 +7,12 @@ namespace NegoSudApi.Services;
 public class GrapeService : IGrapeService
 {
     private readonly NegoSudDbContext _context;
+    private readonly ILogger _logger;
 
-    public GrapeService(NegoSudDbContext context)
+    public GrapeService(NegoSudDbContext context, ILogger logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     //</inheritdoc>
@@ -22,8 +24,10 @@ public class GrapeService : IGrapeService
         }
         catch (Exception ex)
         {
-            return null;
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
+
+        return null;
     }
 
     //</inheritdoc>      
@@ -35,8 +39,10 @@ public class GrapeService : IGrapeService
         }
         catch (Exception ex)
         {
-            return null;
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
+
+        return null;
     }
 
     //</inheritdoc>
@@ -51,8 +57,10 @@ public class GrapeService : IGrapeService
         }
         catch (Exception ex)
         {
-            return null;
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
+
+        return null;
     }
 
     //</inheritdoc>
@@ -66,9 +74,10 @@ public class GrapeService : IGrapeService
         }
         catch (Exception ex)
         {
-            return null;
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
 
+        return null;
     }
 
     //</inheritdoc>
@@ -85,7 +94,7 @@ public class GrapeService : IGrapeService
         }
         catch (Exception ex)
         {
-            // ignored
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
     }
 
@@ -103,9 +112,10 @@ public class GrapeService : IGrapeService
         }
         catch (Exception ex)
         {
-            return null;
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
 
+        return null;
     }
 }
 

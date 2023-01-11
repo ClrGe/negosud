@@ -7,10 +7,12 @@ namespace NegoSudApi.Services;
 public class LocationService : ILocationService
 {
     private readonly NegoSudDbContext _context;
+    private readonly ILogger _logger;
 
-    public LocationService(NegoSudDbContext context)
+    public LocationService(NegoSudDbContext context, ILogger logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     //</inheritdoc>
@@ -22,8 +24,10 @@ public class LocationService : ILocationService
         }
         catch (Exception ex)
         {
-            return null;
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
+
+        return null;
     }
 
     //</inheritdoc>
@@ -35,8 +39,10 @@ public class LocationService : ILocationService
         }
         catch (Exception ex)
         {
-            return null;
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
+
+        return null;
     }
 
     //</inheritdoc>
@@ -51,8 +57,10 @@ public class LocationService : ILocationService
         }
         catch (Exception ex)
         {
-            return null;
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
+
+        return null;
     }
 
     //</inheritdoc>
@@ -66,8 +74,10 @@ public class LocationService : ILocationService
         }
         catch (Exception ex)
         {
-            return null;
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
+
+        return null;
     }
 
     //</inheritdoc>
@@ -84,7 +94,7 @@ public class LocationService : ILocationService
         }
         catch (Exception ex)
         {
-
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
     }
 
@@ -106,8 +116,10 @@ public class LocationService : ILocationService
         }
         catch (Exception ex)
         {
-            return null;
+            _logger.Log(LogLevel.Debug, ex.ToString());
         }
+
+        return null;
     }
 
     //</inheritdoc>
@@ -128,7 +140,7 @@ public class LocationService : ILocationService
         //}
         //catch (Exception ex)
         //{
-        //    return null;
+        //_logger.Log(LogLevel.Debug, ex.ToString());
         //}
     }
 }
