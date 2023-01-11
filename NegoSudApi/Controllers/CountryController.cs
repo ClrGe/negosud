@@ -4,6 +4,8 @@ using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class CountryController : ControllerBase
     {
         private readonly ICountryService _countryService;
