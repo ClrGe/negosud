@@ -88,11 +88,7 @@ namespace NegoSudApi.Services
             }
         }
 
-        //</inheritdoc>
-        public Task<IEnumerable<BottleGrape>?> GetBottleGrapesAsync(int grapeId) => throw new NotImplementedException();
-
-        //</inheritdoc>
-        public async Task<IEnumerable<Bottle>?> GetBottlesAsync(int grapeId)
+        public async Task<IEnumerable<Bottle>?> GetBottlesAsync(int grapeId) 
         {
             try
             {

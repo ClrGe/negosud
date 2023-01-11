@@ -30,7 +30,7 @@ namespace NegoSudApi.Services
         {
             try
             {
-                return await _context.Countries.FindAsync(id);
+                return await _context.Countries.Include(c => c.Regions).FirstOrDefaultAsync(c => c.Id == id);
             }
             catch (Exception ex)
             {
@@ -91,5 +91,6 @@ namespace NegoSudApi.Services
                 return false;
             }
         }
+        
     }
 }

@@ -43,7 +43,7 @@ public class NegoSudDbContext : DbContext
                 .HasPrincipalKey(k => k.Id);
             
             entity.HasOne(k => k.Grape)
-                .WithMany(k => k.Bottles)
+                .WithMany(k => k.BottleGrapes)
                 .HasForeignKey(k => k.Grape_Id)
                 .HasPrincipalKey(k => k.Id);
             
