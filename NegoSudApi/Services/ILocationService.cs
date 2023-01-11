@@ -44,6 +44,6 @@ namespace NegoSudApi.Services
         /// </summary>
         /// <param name="locationId">The Location's id</param>
         /// <returns></returns>
-        public Task<IEnumerable<Storage>?> GetStoragesAsync(int locationId);
+        public Task<IEnumerable<BottleLocation>?> GetStoragesAsync(int locationId);
     }
 }

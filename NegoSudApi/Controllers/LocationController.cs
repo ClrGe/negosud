@@ -107,7 +107,7 @@ namespace NegoSudApi.Controllers
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            IEnumerable<Storage>? storages = await _locationService.GetStoragesAsync(locationId);
+            IEnumerable<BottleLocation>? storages = await _locationService.GetStoragesAsync(locationId);
             if (storages == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
