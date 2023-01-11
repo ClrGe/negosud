@@ -21,7 +21,7 @@ namespace NegoSudApi.Controllers
             Grape? grape = await _grapeService.GetGrape(grapeId);
             if(grape == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, grape);            
         }
@@ -32,7 +32,7 @@ namespace NegoSudApi.Controllers
             IEnumerable<Grape>? grapes = await _grapeService.GetGrapes();
             if(grapes == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, grapes.ToList());
         }
@@ -43,7 +43,7 @@ namespace NegoSudApi.Controllers
             Grape? grape = await _grapeService.AddGrape(model);
             if(grape == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, grape);
         }
@@ -59,7 +59,7 @@ namespace NegoSudApi.Controllers
             Grape? grape = await _grapeService.UpdateGrape(model);
             if (grape == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, grape);
         }
@@ -70,7 +70,7 @@ namespace NegoSudApi.Controllers
             Grape? grape = await _grapeService.GetGrape(grapeId);
             if(grape == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             await _grapeService.DeleteGrape(grapeId);
             return StatusCode(StatusCodes.Status200OK);
@@ -82,12 +82,12 @@ namespace NegoSudApi.Controllers
             Grape? grape = await _grapeService.GetGrape(grapeId);
             if (grape == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             IEnumerable<Bottle>? bottles = await _grapeService.GetBottles(grapeId);
             if(bottles == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, bottles);
         }
@@ -98,12 +98,12 @@ namespace NegoSudApi.Controllers
             Grape? grape = await _grapeService.GetGrape(grapeId);
             if (grape == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             IEnumerable<BottleGrape>? bottleGrapes = await _grapeService.GetBottleGrapes(grapeId);
             if (bottleGrapes == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, bottleGrapes);
         }
