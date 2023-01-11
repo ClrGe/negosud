@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
-using NegoSudApi.Services;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers
 {
@@ -10,102 +9,86 @@ namespace NegoSudApi.Controllers
     public class GrapeController : ControllerBase
     {
         private readonly IGrapeService _grapeService;
-        public GrapeController(IGrapeService grapeService) 
+        public GrapeController(IGrapeService grapeService)
         {
             _grapeService = grapeService;
         }
 
-        [HttpGet("id")]
-        public async Task<IActionResult> GetGrape(int grapeId)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetGrapeAsync(int id)
         {
-            Grape? grape = await _grapeService.GetGrape(grapeId);
-            if(grape == null)
+            Grape? grape = await _grapeService.GetGrapeAsync(id);
+            if (grape == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            return StatusCode(StatusCodes.Status200OK, grape);            
+            return StatusCode(StatusCodes.Status200OK, grape);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetGrapes()
+        public async Task<IActionResult> GetGrapesAsync()
         {
-            IEnumerable<Grape>? grapes = await _grapeService.GetGrapes();
-            if(grapes == null)
+            IEnumerable<Grape>? grapes = await _grapeService.GetGrapesAsync();
+            if (grapes == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, grapes.ToList());
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostGrape(Grape model)
+        public async Task<IActionResult> AddGrapeAsync(Grape model)
         {
-            Grape? grape = await _grapeService.PostGrape(model);
-            if(grape == null)
+            Grape? grape = await _grapeService.AddGrapeAsync(model);
+            if (grape == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, grape);
         }
 
-        [HttpPut("id")]
-        public async Task<IActionResult> PutGrape(int grapeId, Grape model)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateGrapeAsync(int id, Grape model)
         {
-            if(grapeId != model.Id)
+            if (id != model.Id)
             {
                 return BadRequest();
             }
 
-            Grape? grape = await _grapeService.PutGrape(model);
+            Grape? grape = await _grapeService.UpdateGrapeAsync(model);
             if (grape == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, grape);
         }
 
-        [HttpDelete("id")]
-        public async Task<IActionResult> DeleteGrape(int grapeId)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteGrapeAsync(int id)
         {
-            Grape? grape = await _grapeService.GetGrape(grapeId);
-            if(grape == null)
+            Grape? grape = await _grapeService.GetGrapeAsync(id);
+            if (grape == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            await _grapeService.DeleteGrape(grapeId);
+            await _grapeService.DeleteGrapeAsync(id);
             return StatusCode(StatusCodes.Status200OK);
         }
 
         [HttpGet("bottles/{id}")]
-        public async Task<IActionResult> GetBottles(int grapeId)
+        public async Task<IActionResult> GetBottlesAsync(int id)
         {
-            Grape? grape = await _grapeService.GetGrape(grapeId);
+            Grape? grape = await _grapeService.GetGrapeAsync(id);
             if (grape == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            IEnumerable<Bottle>? bottles = await _grapeService.GetBottles(grapeId);
-            if(bottles == null)
+            IEnumerable<Bottle>? bottles = await _grapeService.GetBottlesAsync(id);
+            if (bottles == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, bottles);
-        }
-
-        [HttpGet("bottleGrapes/{id}")]
-        public async Task<IActionResult> GetBottleGrapes(int grapeId)
-        {
-            Grape? grape = await _grapeService.GetGrape(grapeId);
-            if (grape == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
-            IEnumerable<BottleGrape>? bottleGrapes = await _grapeService.GetBottleGrapes(grapeId);
-            if (bottleGrapes == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound);
-            }
-            return StatusCode(StatusCodes.Status200OK, bottleGrapes);
         }
     }
 }

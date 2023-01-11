@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services
 
@@ -7,14 +8,15 @@ namespace NegoSudApi.Services
     public class ProducerService : IProducerService
     {
 
-        private readonly NegoSudContext _context;
+        private readonly NegoSudDbContext _context;
 
-        public ProducerService(NegoSudContext context)
+        public ProducerService(NegoSudDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Producer?> GetProducer(int id)
+        //</inheritdoc> 
+        public async Task<Producer?> GetProducerAsync(int id)
 
         {
             try
@@ -27,7 +29,8 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<IEnumerable<Producer>?> GetProducers()
+        //</inheritdoc> 
+        public async Task<IEnumerable<Producer>?> GetProducersAsync()
 
         {
             try
@@ -40,7 +43,8 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<Producer?> AddProducer(Producer producer)
+        //</inheritdoc> 
+        public async Task<Producer?> AddProducerAsync(Producer producer)
 
         {
             try
@@ -51,11 +55,12 @@ namespace NegoSudApi.Services
             }
             catch (Exception ex)
             {
-                return null; 
+                return null;
             }
         }
 
-        public async Task<Producer?> UpdateProducer(Producer producer)
+        //</inheritdoc> 
+        public async Task<Producer?> UpdateProducerAsync(Producer producer)
 
         {
             try
@@ -67,16 +72,17 @@ namespace NegoSudApi.Services
             }
             catch (Exception ex)
             {
-                return null; 
+                return null;
             }
         }
 
-        public async Task<bool?> DeleteProducer(Producer producer)
+        //</inheritdoc> 
+        public async Task<bool?> DeleteProducerAsync(int id)
 
         {
             try
             {
-                Producer? producerResult = await _context.Producers.FindAsync(producer.Id);
+                Producer? producerResult = await _context.Producers.FindAsync(id);
 
                 if (producerResult == null)
                 {

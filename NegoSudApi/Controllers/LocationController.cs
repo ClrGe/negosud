@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NegoSudApi;
+﻿using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
-using NegoSudApi.Services;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers
 {
@@ -23,94 +16,94 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Location>>> GetLocations()
+        public async Task<ActionResult<IEnumerable<Location>>> GetLocationsAsync()
         {
-            IEnumerable<Location>? locations = await _locationService.GetLocations();
+            IEnumerable<Location>? locations = await _locationService.GetLocationsAsync();
             if (locations == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, locations.ToList());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Location>> GetLocation(int locationId)
+        public async Task<ActionResult<Location>> GetLocationAsync(int locationId)
         {
-            Location? location = await  _locationService.GetLocation(locationId);
+            Location? location = await _locationService.GetLocationAsync(locationId);
             if (location == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, location);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Location>> PostLocation(Location model)
+        public async Task<ActionResult<Location>> AddLocationAsync(Location model)
         {
-            Location? location = await _locationService.PostLocation(model);
+            Location? location = await _locationService.AddLocationAsync(model);
             if (location == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, location);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLocation(int locationId, Location model)
+        public async Task<IActionResult> UpdateGrapeAsync(int locationId, Location model)
         {
             if (locationId != model.Id)
             {
                 return BadRequest();
             }
 
-            Location? location = await _locationService.PutLocation(model);
+            Location? location = await _locationService.UpdateGrapeAsync(model);
             if (location == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, location);
-        }        
+        }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLocation(int locationId)
+        public async Task<IActionResult> DeleteLocationAsync(int locationId)
         {
-            Location? location = await _locationService.GetLocation(locationId);
+            Location? location = await _locationService.GetLocationAsync(locationId);
             if (location == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            await _locationService.DeleteLocation(locationId);
-            return StatusCode(StatusCodes.Status200OK);
+            await _locationService.DeleteLocationAsync(locationId);
+            return StatusCode(StatusCodes.Status200OK, $"Deleted");
         }
 
         [HttpGet("bottles/{id}")]
-        public async Task<IActionResult> GetBottles(int locationId)
+        public async Task<IActionResult> GetBottlesAsync(int locationId)
         {
-            Location? location = await _locationService.GetLocation(locationId);
+            Location? location = await _locationService.GetLocationAsync(locationId);
             if (location == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            IEnumerable<Bottle>? bottles = await _locationService.GetBottles(locationId);
+            IEnumerable<Bottle>? bottles = await _locationService.GetBottlesAsync(locationId);
             if (bottles == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, bottles);
         }
 
-        [HttpGet("storage/{id}")]
-        public async Task<IActionResult> GetStorages(int locationId)
+        [HttpGet("bottleLocations/{id}")]
+        public async Task<IActionResult> GetBottleLocationsAsync(int locationId)
         {
-            Location? location = await _locationService.GetLocation(locationId);
+            Location? location = await _locationService.GetLocationAsync(locationId);
             if (location == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            IEnumerable<Storage>? storages = await _locationService.GetStorages(locationId);
+            IEnumerable<BottleLocation>? storages = await _locationService.GetBottleLocationAsync(locationId);
             if (storages == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, storages);
         }

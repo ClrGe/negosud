@@ -1,21 +1,19 @@
-﻿using System.Data;
-using System.Runtime.CompilerServices;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
-using Npgsql;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services
 {
     public class GrapeService : IGrapeService
     {
-        private readonly NegoSudContext _context;
-        public GrapeService(NegoSudContext context) 
+        private readonly NegoSudDbContext _context;
+        public GrapeService(NegoSudDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Grape?> GetGrape(int grapeId)
+        //</inheritdoc>
+        public async Task<Grape?> GetGrapeAsync(int grapeId)
         {
             try
             {
@@ -27,7 +25,8 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<IEnumerable<Grape>?> GetGrapes()
+        //</inheritdoc>      
+        public async Task<IEnumerable<Grape>?> GetGrapesAsync()
         {
             try
             {
@@ -39,7 +38,8 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<Grape?> PostGrape(Grape model)
+        //</inheritdoc>
+        public async Task<Grape?> AddGrapeAsync(Grape model)
         {
             try
             {
@@ -54,7 +54,8 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<Grape?> PutGrape(Grape model)
+        //</inheritdoc>
+        public async Task<Grape?> UpdateGrapeAsync(Grape model)
         {
             try
             {
@@ -66,15 +67,16 @@ namespace NegoSudApi.Services
             {
                 return null;
             }
-            
+
         }
 
-        public async Task DeleteGrape(int grapeId)
+        //</inheritdoc>
+        public async Task DeleteGrapeAsync(int grapeId)
         {
             try
             {
                 Grape? grape = await _context.Grapes.FindAsync(grapeId);
-                if(grape != null)
+                if (grape != null)
                 {
                     _context.Grapes.Remove(grape);
                     await _context.SaveChangesAsync();
@@ -86,25 +88,23 @@ namespace NegoSudApi.Services
             }
         }
 
-        public  Task<IEnumerable<BottleGrape>?> GetBottleGrapes(int grapeId) => throw new NotImplementedException();
-
-        public async Task<IEnumerable<Bottle>?> GetBottles(int grapeId) 
+        public async Task<IEnumerable<Bottle>?> GetBottlesAsync(int grapeId) 
         {
             try
             {
                 Grape? grape = await _context.Grapes.FindAsync(grapeId);
                 if (grape != null)
                 {
-                    return await _context.Bottles.Include(b => b.Grapes).Where(b => b.Id == grapeId).ToListAsync();
+                    return await _context.Bottles.Include(b => b.BottleGrapes).Where(b => b.Id == grapeId).ToListAsync();
                 }
-               
+
                 return Enumerable.Empty<Bottle>();
             }
             catch (Exception ex)
             {
                 return null;
             }
-            
+
         }
     }
 }

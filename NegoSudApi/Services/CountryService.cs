@@ -1,16 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services
 {
-    public class CountryService
+    public class CountryService : ICountryService
     {
-        private readonly NegoSudContext _context;
-        public CountryService(NegoSudContext context)
+        private readonly NegoSudDbContext _context;
+        public CountryService(NegoSudDbContext context)
         {
             _context = context;
         }
 
+        //</inheritdoc>    
         public async Task<IEnumerable<Country>?> GetCountriesAsync()
         {
             try
@@ -23,11 +25,12 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>    
         public async Task<Country?> GetCountryAsync(int id)
         {
             try
             {
-                return await _context.Countries.FindAsync(id);
+                return await _context.Countries.Include(c => c.Regions).FirstOrDefaultAsync(c => c.Id == id);
             }
             catch (Exception ex)
             {
@@ -35,6 +38,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>    
         public async Task<Country?> AddCountryAsync(Country country)
         {
             try
@@ -49,6 +53,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>    
         public async Task<Country?> UpdateCountryAsync(Country country)
         {
             try
@@ -64,18 +69,19 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<bool?> DeleteCountryAsync(Country country)
+        //</inheritdoc>    
+        public async Task<bool?> DeleteCountryAsync(int id)
         {
             try
             {
-                var dbCountry = await _context.Countries.FindAsync(country.Id);
+                var dbCountry = await _context.Countries.FindAsync(id);
 
                 if (dbCountry == null)
                 {
                     return false;
                 }
 
-                _context.Countries.Remove(country);
+                _context.Countries.Remove(dbCountry);
                 await _context.SaveChangesAsync();
 
                 return true;
@@ -85,5 +91,6 @@ namespace NegoSudApi.Services
                 return false;
             }
         }
+        
     }
 }

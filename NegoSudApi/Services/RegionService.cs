@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services
 
@@ -9,14 +10,15 @@ namespace NegoSudApi.Services
 
     {
 
-        private readonly NegoSudContext _context;
+        private readonly NegoSudDbContext _context;
 
-        public RegionService(NegoSudContext context)
+        public RegionService(NegoSudDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Region?> GetRegion(int id)
+        //</inheritdoc> 
+        public async Task<Region?> GetRegionAsync(int id)
 
         {
             try
@@ -29,7 +31,8 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<IEnumerable<Region>?> GetRegions()
+        //</inheritdoc> 
+        public async Task<IEnumerable<Region>?> GetRegionsAsync()
 
         {
             try
@@ -42,7 +45,8 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<Region?> AddRegions(Region region)
+        //</inheritdoc> 
+        public async Task<Region?> AddRegionAsync(Region region)
 
         {
             try
@@ -53,11 +57,12 @@ namespace NegoSudApi.Services
             }
             catch (Exception ex)
             {
-                return null; 
+                return null;
             }
         }
 
-        public async Task<Region?> UpdateRegion(Region region)
+        //</inheritdoc> 
+        public async Task<Region?> UpdateRegionAsync(Region region)
 
         {
             try
@@ -69,23 +74,24 @@ namespace NegoSudApi.Services
             }
             catch (Exception ex)
             {
-                return null; 
+                return null;
             }
         }
 
-        public async Task<bool?> DeleteRegion(Region region)
+        //</inheritdoc> 
+        public async Task<bool?> DeleteRegionAsync(int id)
 
         {
             try
             {
-                Region? regionResult = await _context.Regions.FindAsync(region.Id);
+                Region? regionResult = await _context.Regions.FindAsync(id);
 
-                if (region == null)
+                if (regionResult == null)
                 {
                     return false;
                 }
 
-                _context.Regions.Remove(region);
+                _context.Regions.Remove(regionResult);
                 await _context.SaveChangesAsync();
 
                 return true;

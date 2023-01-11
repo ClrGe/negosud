@@ -1,18 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services
 {
     public class LocationService : ILocationService
     {
-        private readonly NegoSudContext _context;
-        public LocationService(NegoSudContext context)
+        private readonly NegoSudDbContext _context;
+        public LocationService(NegoSudDbContext context)
         {
             _context = context;
         }
 
         //</inheritdoc>
-        public async Task<Location?> GetLocation(int locationId)
+        public async Task<Location?> GetLocationAsync(int locationId)
         {
             try
             {
@@ -25,7 +26,7 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task<IEnumerable<Location>?> GetLocations()
+        public async Task<IEnumerable<Location>?> GetLocationsAsync()
         {
             try
             {
@@ -38,7 +39,7 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task<Location?> PostLocation(Location model)
+        public async Task<Location?> AddLocationAsync(Location model)
         {
             try
             {
@@ -54,7 +55,7 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task<Location?> PutLocation(Location model)
+        public async Task<Location?> UpdateGrapeAsync(Location model)
         {
             try
             {
@@ -69,7 +70,7 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task DeleteLocation(int locationId)
+        public async Task DeleteLocationAsync(int locationId)
         {
             try
             {
@@ -87,14 +88,14 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task<IEnumerable<Bottle>?> GetBottles(int locationId)
+        public async Task<IEnumerable<Bottle>?> GetBottlesAsync(int locationId)
         {
             try
             {
                 Location? location = await _context.Locations.FindAsync(locationId);
                 if (location != null)
                 {
-                    return await _context.Bottles.Where(x => x.Inventory.Locations.Contains(location)).ToListAsync();
+                    return await _context.Bottles.Include(x => x.BottleLocations).Where(x => x.Id == locationId).ToListAsync(); // TODO : Refaire les includes
                 }
                 else
                 {
@@ -108,24 +109,25 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc>
-        public async Task<IEnumerable<Storage>?> GetStorages(int locationId)
+        public async Task<IEnumerable<BottleLocation>?> GetBottleLocationAsync(int locationId)
         {
-            try
-            {
-                Location? location = await _context.Locations.FindAsync(locationId);
-                if(location != null)
-                {
-                    return await _context.Inventories.Where(x => x.Location_Id== location.Id).ToListAsync();
-                }
-                else
-                {
-                    return Enumerable.Empty<Storage>();
-                }
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            throw new NotImplementedException();
+            //try
+            //{
+            //    Location? location = await _context.Locations.FindAsync(locationId);
+            //    if(location != null)
+            //    {
+            //        return await _context.Inventories.Where(x => x.Location_Id== location.Id).ToListAsync();
+            //    }
+            //    else
+            //    {
+            //        return Enumerable.Empty<Storage>();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return null;
+            //}
         }
     }
 }

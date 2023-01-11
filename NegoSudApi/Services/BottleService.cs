@@ -1,16 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services
 {
     public class BottleService : IBottleService
     {
-        private readonly NegoSudContext _context;
-        public BottleService(NegoSudContext context)
+        private readonly NegoSudDbContext _context;
+        public BottleService(NegoSudDbContext context)
         {
             _context = context;
         }
 
+        //</inheritdoc>  
         public async Task<IEnumerable<Bottle>?> GetBottlesAsync()
         {
             try
@@ -23,6 +25,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>  
         public async Task<Bottle?> GetBottleAsync(int id)
         {
             try
@@ -35,6 +38,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>  
         public async Task<Bottle?> AddBottleAsync(Bottle Bottle)
         {
             try
@@ -49,6 +53,7 @@ namespace NegoSudApi.Services
             }
         }
 
+        //</inheritdoc>  
         public async Task<Bottle?> UpdateBottleAsync(Bottle Bottle)
         {
             try
@@ -64,18 +69,19 @@ namespace NegoSudApi.Services
             }
         }
 
-        public async Task<bool?> DeleteBottleAsync(Bottle Bottle)
+        //</inheritdoc>  
+        public async Task<bool?> DeleteBottleAsync(int id)
         {
             try
             {
-                var dbBottle = await _context.Bottles.FindAsync(Bottle.Id);
+                var dbBottle = await _context.Bottles.FindAsync(id);
 
                 if (dbBottle == null)
                 {
                     return false;
                 }
 
-                _context.Bottles.Remove(Bottle);
+                _context.Bottles.Remove(dbBottle);
                 await _context.SaveChangesAsync();
 
                 return true;
