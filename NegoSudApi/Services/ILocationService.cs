@@ -32,7 +32,7 @@ namespace NegoSudApi.Services
         /// </summary>
         /// <param name="locationId">The entity id</param>
         /// <returns></returns>
-        public Task DeleteLocation(int locationId);
+        public Task DeleteLocationAsync(int locationId);
         /// <summary>
         /// Get an IEnumerable of Bottle entity from the database by their location
         /// </summary>
