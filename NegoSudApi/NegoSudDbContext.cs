@@ -21,7 +21,7 @@ public class NegoSudDbContext : DbContext
         modelBuilder.Entity<Bottle>(entity =>
         {
             entity.ToTable(nameof(Bottle));
-            entity.HasKey(b => new {b.Id, b.Producer_Id});
+            entity.HasKey(b => b.Id);
             entity.Property(p => p.Created_By).HasMaxLength(200);
             entity.Property(p => p.Updated_at).HasMaxLength(200);
             entity.Property(t => t.Created_at).HasPrecision(0);
@@ -66,8 +66,8 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(Grape));
             entity.Property(p => p.Created_By).HasMaxLength(200);
             entity.Property(p => p.Updated_at).HasMaxLength(200);
-            entity.Property(t => t.Created_at).HasPrecision(0);
-            entity.Property(t => t.Updated_at).HasPrecision(0);
+            entity.Property(t => t.Created_at).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.Updated_at).HasPrecision(0).ValueGeneratedOnUpdate();
             entity.HasKey(k => k.Id);
         });
         

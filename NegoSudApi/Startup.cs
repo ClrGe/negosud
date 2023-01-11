@@ -61,7 +61,7 @@ namespace NegoSudApi
             app.UseSession();
 
             app.UseRouting();
-            //dbContext.Database.EnsureCreated();
+            dbContext.Database.EnsureCreated();
         }
     }
 }
