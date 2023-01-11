@@ -12,8 +12,8 @@ public class Bottle : IModelBase
     public decimal? Alcohol_Percentage { get; set; }
     public decimal? Current_Price { get; set; }
 
-    public DateTime Created_at { get; set; }
-    public DateTime Updated_at { get; set; }
+    public DateTime Created_At { get; set; }
+    public DateTime Updated_At { get; set; }
     public string? Created_By { get; set; }
     public string? Updated_By { get; set; }
 
