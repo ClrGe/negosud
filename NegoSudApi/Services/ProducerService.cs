@@ -8,9 +8,9 @@ public class ProducerService : IProducerService
 {
 
     private readonly NegoSudDbContext _context;
-    private readonly ILogger _logger;
+    private readonly ILogger<ProducerService> _logger;
 
-    public ProducerService(NegoSudDbContext context, ILogger logger)
+    public ProducerService(NegoSudDbContext context, ILogger<ProducerService> logger)
     {
         _context = context;
         _logger = logger;
@@ -25,7 +25,7 @@ public class ProducerService : IProducerService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -40,7 +40,7 @@ public class ProducerService : IProducerService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -57,7 +57,7 @@ public class ProducerService : IProducerService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -75,7 +75,7 @@ public class ProducerService : IProducerService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -100,7 +100,7 @@ public class ProducerService : IProducerService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;

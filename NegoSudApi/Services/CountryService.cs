@@ -7,9 +7,9 @@ namespace NegoSudApi.Services;
 public class CountryService : ICountryService
 {
     private readonly NegoSudDbContext _context;
-    private readonly ILogger _logger;
+    private readonly ILogger<CountryService> _logger;
 
-    public CountryService(NegoSudDbContext context, ILogger logger)
+    public CountryService(NegoSudDbContext context, ILogger<CountryService> logger)
     {
         _context = context;
         _logger = logger;
@@ -24,7 +24,7 @@ public class CountryService : ICountryService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -39,7 +39,7 @@ public class CountryService : ICountryService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -56,7 +56,7 @@ public class CountryService : ICountryService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -74,7 +74,7 @@ public class CountryService : ICountryService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -99,7 +99,7 @@ public class CountryService : ICountryService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;

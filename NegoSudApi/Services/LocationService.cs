@@ -7,9 +7,9 @@ namespace NegoSudApi.Services;
 public class LocationService : ILocationService
 {
     private readonly NegoSudDbContext _context;
-    private readonly ILogger _logger;
+    private readonly ILogger<LocationService> _logger;
 
-    public LocationService(NegoSudDbContext context, ILogger logger)
+    public LocationService(NegoSudDbContext context, ILogger<LocationService> logger)
     {
         _context = context;
         _logger = logger;
@@ -24,7 +24,7 @@ public class LocationService : ILocationService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -39,7 +39,7 @@ public class LocationService : ILocationService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -57,7 +57,7 @@ public class LocationService : ILocationService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -74,7 +74,7 @@ public class LocationService : ILocationService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -94,7 +94,7 @@ public class LocationService : ILocationService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
     }
 
@@ -116,7 +116,7 @@ public class LocationService : ILocationService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -140,7 +140,7 @@ public class LocationService : ILocationService
         //}
         //catch (Exception ex)
         //{
-        //_logger.Log(LogLevel.Debug, ex.ToString());
+        //_logger.Log(LogLevel.Information, ex.ToString());
         //}
     }
 }

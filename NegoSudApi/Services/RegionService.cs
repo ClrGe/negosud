@@ -8,9 +8,9 @@ public class RegionService : IRegionService
 {
 
     private readonly NegoSudDbContext _context;
-    private readonly ILogger _logger;
+    private readonly ILogger<RegionService> _logger;
 
-    public RegionService(NegoSudDbContext context, ILogger logger)
+    public RegionService(NegoSudDbContext context, ILogger<RegionService> logger)
     {
         _context = context;
         _logger = logger;
@@ -25,7 +25,7 @@ public class RegionService : IRegionService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -40,7 +40,7 @@ public class RegionService : IRegionService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -52,18 +52,14 @@ public class RegionService : IRegionService
         try
         {
             await _context.Regions.AddAsync(region);
-            if (region.Country.Id != null)
-            {
-                var country = region.Country;
-                _context.Countries.Attach(country);
-            }
-
-            await _context.SaveChangesAsync();
+            var country = region.Country;
+             _context.Countries.Attach(country!);
+             await _context.SaveChangesAsync();
             return await _context.Regions.FindAsync(region.Id);
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -81,7 +77,7 @@ public class RegionService : IRegionService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
@@ -105,7 +101,7 @@ public class RegionService : IRegionService
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.Debug, ex.ToString());
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
         return null;
