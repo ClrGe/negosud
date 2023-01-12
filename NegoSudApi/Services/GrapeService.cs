@@ -57,10 +57,9 @@ public class GrapeService : IGrapeService
     {
         try
         {
-            await _context.Grapes.AddAsync(grape);
+            Grape newGrape = (await _context.Grapes.AddAsync(grape)).Entity;
             await _context.SaveChangesAsync();
-            return await _context.Grapes.FirstOrDefaultAsync(x => x.Id == grape.Id);
-
+            return newGrape;
         }
         catch (Exception ex)
         {

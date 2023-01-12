@@ -60,7 +60,12 @@ public class RegionService : IRegionService
     {
         try
         {
-            Country? country = await _countryService.GetCountryAsync(region.Country?.Id);
+            Country? country = null;
+            if(region.Country?.Id != null)
+            {
+                country = await _countryService.GetCountryAsync(region.Country.Id, includes: false);
+            }
+            
             // If we found a country in the database
             if (country != null)
             {
@@ -75,18 +80,9 @@ public class RegionService : IRegionService
             // Create the region in the database
             Region newRegion = (await _context.Regions.AddAsync(region)).Entity;
 
-            // Add the region into the country's regions collection
-            newRegion.Country?.Regions?.Add(newRegion);
-
             await _context.SaveChangesAsync();
 
-            if(region.Country != null)
-            {
-                await _countryService.UpdateCountryAsync(newRegion.Country);
-            }
-
-            return await GetRegionAsync(region.Id);
-
+            return newRegion;
         }
         catch (Exception ex)
         {

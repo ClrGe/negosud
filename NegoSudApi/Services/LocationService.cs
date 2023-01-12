@@ -57,10 +57,9 @@ public class LocationService : ILocationService
     {
         try
         {
-            await _context.Locations.AddAsync(location);
+            Location newLocation = (await _context.Locations.AddAsync(location)).Entity;
             await _context.SaveChangesAsync();
-            return await _context.Locations.FirstOrDefaultAsync(x => x.Id == location.Id);
-
+            return newLocation;
         }
         catch (Exception ex)
         {
