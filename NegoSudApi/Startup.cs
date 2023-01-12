@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NegoSudApi.Services;
@@ -45,8 +44,7 @@ public class Startup
                 options.SignIn.RequireConfirmedAccount = false;
             })
             .AddEntityFrameworkStores<NegoSudDbContext>();
-        services.AddIdentityServer()
-            .AddAspNetIdentity<IdentityUser>();
+        
         services.AddRazorPages();
     }
 
@@ -68,6 +66,5 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseMvc();
-
     }
 }
