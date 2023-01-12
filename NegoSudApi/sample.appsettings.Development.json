@@ -1,0 +1,14 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning",
+      "Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware": "Information"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "DefaultNegosudDbContext": "Host=localhost;Database=NegoSud.Database;Username=postgres;Password=3538;;ApplicationName=NegoSud;LoadTableComposites=True"
+    
+  }
+}
