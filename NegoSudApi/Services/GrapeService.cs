@@ -2,109 +2,120 @@
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Services
+namespace NegoSudApi.Services;
+
+public class GrapeService : IGrapeService
 {
-    public class GrapeService : IGrapeService
+    private readonly NegoSudDbContext _context;
+    private readonly ILogger<GrapeService> _logger;
+
+    public GrapeService(NegoSudDbContext context, ILogger<GrapeService> logger)
     {
-        private readonly NegoSudDbContext _context;
-        public GrapeService(NegoSudDbContext context)
+        _context = context;
+        _logger = logger;
+    }
+
+    //</inheritdoc>
+    public async Task<Grape?> GetGrapeAsync(int id)
+    {
+        try
         {
-            _context = context;
+            return await _context.Grapes.FindAsync(id);
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
-        //</inheritdoc>
-        public async Task<Grape?> GetGrapeAsync(int grapeId)
+        return null;
+    }
+
+    //</inheritdoc>      
+    public async Task<IEnumerable<Grape>?> GetGrapesAsync()
+    {
+        try
         {
-            try
-            {
-                return await _context.Grapes.FindAsync(grapeId);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            return await _context.Grapes.ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
-        //</inheritdoc>      
-        public async Task<IEnumerable<Grape>?> GetGrapesAsync()
+        return null;
+    }
+
+    //</inheritdoc>
+    public async Task<Grape?> AddGrapeAsync(Grape grape)
+    {
+        try
         {
-            try
-            {
-                return await _context.Grapes.ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            await _context.Grapes.AddAsync(grape);
+            await _context.SaveChangesAsync();
+            return await _context.Grapes.FirstOrDefaultAsync(x => x.Id == grape.Id);
+
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
-        //</inheritdoc>
-        public async Task<Grape?> AddGrapeAsync(Grape model)
+        return null;
+    }
+
+    //</inheritdoc>
+    public async Task<Grape?> UpdateGrapeAsync(Grape grape)
+    {
+        try
         {
-            try
+            _context.Entry(grape).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return grape;
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
+        }
+
+        return null;
+    }
+
+    //</inheritdoc>
+    public async Task DeleteGrapeAsync(int id)
+    {
+        try
+        {
+            Grape? grape = await _context.Grapes.FindAsync(id);
+            if (grape != null)
             {
-                await _context.Grapes.AddAsync(model);
+                _context.Grapes.Remove(grape);
                 await _context.SaveChangesAsync();
-                return await _context.Grapes.FirstOrDefaultAsync(x => x.Id == model.Id);
-
-            }
-            catch (Exception ex)
-            {
-                return null;
             }
         }
-
-        //</inheritdoc>
-        public async Task<Grape?> UpdateGrapeAsync(Grape model)
+        catch (Exception ex)
         {
-            try
-            {
-                _context.Entry(model).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return model;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-
-        }
-
-        //</inheritdoc>
-        public async Task DeleteGrapeAsync(int grapeId)
-        {
-            try
-            {
-                Grape? grape = await _context.Grapes.FindAsync(grapeId);
-                if (grape != null)
-                {
-                    _context.Grapes.Remove(grape);
-                    await _context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                // ignored
-            }
-        }
-
-        public async Task<IEnumerable<Bottle>?> GetBottlesAsync(int grapeId) 
-        {
-            try
-            {
-                Grape? grape = await _context.Grapes.FindAsync(grapeId);
-                if (grape != null)
-                {
-                    return await _context.Bottles.Include(b => b.BottleGrapes).Where(b => b.Id == grapeId).ToListAsync();
-                }
-
-                return Enumerable.Empty<Bottle>();
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
     }
+
+    public async Task<IEnumerable<Bottle>?> GetBottlesAsync(int id)
+    {
+        try
+        {
+            Grape? grape = await _context.Grapes.FindAsync(id);
+            if (grape != null)
+            {
+                return await _context.Bottles.Include(b => b.BottleGrapes).Where(b => b.Id == id).ToListAsync();
+            }
+
+            return Enumerable.Empty<Bottle>();
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
+        }
+
+        return null;
+    }
 }
+

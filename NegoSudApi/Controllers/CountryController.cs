@@ -18,27 +18,27 @@ namespace NegoSudApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCountriesAsync()
         {
-            IEnumerable<Country>? countries = await _countryService.GetCountriesAsync();
+            IEnumerable<Country>? dbCountries = await _countryService.GetCountriesAsync();
 
-            if (countries == null)
+            if (dbCountries == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, "No countries in database");
             }
 
-            return StatusCode(StatusCodes.Status200OK, countries);
+            return StatusCode(StatusCodes.Status200OK, dbCountries);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCountryAsync(int id)
         {
-            Country? country = await _countryService.GetCountryAsync(id);
+            Country? dbCountry = await _countryService.GetCountryAsync(id);
 
-            if (country == null)
+            if (dbCountry == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {id}");
             }
 
-            return StatusCode(StatusCodes.Status200OK, country);
+            return StatusCode(StatusCodes.Status200OK, dbCountry);
         }
 
         [HttpPost]
