@@ -14,6 +14,17 @@ namespace NegoSudApi.Controllers
         {
             _locationService = locationService;
         }
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Location>> GetLocationAsync(int id)
+        {
+            Location? dbLocation = await _locationService.GetLocationAsync(id);
+            if (dbLocation == null)
+            {
+                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            }
+            return StatusCode(StatusCodes.Status200OK, dbLocation);
+        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Location>>> GetLocationsAsync()
@@ -24,17 +35,6 @@ namespace NegoSudApi.Controllers
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, dbLocations.ToList());
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Location>> GetLocationAsync(int id)
-        {
-            Location? dbLocation = await _locationService.GetLocationAsync(id);
-            if (dbLocation == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
-            }
-            return StatusCode(StatusCodes.Status200OK, dbLocation);
         }
 
         [HttpPost]
@@ -75,39 +75,6 @@ namespace NegoSudApi.Controllers
             await _locationService.DeleteLocationAsync(id);
             return StatusCode(StatusCodes.Status200OK, $"Deleted");
         }
-
-        [HttpGet("bottles/{id}")]
-        public async Task<IActionResult> GetBottlesAsync(int id)
-        {
-            Location? dbLocation = await _locationService.GetLocationAsync(id);
-            if (dbLocation == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
-            }
-            IEnumerable<Bottle>? bottles = await _locationService.GetBottlesAsync(id);
-            if (bottles == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
-            }
-            return StatusCode(StatusCodes.Status200OK, bottles);
-        }
-
-        [HttpGet("bottleLocations/{id}")]
-        public async Task<IActionResult> GetBottleLocationsAsync(int id)
-        {
-            Location? dbLocation = await _locationService.GetLocationAsync(id);
-            if (dbLocation == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
-            }
-            IEnumerable<BottleLocation>? storages = await _locationService.GetBottleLocationAsync(id);
-            if (storages == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
-            }
-            return StatusCode(StatusCodes.Status200OK, storages);
-        }
-
 
     }
 }

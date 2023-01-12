@@ -15,19 +15,6 @@ namespace NegoSudApi.Controllers
             _bottleService = bottleService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetBottlesAsync()
-        {
-            var dbBottles = await _bottleService.GetBottlesAsync();
-
-            if (dbBottles == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, "No bottles in database");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbBottles);
-        }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBottleAsync(int id)
         {
@@ -39,6 +26,19 @@ namespace NegoSudApi.Controllers
             }
 
             return StatusCode(StatusCodes.Status200OK, dbBottle);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetBottlesAsync()
+        {
+            var dbBottles = await _bottleService.GetBottlesAsync();
+
+            if (dbBottles == null)
+            {
+                return StatusCode(StatusCodes.Status204NoContent, "No bottles in database");
+            }
+
+            return StatusCode(StatusCodes.Status200OK, dbBottles);
         }
 
         [HttpPost]
