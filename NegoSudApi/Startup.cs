@@ -1,8 +1,11 @@
 ﻿using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using NegoSudApi.Data;
 
 namespace NegoSudApi;
 
@@ -33,13 +36,23 @@ public class Startup
         services.AddScoped<IProducerService, ProducerService>();
         services.AddScoped<IRegionService, RegionService>();
 
-        var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext");
+        var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext")?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");;
 
         services.AddDbContext<NegoSudDbContext>(options => options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
+
+        services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+            })
+            .AddEntityFrameworkStores<NegoSudDbContext>();
+        services.AddIdentityServer()
+            .AddAspNetIdentity<IdentityUser>();
+        services.AddRazorPages();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, NegoSudDbContext dbContext)
     {
+        dbContext.Database.EnsureCreated();
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
@@ -49,9 +62,12 @@ public class Startup
             
         app.UseHttpLogging();
         app.UseHttpsRedirection();
-        app.UseMvc();
+        app.UseStaticFiles();
         app.UseSession();
         app.UseRouting();
-        dbContext.Database.EnsureCreated();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.UseMvc();
+
     }
 }

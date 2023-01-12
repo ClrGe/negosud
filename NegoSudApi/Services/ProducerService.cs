@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
