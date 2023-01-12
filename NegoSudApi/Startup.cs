@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
@@ -16,7 +17,8 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddMvc(options => options.EnableEndpointRouting = false);
+        services.AddMvc(options => options.EnableEndpointRouting = false)
+            .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);;
         services.AddSession();
         services.AddHttpLogging((options) =>
         {
