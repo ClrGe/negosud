@@ -52,8 +52,7 @@ public class RegionService : IRegionService
         try
         {
             await _context.Regions.AddAsync(region);
-            var country = region.Country;
-             _context.Countries.Attach(country!);
+             // _context.Countries.Attach(region.Country);
              await _context.SaveChangesAsync();
             return await _context.Regions.FindAsync(region.Id);
         }
