@@ -8,12 +8,14 @@ public class BottleService : IBottleService
 {
     private readonly NegoSudDbContext _context;
     private readonly ILogger<BottleService> _logger;
+    private readonly IProducerService _producerService;
 
-    public BottleService(NegoSudDbContext context, ILogger<BottleService> logger)
+    public BottleService(NegoSudDbContext context, ILogger<BottleService> logger, IProducerService producerService)
     {
         _context = context;
         _logger = logger;
-    }
+        _producerService = producerService;
+    }    
 
     //</inheritdoc>  
     public async Task<Bottle?> GetBottleAsync(int id, bool includes = true)
@@ -77,6 +79,17 @@ public class BottleService : IBottleService
     {
         try
         {
+
+            if (bottle.Producer?.Id != null)
+            {
+                Producer? producer = await _producerService.GetProducerAsync(bottle.Producer.Id, includes: false);
+                // If we found a producer in the database
+                if (producer != null)
+                {
+                    bottle.Producer = producer;
+                }
+            }
+
             _context.Entry(bottle).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 

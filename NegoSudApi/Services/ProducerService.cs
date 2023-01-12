@@ -9,11 +9,13 @@ public class ProducerService : IProducerService
 
     private readonly NegoSudDbContext _context;
     private readonly ILogger<ProducerService> _logger;
+    private readonly IRegionService _regionService;
 
-    public ProducerService(NegoSudDbContext context, ILogger<ProducerService> logger)
+    public ProducerService(NegoSudDbContext context, ILogger<ProducerService> logger, IRegionService regionService)
     {
         _context = context;
         _logger = logger;
+        _regionService = regionService;
     }
 
     //</inheritdoc> 
@@ -75,6 +77,16 @@ public class ProducerService : IProducerService
     {
         try
         {
+            if (producer.Region?.Id != null)
+            {
+                Region? region = await _regionService.GetRegionAsync(producer.Region.Id, includes: false);
+                // If we found a region in the database
+                if (region != null)
+                {
+                    producer.Region = region;
+                }
+            }
+
             _context.Entry(producer).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
