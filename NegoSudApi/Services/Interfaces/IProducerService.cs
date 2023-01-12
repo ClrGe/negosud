@@ -4,12 +4,14 @@ namespace NegoSudApi.Services.Interfaces;
 
 public interface IProducerService
 {
+
     /// <summary>
-    /// Get a Producer entity from the database by its id
+    /// Get a Producer entity from the database by its id, including or not subobjects and collections
     /// </summary>
     /// <param name="id">The Country's id</param>
+    /// <param name="includes">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
     /// <returns></returns>
-    Task<Producer?> GetProducerAsync(int id);
+    Task<Producer?> GetProducerAsync(int id, bool includes = true);
 
     /// <summary>
     /// Get an IEnumerable of Producers from the database

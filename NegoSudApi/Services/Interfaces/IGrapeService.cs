@@ -5,11 +5,12 @@ namespace NegoSudApi.Services.Interfaces;
 public interface IGrapeService
 {
     /// <summary>
-    /// Get a Grape entity from the database by its id
+    /// Get a Grape entity from the database by its id, including or not subobjects and collections
     /// </summary>
     /// <param name="id">The entity's id</param>
+    /// <param name="includes">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
     /// <returns></returns>
-    public Task<Grape?> GetGrapeAsync(int id);
+    public Task<Grape?> GetGrapeAsync(int id, bool includes = true);
 
     /// <summary>
     /// Get an IEnumerable of Grapes Entities 
@@ -37,11 +38,4 @@ public interface IGrapeService
     /// <param name="id">The entity's id</param>
     /// <returns></returns>
     public Task DeleteGrapeAsync(int id);
-
-    /// <summary>
-    /// Get an IEnumerable of Bottles entities from the database by GrapeID
-    /// </summary>
-    /// <param name="id">The Grape's id</param>
-    /// <returns></returns>
-    public Task<IEnumerable<Bottle>?> GetBottlesAsync(int id);
 }

@@ -4,18 +4,20 @@ namespace NegoSudApi.Services.Interfaces;
 
 public interface IBottleService
 {
+
+    /// <summary>
+    /// Get a Bottle entity from the database by its id, , including or not subobjects and collections
+    /// </summary>
+    /// <param name="id">The Bottle's id</param>
+    /// <param name="includes">Indicates whether or not subobjects and collections should be loaded</param>
+    /// <returns></returns>
+    Task<Bottle?> GetBottleAsync(int id, bool includes = true);
+
     /// <summary>
     /// Get an IEnumerable of Bottles from the database
     /// </summary>
     /// <returns></returns>
     Task<IEnumerable<Bottle>?> GetBottlesAsync();
-
-    /// <summary>
-    /// Get a Bottle entity from the database by its id
-    /// </summary>
-    /// <param name="id">The Bottle's id</param>
-    /// <returns></returns>
-    Task<Bottle?> GetBottleAsync(int id);
 
     /// <summary>
     /// Create a new Bottle entity in the database
