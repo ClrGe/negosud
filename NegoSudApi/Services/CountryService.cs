@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -16,11 +17,20 @@ public class CountryService : ICountryService
     }
 
     //</inheritdoc>    
-    public async Task<IEnumerable<Country>?> GetCountriesAsync()
+    public async Task<Country?> GetCountryAsync(int id, bool includes = true)
     {
         try
         {
-            return await _context.Countries.ToListAsync();
+
+            if (includes)
+            {
+                return await _context.Countries
+                .Include(c => c.Regions)
+                .FirstOrDefaultAsync(c => c.Id == id);
+            }
+
+            return await _context.Countries.FindAsync(id);
+
         }
         catch (Exception ex)
         {
@@ -31,11 +41,11 @@ public class CountryService : ICountryService
     }
 
     //</inheritdoc>    
-    public async Task<Country?> GetCountryAsync(int id)
+    public async Task<IEnumerable<Country>?> GetCountriesAsync()
     {
         try
         {
-            return await _context.Countries.Include(c => c.Regions).FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Countries.ToListAsync();
         }
         catch (Exception ex)
         {

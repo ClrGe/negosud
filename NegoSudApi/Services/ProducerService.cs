@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -17,10 +18,17 @@ public class ProducerService : IProducerService
     }
 
     //</inheritdoc> 
-    public async Task<Producer?> GetProducerAsync(int id)
+    public async Task<Producer?> GetProducerAsync(int id, bool includes = true)
     {
         try
         {
+            if (includes)
+            {
+                return await _context.Producers
+                    .Include(p => p.Region)
+                    .Include(p => p.Bottles)
+                    .FirstOrDefaultAsync(p => p.Id == id);
+            }
             return await _context.Producers.FindAsync(id);
         }
         catch (Exception ex)

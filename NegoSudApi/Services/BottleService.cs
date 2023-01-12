@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -16,11 +17,21 @@ public class BottleService : IBottleService
     }
 
     //</inheritdoc>  
-    public async Task<IEnumerable<Bottle>?> GetBottlesAsync()
+    public async Task<Bottle?> GetBottleAsync(int id, bool includes = true)
     {
         try
         {
-            return await _context.Bottles.ToListAsync();
+            if (includes)
+            {
+                return await _context.Bottles
+                    .Include(b => b.Producer)
+                    .Include(b => b.BottleLocations)
+                    .ThenInclude(bl => bl.Location)
+                    .Include(b => b.BottleGrapes)
+                    .ThenInclude(bg => bg.Grape)
+                    .FirstOrDefaultAsync(b => b.Id == id);
+            }
+            return await _context.Bottles.FindAsync(id);
         }
         catch (Exception ex)
         {
@@ -31,11 +42,11 @@ public class BottleService : IBottleService
     }
 
     //</inheritdoc>  
-    public async Task<Bottle?> GetBottleAsync(int id)
+    public async Task<IEnumerable<Bottle>?> GetBottlesAsync()
     {
         try
         {
-            return await _context.Bottles.FindAsync(id);
+            return await _context.Bottles.ToListAsync();
         }
         catch (Exception ex)
         {

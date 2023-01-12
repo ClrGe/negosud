@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -16,10 +17,17 @@ public class GrapeService : IGrapeService
     }
 
     //</inheritdoc>
-    public async Task<Grape?> GetGrapeAsync(int id)
+    public async Task<Grape?> GetGrapeAsync(int id, bool includes = true)
     {
         try
         {
+            if (includes)
+            {
+                return await _context.Grapes
+                    .Include(g => g.BottleGrapes)
+                    .ThenInclude(bg => bg.Bottle)
+                    .FirstOrDefaultAsync(g => g.Id == id);
+            }
             return await _context.Grapes.FindAsync(id);
         }
         catch (Exception ex)
@@ -96,26 +104,6 @@ public class GrapeService : IGrapeService
         {
             _logger.Log(LogLevel.Information, ex.ToString());
         }
-    }
-
-    public async Task<IEnumerable<Bottle>?> GetBottlesAsync(int id)
-    {
-        try
-        {
-            Grape? grape = await _context.Grapes.FindAsync(id);
-            if (grape != null)
-            {
-                return await _context.Bottles.Include(b => b.BottleGrapes).Where(b => b.Id == id).ToListAsync();
-            }
-
-            return Enumerable.Empty<Bottle>();
-        }
-        catch (Exception ex)
-        {
-            _logger.Log(LogLevel.Information, ex.ToString());
-        }
-
-        return null;
     }
 }
 

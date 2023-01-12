@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -17,10 +18,17 @@ public class RegionService : IRegionService
     }
 
     //</inheritdoc> 
-    public async Task<Region?> GetRegionAsync(int id)
+    public async Task<Region?> GetRegionAsync(int id, bool includes = true)
     {
         try
         {
+            if (includes)
+            {
+                return await _context.Regions
+                    .Include(r => r.Country)
+                    .Include(r => r.Producers)
+                    .FirstOrDefaultAsync(r => r.Id == id);
+            }
             return await _context.Regions.FindAsync(id);
         }
         catch (Exception ex)

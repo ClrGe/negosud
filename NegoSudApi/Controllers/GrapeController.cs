@@ -75,20 +75,5 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK);
         }
 
-        [HttpGet("bottles/{id}")]
-        public async Task<IActionResult> GetBottlesAsync(int id)
-        {
-            Grape? dbGrape = await _grapeService.GetGrapeAsync(id);
-            if (dbGrape == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
-            }
-            IEnumerable<Bottle>? bottles = await _grapeService.GetBottlesAsync(id);
-            if (bottles == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
-            }
-            return StatusCode(StatusCodes.Status200OK, bottles);
-        }
     }
 }

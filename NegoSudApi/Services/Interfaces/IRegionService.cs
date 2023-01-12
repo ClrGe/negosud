@@ -4,12 +4,14 @@ namespace NegoSudApi.Services.Interfaces;
 
 public interface IRegionService
 {
+
     /// <summary>
-    /// Get a Region entity from the database by its id
+    /// Get a Region entity from the database by its id, including or not subobjects and collections
     /// </summary>
     /// <param name="id">The Country's id</param>
+    /// <param name="includes">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
     /// <returns></returns>
-    Task<Region?> GetRegionAsync(int id);
+    Task<Region?> GetRegionAsync(int id, bool includes = true);
 
     /// <summary>
     /// Get an IEnumerable of Regions from the database

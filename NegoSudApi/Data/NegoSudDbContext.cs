@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
 
-namespace NegoSudApi;
+namespace NegoSudApi.Data;
 
-public class NegoSudDbContext : DbContext
+public class NegoSudDbContext : IdentityDbContext
 {
     public NegoSudDbContext(DbContextOptions<NegoSudDbContext> options) : base(options)
     {
@@ -18,6 +20,10 @@ public class NegoSudDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+        modelBuilder.Entity<IdentityUserLogin<string>>(entity => entity.HasNoKey());
+        modelBuilder.Entity<IdentityUserRole<string>>(entity => entity.HasNoKey());
+        modelBuilder.Entity<IdentityUserToken<string>>(entity => entity.HasNoKey());
         modelBuilder.Entity<Bottle>(entity =>
         {
             entity.ToTable(nameof(Bottle));
