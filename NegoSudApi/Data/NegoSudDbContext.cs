@@ -22,6 +22,8 @@ public class NegoSudDbContext : IdentityDbContext
     {
 
         modelBuilder.Entity<IdentityUserLogin<string>>(entity => entity.HasNoKey());
+        modelBuilder.Entity<IdentityUserRole<string>>(entity => entity.HasNoKey());
+        modelBuilder.Entity<IdentityUserToken<string>>(entity => entity.HasNoKey());
         modelBuilder.Entity<Bottle>(entity =>
         {
             entity.ToTable(nameof(Bottle));
