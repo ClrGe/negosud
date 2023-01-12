@@ -15,7 +15,7 @@ public interface ICountryService
     /// </summary>
     /// <param name="id">The Country's id</param>
     /// <returns></returns>
-    Task<Country?> GetCountryAsync(int id);
+    Task<Country?> GetCountryAsync(int? id);
 
     /// <summary>
     /// Create a new Country entity in the database

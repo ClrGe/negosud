@@ -31,7 +31,7 @@ public class CountryService : ICountryService
     }
 
     //</inheritdoc>    
-    public async Task<Country?> GetCountryAsync(int id)
+    public async Task<Country?> GetCountryAsync(int? id)
     {
         try
         {
