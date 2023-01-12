@@ -10,86 +10,86 @@ namespace NegoSudApi.Controllers;
 
 public class RegionController : ControllerBase
 {
-    private readonly IRegionService _RegionService;
+    private readonly IRegionService _regionService;
 
     public RegionController(IRegionService regionService)
     {
-        _RegionService = regionService;
+        _regionService = regionService;
     }
 
     // method to return a region matching query
     [HttpGet("{id}")]
     public async Task<IActionResult> GetRegionAsync(int id)
     {
-        Region? region = await _RegionService.GetRegionAsync(id);
+        Region? dbRegion = await _regionService.GetRegionAsync(id);
 
-        if (region == null)
+        if (dbRegion == null)
         {
             return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
         }
 
-        return StatusCode(StatusCodes.Status200OK, region);
+        return StatusCode(StatusCodes.Status200OK, dbRegion);
     }
 
     // method to return all existing regions
     [HttpGet]
     public async Task<IActionResult> GetRegionsAsync()
     {
-        IEnumerable<Region>? regions = await _RegionService.GetRegionsAsync();
+        IEnumerable<Region>? dbRegions = await _regionService.GetRegionsAsync();
 
-        if (regions == null)
+        if (dbRegions == null)
         {
             return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
         }
 
-        return StatusCode(StatusCodes.Status200OK, regions);
+        return StatusCode(StatusCodes.Status200OK, dbRegions);
     }
 
     // method to add a new region to the database
     [HttpPost]
-    public async Task<ActionResult<Region>> AddRegionAsync(Region Region)
+    public async Task<ActionResult<Region>> AddRegionAsync(Region region)
     {
-        Region? region = await _RegionService.AddRegionAsync(Region);
+        Region? dbRegion = await _regionService.AddRegionAsync(region);
 
-        if (region == null)
+        if (dbRegion == null)
         {
             return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
         }
 
-        return StatusCode(StatusCodes.Status200OK, region);
+        return StatusCode(StatusCodes.Status200OK, dbRegion);
     }
 
     // update existing record matching query
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateRegionAsync(int id, Region Region)
+    public async Task<IActionResult> UpdateRegionAsync(int id, Region region)
     {
-        if (id != Region.Id)
+        if (id != region.Id)
         {
             return BadRequest();
         }
 
-        Region? region = await _RegionService.UpdateRegionAsync(Region);
+        Region? dbRegion = await _regionService.UpdateRegionAsync(region);
 
-        if (region == null)
+        if (dbRegion == null)
         {
             return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
         }
 
-        return StatusCode(StatusCodes.Status200OK, region);
+        return StatusCode(StatusCodes.Status200OK, dbRegion);
     }
 
     // delete individual region matching query 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteRegionAsync(int id)
     {
-        Region? region = await _RegionService.GetRegionAsync(id);
+        Region? dbRegion = await _regionService.GetRegionAsync(id);
 
-        if (region == null)
+        if (dbRegion == null)
         {
             return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
         }
 
-        await _RegionService.DeleteRegionAsync(id);
+        await _regionService.DeleteRegionAsync(id);
 
         return StatusCode(StatusCodes.Status200OK, $"Region deleted with success");
     }

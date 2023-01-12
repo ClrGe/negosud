@@ -2,94 +2,106 @@
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Services
+namespace NegoSudApi.Services;
+
+public class BottleService : IBottleService
 {
-    public class BottleService : IBottleService
+    private readonly NegoSudDbContext _context;
+    private readonly ILogger<BottleService> _logger;
+
+    public BottleService(NegoSudDbContext context, ILogger<BottleService> logger)
     {
-        private readonly NegoSudDbContext _context;
-        public BottleService(NegoSudDbContext context)
+        _context = context;
+        _logger = logger;
+    }
+
+    //</inheritdoc>  
+    public async Task<IEnumerable<Bottle>?> GetBottlesAsync()
+    {
+        try
         {
-            _context = context;
+            return await _context.Bottles.ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
-        //</inheritdoc>  
-        public async Task<IEnumerable<Bottle>?> GetBottlesAsync()
+        return null;
+    }
+
+    //</inheritdoc>  
+    public async Task<Bottle?> GetBottleAsync(int id)
+    {
+        try
         {
-            try
-            {
-                return await _context.Bottles.ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            return await _context.Bottles.FindAsync(id);
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
-        //</inheritdoc>  
-        public async Task<Bottle?> GetBottleAsync(int id)
+        return null;
+    }
+
+    //</inheritdoc>  
+    public async Task<Bottle?> AddBottleAsync(Bottle bottle)
+    {
+        try
         {
-            try
-            {
-                return await _context.Bottles.FindAsync(id);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            await _context.Bottles.AddAsync(bottle);
+            await _context.SaveChangesAsync();
+            return await _context.Bottles.FindAsync(bottle.Id); // Auto ID from DB
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
-        //</inheritdoc>  
-        public async Task<Bottle?> AddBottleAsync(Bottle Bottle)
+        return null;
+    }
+
+    //</inheritdoc>  
+    public async Task<Bottle?> UpdateBottleAsync(Bottle bottle)
+    {
+        try
         {
-            try
-            {
-                await _context.Bottles.AddAsync(Bottle);
-                await _context.SaveChangesAsync();
-                return await _context.Bottles.FindAsync(Bottle.Id); // Auto ID from DB
-            }
-            catch (Exception ex)
-            {
-                return null; // An error occured
-            }
+            _context.Entry(bottle).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return bottle;
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
         }
 
-        //</inheritdoc>  
-        public async Task<Bottle?> UpdateBottleAsync(Bottle Bottle)
+        return null;
+    }
+
+    //</inheritdoc>  
+    public async Task<bool?> DeleteBottleAsync(int id)
+    {
+        try
         {
-            try
-            {
-                _context.Entry(Bottle).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
+            var dbBottle = await _context.Bottles.FindAsync(id);
 
-                return Bottle;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-
-        //</inheritdoc>  
-        public async Task<bool?> DeleteBottleAsync(int id)
-        {
-            try
-            {
-                var dbBottle = await _context.Bottles.FindAsync(id);
-
-                if (dbBottle == null)
-                {
-                    return false;
-                }
-
-                _context.Bottles.Remove(dbBottle);
-                await _context.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception ex)
+            if (dbBottle == null)
             {
                 return false;
             }
+
+            _context.Bottles.Remove(dbBottle);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
+        }
+
+        return null;
     }
 }

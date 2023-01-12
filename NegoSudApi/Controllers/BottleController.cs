@@ -18,27 +18,27 @@ namespace NegoSudApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBottlesAsync()
         {
-            var bottles = await _bottleService.GetBottlesAsync();
+            var dbBottles = await _bottleService.GetBottlesAsync();
 
-            if (bottles == null)
+            if (dbBottles == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, "No bottles in database");
             }
 
-            return StatusCode(StatusCodes.Status200OK, bottles);
+            return StatusCode(StatusCodes.Status200OK, dbBottles);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBottleAsync(int id)
         {
-            Bottle? bottle = await _bottleService.GetBottleAsync(id);
+            Bottle? dbBottle = await _bottleService.GetBottleAsync(id);
 
-            if (bottle == null)
+            if (dbBottle == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No Bottle found for id: {id}");
             }
 
-            return StatusCode(StatusCodes.Status200OK, bottle);
+            return StatusCode(StatusCodes.Status200OK, dbBottle);
         }
 
         [HttpPost]
