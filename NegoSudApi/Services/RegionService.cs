@@ -10,11 +10,13 @@ public class RegionService : IRegionService
 
     private readonly NegoSudDbContext _context;
     private readonly ILogger<RegionService> _logger;
+    private readonly ICountryService _countryService;
 
-    public RegionService(NegoSudDbContext context, ILogger<RegionService> logger)
+    public RegionService(NegoSudDbContext context, ILogger<RegionService> logger, ICountryService countryService)
     {
         _context = context;
         _logger = logger;
+        _countryService = countryService;
     }
 
     //</inheritdoc> 
@@ -59,10 +61,29 @@ public class RegionService : IRegionService
     {
         try
         {
-            await _context.Regions.AddAsync(region);
-             // _context.Countries.Attach(region.Country);
-             await _context.SaveChangesAsync();
-            return await _context.Regions.FindAsync(region.Id);
+            Country? country = null;
+            if(region.Country?.Id != null)
+            {
+                country = await _countryService.GetCountryAsync(region.Country.Id, includes: false);
+            }
+            
+            // If we found a country in the database
+            if (country != null)
+            {
+                region.Country = country;
+            }
+            // If we want to add a new country into the database from the AddRegionForm
+            else if (region.Country != null)
+            {
+                region.Country = await _countryService.AddCountryAsync(region.Country);                
+            }
+
+            // Create the region in the database
+            Region newRegion = (await _context.Regions.AddAsync(region)).Entity;
+
+            await _context.SaveChangesAsync();
+
+            return newRegion;
         }
         catch (Exception ex)
         {
@@ -80,7 +101,7 @@ public class RegionService : IRegionService
             _context.Entry(region).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return region;
+            return await GetRegionAsync(region.Id);
         }
         catch (Exception ex)
         {
