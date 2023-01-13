@@ -8,9 +8,9 @@ namespace NegoSudApi.Controllers
     [Route("api/[controller]")]
     public class BottleController : ControllerBase
     {
-        private readonly IWineLabelService _bottleService;
+        private readonly IBottleService _bottleService;
 
-        public BottleController(IWineLabelService bottleService)
+        public BottleController(IBottleService bottleService)
         {
             _bottleService = bottleService;
         }

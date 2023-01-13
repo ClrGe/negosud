@@ -11,6 +11,12 @@ namespace NegoSudApi.Services
         private readonly NegoSudDbContext _context;
         private readonly ILogger<WineLabelService> _logger;
 
+        public WineLabelService(NegoSudDbContext context, ILogger<WineLabelService> logger)
+        {
+            _context = context;
+            _logger = logger;
+        }
+
         public async Task<WineLabel?> GetWineLabelAsync(int id, bool includes = true)
         {
             try

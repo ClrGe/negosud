@@ -16,7 +16,7 @@ public class WineLabelController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetBottleAsync(int id)
+    public async Task<IActionResult> GetWineLabelAsync(int id)
     {
         WineLabel? dbWineLabel = await _wineLabelService.GetWineLabelAsync(id);
 
@@ -29,7 +29,7 @@ public class WineLabelController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetBottlesAsync()
+    public async Task<IActionResult> GetWineLabelsAsync()
     {
         var dbWineLabels = await _wineLabelService.GetWineLabelsAsync();
 
@@ -43,7 +43,7 @@ public class WineLabelController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<WineLabel>> AddBottle(WineLabel wineLabel)
+    public async Task<ActionResult<WineLabel>> AddWineLabelAsync(WineLabel wineLabel)
     {
         WineLabel? dbWineLabel = await _wineLabelService.AddWineLabelAsync(wineLabel);
 
@@ -56,7 +56,7 @@ public class WineLabelController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateBottleAsync(int id, WineLabel wineLabel)
+    public async Task<IActionResult> UpdateWineLabelAsync(int id, WineLabel wineLabel)
     {
         if (id != wineLabel.Id)
         {
@@ -70,11 +70,11 @@ public class WineLabelController : ControllerBase
             return StatusCode(StatusCodes.Status204NoContent, $"No match for query - could not update");
         }
 
-        return NoContent();
+        return StatusCode(StatusCodes.Status200OK, dbWineLabel);
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteBottleAsync(int id)
+    public async Task<IActionResult> DeleteWineLabelAsync(int id)
     {
         bool? status = await _wineLabelService.DeleteWineLabelAsync(id);
 
