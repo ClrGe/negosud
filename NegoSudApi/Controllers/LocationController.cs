@@ -45,7 +45,7 @@ namespace NegoSudApi.Controllers
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            return StatusCode(StatusCodes.Status200OK, location);
+            return StatusCode(StatusCodes.Status201Created, dbLocation);
         }
 
         [HttpPut("{id}")]
