@@ -51,7 +51,7 @@ namespace NegoSudApi.Controllers
                 return StatusCode(StatusCodes.Status204NoContent, $"{bottle.Full_Name} could not be added.");
             }
 
-            return StatusCode(StatusCodes.Status200OK, dbBottle);
+            return StatusCode(StatusCodes.Status201Created, dbBottle);
         }
 
         [HttpPut("{id}")]
