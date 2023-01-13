@@ -12,18 +12,21 @@ public class BottleService : IBottleService
     private readonly IProducerService _producerService;
     private readonly IGrapeService _grapeService;
     private readonly IStorageLocationService _storageLocationService;
+    private readonly IWineLabelService _wineLabelService;
 
     public BottleService(NegoSudDbContext context,
                          ILogger<BottleService> logger,
                          IProducerService producerService,
                          IGrapeService grapeService,
-                         IStorageLocationService storageLocationService)
+                         IStorageLocationService storageLocationService,
+                         IWineLabelService wineLabelService)
     {
         _context = context;
         _logger = logger;
         _producerService = producerService;
         _grapeService = grapeService;
         _storageLocationService = storageLocationService;
+        _wineLabelService = wineLabelService;
     }
 
     //</inheritdoc>  
@@ -71,29 +74,44 @@ public class BottleService : IBottleService
     {
         try
         {
-            foreach(var bottleLocation in bottle.BottleStorageLocations)
+            if(bottle.BottleStorageLocations != null)
             {
-                if(bottleLocation.StorageLocation?.Id != null)
+                foreach (var bottleStorageLocation in bottle.BottleStorageLocations)
                 {
-                    StorageLocation? location = await _storageLocationService.GetStorageLocationAsync(bottleLocation.StorageLocation.Id, includes: false);
-                    if (location != null)
+                    if (bottleStorageLocation.StorageLocation?.Id != null)
                     {
-                        bottleLocation.StorageLocation = location;
-                        bottleLocation.Bottle = bottle;
+                        StorageLocation? location = await _storageLocationService.GetStorageLocationAsync(bottleStorageLocation.StorageLocation.Id, includes: false);
+                        if (location != null)
+                        {
+                            bottleStorageLocation.StorageLocation = location;
+                            bottleStorageLocation.Bottle = bottle;
+                        }
                     }
-                }                
-            }
+                }
+            }            
 
-            foreach (var bottleGrape in bottle.BottleGrapes)
+            if(bottle.BottleGrapes != null)
             {
-                if (bottleGrape.Grape?.Id != null)
+                foreach (var bottleGrape in bottle.BottleGrapes)
                 {
-                    Grape? grape = await _grapeService.GetGrapeAsync(bottleGrape.Grape.Id, includes: false);
-                    if (grape != null)
+                    if (bottleGrape.Grape?.Id != null)
                     {
-                        bottleGrape.Grape = grape;
-                        bottleGrape.Bottle = bottle;
+                        Grape? grape = await _grapeService.GetGrapeAsync(bottleGrape.Grape.Id, includes: false);
+                        if (grape != null)
+                        {
+                            bottleGrape.Grape = grape;
+                            bottleGrape.Bottle = bottle;
+                        }
                     }
+                }
+            }            
+
+            if(bottle.WineLabel?.Id != null)
+            {
+                WineLabel? wineLabel = await _wineLabelService.GetWineLabelAsync(bottle.WineLabel.Id, includes: false);
+                if(wineLabel != null) 
+                {
+                    bottle.WineLabel = wineLabel;
                 }
             }
 
@@ -108,9 +126,15 @@ public class BottleService : IBottleService
 
             await _context.Bottles.AddAsync(bottle);
 
-            await _context.AddRangeAsync(bottle.BottleStorageLocations);
+            if (bottle.BottleStorageLocations != null)
+            {
+                await _context.AddRangeAsync(bottle.BottleStorageLocations);
+            }
 
-            await _context.AddRangeAsync(bottle.BottleGrapes);
+            if (bottle.BottleGrapes != null)
+            {
+                await _context.AddRangeAsync(bottle.BottleGrapes);
+            }
 
             await _context.SaveChangesAsync();
 
