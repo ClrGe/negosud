@@ -76,7 +76,6 @@ public class Startup
         app.UseSession();
         app.UseRouting();
         app.UseAuthentication();
-        app.UseAuthorization();
         app.UseMvc();
     }
 }

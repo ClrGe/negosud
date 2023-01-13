@@ -51,9 +51,8 @@ public class JwtAuthenticationService : IJwtAuthenticationService
             Issuer = _configuration["Jwt:Issuer"],
         };
 
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(securityToken);
+        var securityToken = new JwtSecurityTokenHandler().CreateToken(tokenDescriptor);
+        return new JwtSecurityTokenHandler().WriteToken(securityToken);
 
     }
 
