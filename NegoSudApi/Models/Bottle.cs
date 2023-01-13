@@ -5,7 +5,6 @@ public class Bottle : IModelBase
     public int Id { get; set; }
     public string? Full_Name { get; set; }
     public string? Description { get; set; }
-    public string? Label { get; set; }
     public decimal? Volume { get; set; }
     public byte[]? Picture { get; set; }
     public int? Year_Produced { get; set; }

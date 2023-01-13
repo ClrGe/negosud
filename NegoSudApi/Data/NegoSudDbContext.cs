@@ -12,6 +12,7 @@ public class NegoSudDbContext : IdentityDbContext
     }
 
     public virtual DbSet<Bottle> Bottles { get; set; }
+    public virtual DbSet<WineLabel> WineLabels { get; set; }
     public virtual DbSet<Country> Countries { get; set; }
     public virtual DbSet<Grape> Grapes { get; set; }
     public virtual DbSet<StorageLocation> StorageLocations { get; set; }
@@ -27,6 +28,16 @@ public class NegoSudDbContext : IdentityDbContext
         modelBuilder.Entity<Bottle>(entity =>
         {
             entity.ToTable(nameof(Bottle));
+            entity.HasKey(b => b.Id);
+            entity.Property(p => p.Created_By).HasMaxLength(200);
+            entity.Property(p => p.Updated_By).HasMaxLength(200);
+            entity.Property(t => t.Created_At).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.Updated_At).HasPrecision(0).ValueGeneratedOnUpdate();
+        });
+
+        modelBuilder.Entity<WineLabel>(entity =>
+        {
+            entity.ToTable(nameof(WineLabel));
             entity.HasKey(b => b.Id);
             entity.Property(p => p.Created_By).HasMaxLength(200);
             entity.Property(p => p.Updated_By).HasMaxLength(200);
