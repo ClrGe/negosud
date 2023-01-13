@@ -19,5 +19,5 @@ public class Bottle : IModelBase
 
     public virtual ICollection<BottleLocation>? BottleLocations { get; set; }
     public virtual ICollection<BottleGrape>? BottleGrapes { get; set; }
-    public virtual  Producer? Producer { get; set; }
+    public virtual Producer? Producer { get; set; }
 }

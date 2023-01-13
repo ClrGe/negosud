@@ -1,4 +1,6 @@
-﻿namespace NegoSudApi;
+﻿using Microsoft.AspNetCore;
+
+namespace NegoSudApi;
 
 public class Program
 {
@@ -11,7 +13,7 @@ public class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {
-                webBuilder.UseUrls("https://localhost:4000");
+                //webBuilder.UseUrls("httpS://localhost:4000");
                 webBuilder.UseStartup<Startup>();
             });
 }

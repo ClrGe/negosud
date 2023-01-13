@@ -21,7 +21,6 @@ public class CountryService : ICountryService
     {
         try
         {
-
             if (includes)
             {
                 return await _context.Countries
@@ -30,7 +29,6 @@ public class CountryService : ICountryService
             }
 
             return await _context.Countries.FindAsync(id);
-
         }
         catch (Exception ex)
         {
@@ -60,9 +58,9 @@ public class CountryService : ICountryService
     {
         try
         {
-            await _context.Countries.AddAsync(country);
+            Country newCountry = (await _context.Countries.AddAsync(country)).Entity;
             await _context.SaveChangesAsync();
-            return await _context.Countries.FindAsync(country.Id); // Auto ID from DB
+            return newCountry;
         }
         catch (Exception ex)
         {

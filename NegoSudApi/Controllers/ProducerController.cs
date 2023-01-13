@@ -57,7 +57,7 @@ public class ProducerController : ControllerBase
             return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
         }
 
-        return StatusCode(StatusCodes.Status200OK, dbProducer);
+        return StatusCode(StatusCodes.Status201Created, dbProducer);
     }
 
     // update existing record matching query
