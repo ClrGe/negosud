@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
+using NegoSudApi.Data;
 
 namespace NegoSudApi;
 
@@ -49,9 +50,11 @@ public class Startup
             
         app.UseHttpLogging();
         app.UseHttpsRedirection();
-        app.UseMvc();
+        app.UseStaticFiles();
         app.UseSession();
         app.UseRouting();
-        dbContext.Database.EnsureCreated();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.UseMvc();
     }
 }

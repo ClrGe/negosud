@@ -44,7 +44,7 @@ namespace NegoSudApi.Controllers
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
             }
-            return StatusCode(StatusCodes.Status200OK, dbGrape);
+            return StatusCode(StatusCodes.Status201Created, dbGrape);
         }
 
         [HttpPut("{id}")]

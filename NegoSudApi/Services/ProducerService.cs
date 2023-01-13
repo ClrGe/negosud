@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -60,9 +61,29 @@ public class ProducerService : IProducerService
     {
         try
         {
-            await _context.Producers.AddAsync(producer);
+            Region? region = null;
+            if (producer.Region?.Id != null)
+            {
+                region = await _regionService.GetRegionAsync(producer.Region.Id, includes: false);
+            }
+            
+            // If we found a region in the database
+            if (region != null)
+            {
+                producer.Region = region;
+            }
+            // If we want to add a new region into the database from the AddProducerForm
+            else if (producer.Region!= null)
+            {
+                producer.Region = await _regionService.AddRegionAsync(producer.Region);
+            }
+
+            // Create the producer in the database
+            Producer newProducer = (await _context.Producers.AddAsync(producer)).Entity;
+
             await _context.SaveChangesAsync();
-            return await _context.Producers.FindAsync(producer.Id);
+
+            return newProducer;
         }
         catch (Exception ex)
         {

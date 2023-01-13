@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -66,9 +67,50 @@ public class BottleService : IBottleService
     {
         try
         {
+            foreach(var bottleLocation in bottle.BottleLocations)
+            {
+                if(bottleLocation.Location?.Id != null)
+                {
+                    Location? location = await _locationService.GetLocationAsync(bottleLocation.Location.Id, includes: false);
+                    if (location != null)
+                    {
+                        bottleLocation.Location = location;
+                        bottleLocation.Bottle = bottle;
+                    }
+                }                
+            }
+
+            foreach (var bottleGrape in bottle.BottleGrapes)
+            {
+                if (bottleGrape.Grape?.Id != null)
+                {
+                    Grape? grape = await _grapeService.GetGrapeAsync(bottleGrape.Grape.Id, includes: false);
+                    if (grape != null)
+                    {
+                        bottleGrape.Grape = grape;
+                        bottleGrape.Bottle = bottle;
+                    }
+                }
+            }
+
+            if(bottle.Producer?.Id != null)
+            {
+                Producer? producer = await _producerService.GetProducerAsync(bottle.Producer.Id, includes: false);
+                if(producer != null)
+                {
+                    bottle.Producer = producer;
+                }
+            }
+
             await _context.Bottles.AddAsync(bottle);
+
+            await _context.AddRangeAsync(bottle.BottleLocations);
+
+            await _context.AddRangeAsync(bottle.BottleGrapes);
+
             await _context.SaveChangesAsync();
-            return await _context.Bottles.FindAsync(bottle.Id); // Auto ID from DB
+
+            return await GetBottleAsync(bottle.Id);
         }
         catch (Exception ex)
         {
