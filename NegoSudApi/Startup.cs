@@ -1,9 +1,12 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using NegoSudApi.Data;
 
 namespace NegoSudApi;
@@ -34,18 +37,28 @@ public class Startup
         services.AddScoped<ILocationService, LocationService>();
         services.AddScoped<IProducerService, ProducerService>();
         services.AddScoped<IRegionService, RegionService>();
+        
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(o =>
+        {
+            o.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = Configuration["Jwt:Issuer"],
+                IssuerSigningKey = new SymmetricSecurityKey
+                    (Encoding.UTF8.GetBytes(Configuration["Jwt:Key"] ?? throw new InvalidOperationException())),
+                ValidateIssuer = true,
+                ValidateLifetime = false,
+                ValidateIssuerSigningKey = true
+            };
+        });
 
         var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext")?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");;
 
         services.AddDbContext<NegoSudDbContext>(options => options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
-
-        services.AddIdentity<IdentityUser, IdentityRole>(options =>
-            {
-                options.SignIn.RequireConfirmedAccount = false;
-            })
-            .AddEntityFrameworkStores<NegoSudDbContext>();
-        
-        services.AddRazorPages();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, NegoSudDbContext dbContext)
@@ -60,7 +73,6 @@ public class Startup
             
         app.UseHttpLogging();
         app.UseHttpsRedirection();
-        app.UseStaticFiles();
         app.UseSession();
         app.UseRouting();
         app.UseAuthentication();

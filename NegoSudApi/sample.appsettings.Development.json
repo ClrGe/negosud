@@ -9,6 +9,9 @@
   "AllowedHosts": "*",
   "ConnectionStrings": {
     "DefaultNegosudDbContext": "Host=localhost;Database=NegoSud.Database;Username=postgres;Password=****;;ApplicationName=NegoSud;LoadTableComposites=True"
-    
+  },
+  "Jwt": {
+    "Key":"ThisIsMySecretKey",
+    "Issuer":"Test.com"
   }
 }
