@@ -17,7 +17,8 @@ public class Bottle : IModelBase
     public string? Created_By { get; set; }
     public string? Updated_By { get; set; }
 
-    public virtual ICollection<BottleLocation>? BottleLocations { get; set; }
+    public virtual ICollection<BottleStorageLocation>? BottleStorageLocations { get; set; }
     public virtual ICollection<BottleGrape>? BottleGrapes { get; set; }
     public virtual Producer? Producer { get; set; }
+    public virtual WineLabel? WineLabel { get; set; }
 }

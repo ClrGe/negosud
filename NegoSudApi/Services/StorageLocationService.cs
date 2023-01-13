@@ -5,30 +5,30 @@ using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services;
 
-public class LocationService : ILocationService
+public class StorageLocationService : IStorageLocationService
 {
     private readonly NegoSudDbContext _context;
-    private readonly ILogger<LocationService> _logger;
+    private readonly ILogger<StorageLocationService> _logger;
 
-    public LocationService(NegoSudDbContext context, ILogger<LocationService> logger)
+    public StorageLocationService(NegoSudDbContext context, ILogger<StorageLocationService> logger)
     {
         _context = context;
         _logger = logger;
     }
 
     //</inheritdoc>
-    public async Task<Location?> GetLocationAsync(int id, bool includes = true)
+    public async Task<StorageLocation?> GetStorageLocationAsync(int id, bool includes = true)
     {
         try
         {
             if (includes)
             {
-                return await _context.Locations
-                    .Include(l => l.BottleLocations)
+                return await _context.StorageLocations
+                    .Include(l => l.BottleStorageLocations)
                     .ThenInclude(bl => bl.Bottle)
                     .FirstOrDefaultAsync(l => l.Id == id);
             }
-            return await _context.Locations.FindAsync(id);
+            return await _context.StorageLocations.FindAsync(id);
         }
         catch (Exception ex)
         {
@@ -39,11 +39,11 @@ public class LocationService : ILocationService
     }
 
     //</inheritdoc>
-    public async Task<IEnumerable<Location>?> GetLocationsAsync()
+    public async Task<IEnumerable<StorageLocation>?> GetStorageLocationsAsync()
     {
         try
         {
-            return await _context.Locations.ToListAsync();
+            return await _context.StorageLocations.ToListAsync();
         }
         catch (Exception ex)
         {
@@ -54,11 +54,11 @@ public class LocationService : ILocationService
     }
 
     //</inheritdoc>
-    public async Task<Location?> AddLocationAsync(Location location)
+    public async Task<StorageLocation?> AddStorageLocationAsync(StorageLocation storageLocation)
     {
         try
         {
-            Location newLocation = (await _context.Locations.AddAsync(location)).Entity;
+            StorageLocation newLocation = (await _context.StorageLocations.AddAsync(storageLocation)).Entity;
             await _context.SaveChangesAsync();
             return newLocation;
         }
@@ -71,13 +71,13 @@ public class LocationService : ILocationService
     }
 
     //</inheritdoc>
-    public async Task<Location?> UpdateGrapeAsync(Location location)
+    public async Task<StorageLocation?> UpdateStorageLocationAsync(StorageLocation storageLocation)
     {
         try
         {
-            _context.Entry(location).State = EntityState.Modified;
+            _context.Entry(storageLocation).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return location;
+            return storageLocation;
         }
         catch (Exception ex)
         {
@@ -88,14 +88,14 @@ public class LocationService : ILocationService
     }
 
     //</inheritdoc>
-    public async Task DeleteLocationAsync(int id)
+    public async Task DeleteStorageLocationAsync(int id)
     {
         try
         {
-            Location? location = await _context.Locations.FindAsync(id);
+            StorageLocation? location = await _context.StorageLocations.FindAsync(id);
             if (location != null)
             {
-                _context.Locations.Remove(location);
+                _context.StorageLocations.Remove(location);
                 await _context.SaveChangesAsync();
             }
         }

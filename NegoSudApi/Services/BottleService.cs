@@ -11,19 +11,19 @@ public class BottleService : IBottleService
     private readonly ILogger<BottleService> _logger;
     private readonly IProducerService _producerService;
     private readonly IGrapeService _grapeService;
-    private readonly ILocationService _locationService;
+    private readonly IStorageLocationService _storageLocationService;
 
     public BottleService(NegoSudDbContext context,
                          ILogger<BottleService> logger,
                          IProducerService producerService,
                          IGrapeService grapeService,
-                         ILocationService locationService)
+                         IStorageLocationService storageLocationService)
     {
         _context = context;
         _logger = logger;
         _producerService = producerService;
         _grapeService = grapeService;
-        _locationService = locationService;
+        _storageLocationService = storageLocationService;
     }
 
     //</inheritdoc>  
@@ -35,8 +35,8 @@ public class BottleService : IBottleService
             {
                 return await _context.Bottles
                     .Include(b => b.Producer)
-                    .Include(b => b.BottleLocations)
-                    .ThenInclude(bl => bl.Location)
+                    .Include(b => b.BottleStorageLocations)
+                    .ThenInclude(bl => bl.StorageLocation)
                     .Include(b => b.BottleGrapes)
                     .ThenInclude(bg => bg.Grape)
                     .FirstOrDefaultAsync(b => b.Id == id);
@@ -71,14 +71,14 @@ public class BottleService : IBottleService
     {
         try
         {
-            foreach(var bottleLocation in bottle.BottleLocations)
+            foreach(var bottleLocation in bottle.BottleStorageLocations)
             {
-                if(bottleLocation.Location?.Id != null)
+                if(bottleLocation.StorageLocation?.Id != null)
                 {
-                    Location? location = await _locationService.GetLocationAsync(bottleLocation.Location.Id, includes: false);
+                    StorageLocation? location = await _storageLocationService.GetStorageLocationAsync(bottleLocation.StorageLocation.Id, includes: false);
                     if (location != null)
                     {
-                        bottleLocation.Location = location;
+                        bottleLocation.StorageLocation = location;
                         bottleLocation.Bottle = bottle;
                     }
                 }                
@@ -108,7 +108,7 @@ public class BottleService : IBottleService
 
             await _context.Bottles.AddAsync(bottle);
 
-            await _context.AddRangeAsync(bottle.BottleLocations);
+            await _context.AddRangeAsync(bottle.BottleStorageLocations);
 
             await _context.AddRangeAsync(bottle.BottleGrapes);
 
