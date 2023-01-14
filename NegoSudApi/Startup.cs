@@ -36,7 +36,7 @@ public class Startup
         services.AddScoped<IRegionService, RegionService>();
         services.AddScoped<IWineLabelService, WineLabelService>();
 
-        var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext");
+            var connectionString = Configuration.GetConnectionString("NegoSudDbContext");
 
         services.AddDbContext<NegoSudDbContext>(options => options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
     }
