@@ -31,21 +31,14 @@ public class Startup
         services.AddScoped<IGrapeService, GrapeService>();
         services.AddScoped<IBottleService, BottleService>();
         services.AddScoped<ICountryService, CountryService>();
-        services.AddScoped<ILocationService, LocationService>();
+        services.AddScoped<IStorageLocationService, StorageLocationService>();
         services.AddScoped<IProducerService, ProducerService>();
         services.AddScoped<IRegionService, RegionService>();
+        services.AddScoped<IWineLabelService, WineLabelService>();
 
-        var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext")?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");;
+            var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext");
 
         services.AddDbContext<NegoSudDbContext>(options => options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
-
-        services.AddIdentity<IdentityUser, IdentityRole>(options =>
-            {
-                options.SignIn.RequireConfirmedAccount = false;
-            })
-            .AddEntityFrameworkStores<NegoSudDbContext>();
-        
-        services.AddRazorPages();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, NegoSudDbContext dbContext)
