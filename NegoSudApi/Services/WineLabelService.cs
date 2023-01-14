@@ -17,6 +17,7 @@ namespace NegoSudApi.Services
             _logger = logger;
         }
 
+        //</inheritdoc> 
         public async Task<WineLabel?> GetWineLabelAsync(int id, bool includes = true)
         {
             try
@@ -38,6 +39,7 @@ namespace NegoSudApi.Services
             return null;
         }
 
+        //</inheritdoc> 
         public async Task<IEnumerable<WineLabel>?> GetWineLabelsAsync()
         {
             try
@@ -52,6 +54,7 @@ namespace NegoSudApi.Services
             return null;
         }
 
+        //</inheritdoc> 
         public async Task<WineLabel?> AddWineLabelAsync(WineLabel wineLabel)
         {
             try
@@ -68,6 +71,7 @@ namespace NegoSudApi.Services
             return null;
         }
 
+        //</inheritdoc> 
         public async Task<WineLabel?> UpdateWineLabelAsync(WineLabel wineLabel)
         {
             try
@@ -85,6 +89,7 @@ namespace NegoSudApi.Services
             return null;
         }
 
+        //</inheritdoc> 
         public async Task<bool?> DeleteWineLabelAsync(int id)
         {
             try

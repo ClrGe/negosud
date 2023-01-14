@@ -9,27 +9,27 @@ public interface IGrapeService
     /// </summary>
     /// <param name="id">The entity's id</param>
     /// <param name="includes">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
-    /// <returns></returns>
+    /// <returns>A Grape model with the desired id, or null if it doesn't exist</returns>
     public Task<Grape?> GetGrapeAsync(int id, bool includes = true);
 
     /// <summary>
     /// Get an IEnumerable of Grapes Entities 
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A collection of Grape model</returns>
     public Task<IEnumerable<Grape>?> GetGrapesAsync();
 
     /// <summary>
     /// Create a new Grape entity in the database
     /// </summary>
     /// <param name="grape">The entity's model</param>
-    /// <returns></returns>
+    /// <returns>A Grape model</returns>
     public Task<Grape?> AddGrapeAsync(Grape grape);
 
     /// <summary>
     /// Update a Grape entity in the database
     /// </summary>
     /// <param name="grape">The new entity's model</param>
-    /// <returns></returns>
+    /// <returns>A Grape model</returns>
     public Task<Grape?> UpdateGrapeAsync(Grape grape);
 
     /// <summary>
