@@ -1,13 +1,15 @@
-﻿namespace NegoSudApi.Models;
+﻿using NegoSudApi.Models.Interfaces;
+
+namespace NegoSudApi.Models;
 
 public class Location : IModelBase
 {
     public int Id { get; set; }
     public string? Name { get; set; }
-    public DateTime? Created_At { get; set; }
-    public DateTime? Updated_At { get; set; }
-    public string? Created_By { get; set; }
-    public string? Updated_By { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public string? CreatedBy { get; set; }
+    public string? UpdatedBy { get; set; }
     public virtual ICollection<BottleLocation>? BottleLocations { get; set; }
 
 }

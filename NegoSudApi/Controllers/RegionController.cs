@@ -4,10 +4,8 @@ using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers;
 
-
 [ApiController]
 [Route("api/[controller]")]
-
 public class RegionController : ControllerBase
 {
     private readonly IRegionService _regionService;

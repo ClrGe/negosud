@@ -1,42 +1,28 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
+using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Services.JWT;
+namespace NegoSudApi.Services;
 
+//</inheritdoc>
 public class JwtAuthenticationService : IJwtAuthenticationService
 {
-    private ConfigurationManager _configuration;
+    private readonly IConfiguration _configuration;
     private readonly NegoSudDbContext _context;
+    private readonly SecurePassword _securePassword;
 
-
-    public JwtAuthenticationService(ConfigurationManager configuration, NegoSudDbContext context)
+    public JwtAuthenticationService(IConfiguration configuration, NegoSudDbContext context, SecurePassword securePassword)
     {
         _configuration = configuration;
         _context = context;
+        _securePassword = securePassword;
     }
-
-    public async Task<ActionResult<string>> Login(string email, string password)
-    {
-        var user = Authenticate(email, password);
-
-        if (user != null)
-        {
-            var claims = new List<Claim>
-            {
-                new(ClaimTypes.Email, email)
-            };
-            var token = GenerateToken(_configuration["Jwt:Key"]!, claims);
-            return new JsonResult(token);
-        }
-        
-        return $"{StatusCodes.Status400BadRequest},  Username or password is incorrect";
-    }
-
+    
+    //</inheritdoc>
     public string GenerateToken(string secret, List<Claim> claims)
     {
 
@@ -56,14 +42,20 @@ public class JwtAuthenticationService : IJwtAuthenticationService
 
     }
 
+    //</inheritdoc>
     public User? Authenticate(string email, string password)
     {
-        var user = _context.Users.FirstOrDefault(u => u.Email == email);
+        var dbUser = _context.Users.FirstOrDefault(u => u.Email ==  email);
 
-        if (user != null)
-            if (user.VerifyHash(password, user.Password))
-                return user;
+        if (dbUser != null)
+            if (_securePassword.VerifyHash(dbUser, password))
+                return dbUser;
 
-        return user;
+        return dbUser;
+    }
+
+    public string GenerateRefreshToken()
+    {
+        throw new NotImplementedException();
     }
 }

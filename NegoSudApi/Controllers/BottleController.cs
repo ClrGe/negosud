@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -48,7 +49,7 @@ namespace NegoSudApi.Controllers
 
             if (dbBottle == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"{bottle.Full_Name} could not be added.");
+                return StatusCode(StatusCodes.Status204NoContent, $"{bottle.FullName} could not be added.");
             }
 
             return StatusCode(StatusCodes.Status201Created, dbBottle);
