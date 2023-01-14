@@ -10,27 +10,27 @@ public interface ICountryService
     /// </summary>
     /// <param name="id">The Country's id</param>
     /// <param name="includes">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
-    /// <returns></returns>
+    /// <returns>A Country with the desired id, or null if it doesn't exist</returns>
     Task<Country?> GetCountryAsync(int id, bool includes = true);
 
     /// <summary>
     /// Get an IEnumerable of Countries from the database
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A collection of Country</returns>
     Task<IEnumerable<Country>?> GetCountriesAsync();
 
     /// <summary>
     /// Create a new Country entity in the database
     /// </summary>
     /// <param name="country">The entity's model</param>
-    /// <returns></returns>
+    /// <returns>A Country</returns>
     Task<Country?> AddCountryAsync(Country country);
 
     /// <summary>
     /// Update a Country entity in the database from a new model
     /// </summary>
     /// <param name="country">The new entity's model</param>
-    /// <returns></returns>
+    /// <returns>A Country</returns>
     Task<Country?> UpdateCountryAsync(Country country);
 
     /// <summary>
