@@ -102,7 +102,7 @@ public class BottleService : IBottleService
                 }
             }
 
-            await _context.Bottles.AddAsync(bottle);
+            Bottle newBottle = (await _context.Bottles.AddAsync(bottle)).Entity;
 
             await _context.AddRangeAsync(bottle.BottleLocations);
 
@@ -110,7 +110,7 @@ public class BottleService : IBottleService
 
             await _context.SaveChangesAsync();
 
-            return await GetBottleAsync(bottle.Id);
+            return newBottle;
         }
         catch (Exception ex)
         {
@@ -127,19 +127,19 @@ public class BottleService : IBottleService
         {
 
             // get the current bottle from db
-            Bottle? currentBottle = await this.GetBottleAsync(bottle.Id);
+            Bottle? dbBottle = await this.GetBottleAsync(bottle.Id);
 
-            if (currentBottle != null)
+            if (dbBottle != null)
             {
 
-                currentBottle.Full_Name = bottle.Full_Name;
-                currentBottle.Description = bottle.Description;
-                currentBottle.Label = bottle.Label;
-                currentBottle.Volume = bottle.Volume;
-                currentBottle.Picture = bottle.Picture;
-                currentBottle.Year_Produced = bottle.Year_Produced;
-                currentBottle.Alcohol_Percentage = bottle.Alcohol_Percentage;
-                currentBottle.Current_Price = bottle.Current_Price;
+                dbBottle.Full_Name = bottle.Full_Name;
+                dbBottle.Description = bottle.Description;
+                dbBottle.Label = bottle.Label;
+                dbBottle.Volume = bottle.Volume;
+                dbBottle.Picture = bottle.Picture;
+                dbBottle.Year_Produced = bottle.Year_Produced;
+                dbBottle.Alcohol_Percentage = bottle.Alcohol_Percentage;
+                dbBottle.Current_Price = bottle.Current_Price;
 
 
                 if (bottle.Producer != null)
@@ -148,84 +148,83 @@ public class BottleService : IBottleService
                     // If we found a producer in the database
                     if (producer != null)
                     {
-                        currentBottle.Producer = producer;
+                        dbBottle.Producer = producer;
                     }
                 }
 
 
-                if (bottle.BottleLocations != null && currentBottle.BottleLocations != null)
+                if (bottle.BottleLocations != null && dbBottle.BottleLocations != null)
                 {
 
-                    ICollection<BottleLocation>? currentBottleLocations = currentBottle.BottleLocations.ToList();
+                    ICollection<BottleLocation>? dbBottleLocations = dbBottle.BottleLocations.ToList();
 
                     foreach (BottleLocation bottleLocation in bottle.BottleLocations)
                     {
                         //if the BottleLocation already exists
-                        BottleLocation? existingBottleLocation = currentBottleLocations.FirstOrDefault(bl => bl.Bottle_Id == bottleLocation.Bottle_Id && bl.Location_Id == bottleLocation.Location_Id);
+                        BottleLocation? existingBottleLocation = dbBottleLocations.FirstOrDefault(bl => bl.Bottle_Id == bottleLocation.Bottle_Id && bl.Location_Id == bottleLocation.Location_Id);
 
                         if (existingBottleLocation != null)
                         {
                             //update the existing BottleLocation
                             existingBottleLocation.Quantity = bottleLocation.Quantity;
                             _context.Entry(existingBottleLocation).State = EntityState.Modified;
-                            currentBottleLocations.Remove(existingBottleLocation);
+                            dbBottleLocations.Remove(existingBottleLocation);
                         }
                         else
                         {
                             // otherwise, add the new BottleLocation to the current bottle
-                            currentBottle.BottleLocations.Add(bottleLocation);
+                            dbBottle.BottleLocations.Add(bottleLocation);
                         }
 
                     }
 
-                    foreach (BottleLocation bottleLocationToDelete in currentBottleLocations)
+                    foreach (BottleLocation bottleLocationToDelete in dbBottleLocations)
                     {
-                        //currentBottle.BottleLocations.Remove(bottleLocationToDelete);
-                        currentBottle.BottleLocations.Remove(bottleLocationToDelete);
+                        dbBottle.BottleLocations.Remove(bottleLocationToDelete);
                     }
 
                 }
 
 
-                if (bottle.BottleGrapes != null && currentBottle.BottleGrapes != null)
+                if (bottle.BottleGrapes != null && dbBottle.BottleGrapes != null)
                 {
 
-                    ICollection<BottleGrape>? currentBottleGrapes = currentBottle.BottleGrapes.ToList();
+                    ICollection<BottleGrape>? dbBottleGrapes = dbBottle.BottleGrapes.ToList();
 
                     foreach (BottleGrape bottleGrape in bottle.BottleGrapes)
                     {
                         //if the BottleGrape already exists
-                        BottleGrape? existingBottleGrape = currentBottleGrapes.FirstOrDefault(bl => bl.Bottle_Id == bottleGrape.Bottle_Id && bl.Grape_Id == bottleGrape.Grape_Id);
+                        BottleGrape? existingBottleGrape = dbBottleGrapes.FirstOrDefault(bl => bl.Bottle_Id == bottleGrape.Bottle_Id && bl.Grape_Id == bottleGrape.Grape_Id);
 
                         if (existingBottleGrape != null)
                         {
                             //update the existing BottleGrape
                             existingBottleGrape.Grape_Percentage = bottleGrape.Grape_Percentage;
                             _context.Entry(existingBottleGrape).State = EntityState.Modified;
-                            currentBottleGrapes.Remove(existingBottleGrape);
+                            dbBottleGrapes.Remove(existingBottleGrape);
                         }
                         else
                         {
                             // otherwise, add the new BottleGrape to the current bottle
-                            currentBottle.BottleGrapes.Add(bottleGrape);
+                            dbBottle.BottleGrapes.Add(bottleGrape);
                         }
 
                     }
 
-                    foreach (BottleGrape bottleGrapeToDelete in currentBottleGrapes)
+                    foreach (BottleGrape bottleGrapeToDelete in dbBottleGrapes)
                     {
                         //currentBottle.BottleGrapes.Remove(bottleGrapeToDelete);
-                        currentBottle.BottleGrapes.Remove(bottleGrapeToDelete);
+                        dbBottle.BottleGrapes.Remove(bottleGrapeToDelete);
                     }
 
                 }
 
 
-                _context.Entry(currentBottle).State = EntityState.Modified;
+                _context.Entry(dbBottle).State = EntityState.Modified;
 
                 await _context.SaveChangesAsync();
 
-                return currentBottle;
+                return dbBottle;
             }
         }
         catch (Exception ex)
