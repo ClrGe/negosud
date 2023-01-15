@@ -20,11 +20,11 @@ public class ProducerService : IProducerService
     }
 
     //</inheritdoc> 
-    public async Task<Producer?> GetProducerAsync(int id, bool includes = true)
+    public async Task<Producer?> GetProducerAsync(int id, bool includeRelations = true)
     {
         try
         {
-            if (includes)
+            if (includeRelations)
             {
                 return await _context.Producers
                     .Include(p => p.Region)
@@ -64,7 +64,7 @@ public class ProducerService : IProducerService
             Region? region = null;
             if (producer.Region?.Id != null)
             {
-                region = await _regionService.GetRegionAsync(producer.Region.Id, includes: false);
+                region = await _regionService.GetRegionAsync(producer.Region.Id, includeRelations: false);
             }
             
             // If we found a region in the database
@@ -98,6 +98,16 @@ public class ProducerService : IProducerService
     {
         try
         {
+            if (producer.Region?.Id != null)
+            {
+                Region? region = await _regionService.GetRegionAsync(producer.Region.Id, includeRelations: false);
+                // If we found a region in the database
+                if (region != null)
+                {
+                    producer.Region = region;
+                }
+            }
+
             _context.Entry(producer).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 

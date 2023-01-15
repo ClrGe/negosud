@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
-using Microsoft.AspNetCore.Identity;
 using NegoSudApi.Data;
+using System;
 
 namespace NegoSudApi;
 
@@ -36,7 +36,8 @@ public class Startup
         services.AddScoped<IRegionService, RegionService>();
         services.AddScoped<IWineLabelService, WineLabelService>();
 
-            var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext");
+        var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext");
+        //var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found."); ;
 
         services.AddDbContext<NegoSudDbContext>(options => options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
     }

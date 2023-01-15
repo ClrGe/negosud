@@ -17,11 +17,11 @@ public class StorageLocationService : IStorageLocationService
     }
 
     //</inheritdoc>
-    public async Task<StorageLocation?> GetStorageLocationAsync(int id, bool includes = true)
+    public async Task<StorageLocation?> GetStorageLocationAsync(int id, bool includeRelations = true)
     {
         try
         {
-            if (includes)
+            if (includeRelations)
             {
                 return await _context.StorageLocations
                     .Include(l => l.BottleStorageLocations)

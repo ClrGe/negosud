@@ -69,7 +69,7 @@ namespace NegoSudApi.Controllers
                 return StatusCode(StatusCodes.Status204NoContent, $"No match for query - could not update");
             }
 
-            return NoContent();
+            return StatusCode(StatusCodes.Status200OK, dbBottle);
         }
 
         [HttpDelete("{id}")]
