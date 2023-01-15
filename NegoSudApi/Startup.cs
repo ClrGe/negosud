@@ -34,9 +34,14 @@ public class Startup
         services.AddScoped<IGrapeService, GrapeService>();
         services.AddScoped<IBottleService, BottleService>();
         services.AddScoped<ICountryService, CountryService>();
-        services.AddScoped<ILocationService, LocationService>();
+        services.AddScoped<IStorageLocationService, StorageLocationService>();
         services.AddScoped<IProducerService, ProducerService>();
         services.AddScoped<IRegionService, RegionService>();
+        services.AddScoped<IWineLabelService, WineLabelService>();
+
+            var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext");
+
+        services.AddDbContext<NegoSudDbContext>(options => options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<SecurePassword>();
         

@@ -9,14 +9,13 @@ public class NegoSudDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Bottle>? Bottles { get; set; }
-    public virtual DbSet<Country>? Countries { get; set; }
-    public virtual DbSet<Grape>? Grapes { get; set; }
-    public virtual DbSet<Location>? Locations { get; set; }
-    public virtual DbSet<Producer>? Producers { get; set; }
-    public virtual DbSet<Region>? Regions { get; set; }
-    public virtual DbSet<User>? Users { get; set; }
-    
+    public virtual DbSet<Bottle> Bottles { get; set; }
+    public virtual DbSet<WineLabel> WineLabels { get; set; }
+    public virtual DbSet<Country> Countries { get; set; }
+    public virtual DbSet<Grape> Grapes { get; set; }
+    public virtual DbSet<StorageLocation> StorageLocations { get; set; }
+    public virtual DbSet<Producer> Producers { get; set; }
+    public virtual DbSet<Region> Regions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,6 +27,16 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate();
+        });
+
+        modelBuilder.Entity<WineLabel>(entity =>
+        {
+            entity.ToTable(nameof(WineLabel));
+            entity.HasKey(b => b.Id);
+            entity.Property(p => p.Created_By).HasMaxLength(200);
+            entity.Property(p => p.Updated_By).HasMaxLength(200);
+            entity.Property(t => t.Created_At).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.Updated_At).HasPrecision(0).ValueGeneratedOnUpdate();
         });
         
         modelBuilder.Entity<BottleGrape>(entity =>
@@ -73,9 +82,9 @@ public class NegoSudDbContext : DbContext
             entity.HasKey(k => k.Id);
         });
         
-        modelBuilder.Entity<Location>(entity =>
+        modelBuilder.Entity<StorageLocation>(entity =>
         {
-            entity.ToTable(nameof(Location));
+            entity.ToTable(nameof(StorageLocation));
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
@@ -105,9 +114,9 @@ public class NegoSudDbContext : DbContext
             entity.HasMany(k => k.Producers).WithOne(k => k.Region);
         });
 
-        modelBuilder.Entity<BottleLocation>(entity =>
+        modelBuilder.Entity<BottleStorageLocation>(entity =>
         {
-            entity.ToTable(nameof(BottleLocation));
+            entity.ToTable(nameof(BottleStorageLocation));
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
@@ -115,13 +124,13 @@ public class NegoSudDbContext : DbContext
             entity.HasKey(k => new {Bottle_Id = k.BottleId, Location_Id = k.LocationId});
             
             entity.HasOne(k => k.Bottle)
-                .WithMany(k => k.BottleLocations)
+                .WithMany(k => k.BottleStorageLocations)
                 .HasForeignKey(k => k.BottleId)
                 .HasPrincipalKey(k => k.Id);
             
-            entity.HasOne(k => k.Location)
-                .WithMany(k => k.BottleLocations)
-                .HasForeignKey(k => k.LocationId)
+            entity.HasOne(k => k.StorageLocation)
+                .WithMany(k => k.BottleStorageLocations)
+                .HasForeignKey(k => k.StorageLocationId)
                 .HasPrincipalKey(k => k.Id);
         });
 
