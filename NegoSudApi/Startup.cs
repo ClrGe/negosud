@@ -41,6 +41,7 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, NegoSudDbContext dbContext)
     {
+        dbContext.Database.EnsureCreated();
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {

@@ -17,11 +17,11 @@ public class CountryService : ICountryService
     }
 
     //</inheritdoc>    
-    public async Task<Country?> GetCountryAsync(int id, bool includes = true)
+    public async Task<Country?> GetCountryAsync(int id, bool includeRelations = true)
     {
         try
         {
-            if (includes)
+            if (includeRelations)
             {
                 return await _context.Countries
                 .Include(c => c.Regions)

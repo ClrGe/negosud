@@ -9,9 +9,9 @@ public interface IBottleService
     /// Get a Bottle entity from the database by its id, , including or not subobjects and collections
     /// </summary>
     /// <param name="id">The Bottle's id</param>
-    /// <param name="includes">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
+    /// <param name="includeRelations">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
     /// <returns></returns>
-    Task<Bottle?> GetBottleAsync(int id, bool includes = true);
+    Task<Bottle?> GetBottleAsync(int id, bool includeRelations = true);
 
     /// <summary>
     /// Get an IEnumerable of Bottles from the database

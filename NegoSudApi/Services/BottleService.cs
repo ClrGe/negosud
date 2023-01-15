@@ -23,11 +23,11 @@ public class BottleService : IBottleService
     }     
 
     //</inheritdoc>  
-    public async Task<Bottle?> GetBottleAsync(int id, bool includes = true)
+    public async Task<Bottle?> GetBottleAsync(int id, bool includeRelations = true)
     {
         try
         {
-            if (includes)
+            if (includeRelations)
             {
                 return await _context.Bottles
                     .Include(b => b.Producer)
@@ -71,7 +71,7 @@ public class BottleService : IBottleService
             {
                 if(bottleLocation.Location?.Id != null)
                 {
-                    Location? location = await _locationService.GetLocationAsync(bottleLocation.Location.Id, includes: false);
+                    Location? location = await _locationService.GetLocationAsync(bottleLocation.Location.Id, includeRelations: false);
                     if (location != null)
                     {
                         bottleLocation.Location = location;
@@ -84,7 +84,7 @@ public class BottleService : IBottleService
             {
                 if (bottleGrape.Grape?.Id != null)
                 {
-                    Grape? grape = await _grapeService.GetGrapeAsync(bottleGrape.Grape.Id, includes: false);
+                    Grape? grape = await _grapeService.GetGrapeAsync(bottleGrape.Grape.Id, includeRelations: false);
                     if (grape != null)
                     {
                         bottleGrape.Grape = grape;
@@ -95,7 +95,7 @@ public class BottleService : IBottleService
 
             if(bottle.Producer?.Id != null)
             {
-                Producer? producer = await _producerService.GetProducerAsync(bottle.Producer.Id, includes: false);
+                Producer? producer = await _producerService.GetProducerAsync(bottle.Producer.Id, includeRelations: false);
                 if(producer != null)
                 {
                     bottle.Producer = producer;
@@ -144,7 +144,7 @@ public class BottleService : IBottleService
 
                 if (bottle.Producer != null)
                 {
-                    Producer? producer = await _producerService.GetProducerAsync(bottle.Producer.Id, includes: false);
+                    Producer? producer = await _producerService.GetProducerAsync(bottle.Producer.Id, includeRelations: false);
                     // If we found a producer in the database
                     if (producer != null)
                     {

@@ -17,11 +17,11 @@ public class GrapeService : IGrapeService
     }
 
     //</inheritdoc>
-    public async Task<Grape?> GetGrapeAsync(int id, bool includes = true)
+    public async Task<Grape?> GetGrapeAsync(int id, bool includeRelations = true)
     {
         try
         {
-            if (includes)
+            if (includeRelations)
             {
                 return await _context.Grapes
                     .Include(g => g.BottleGrapes)

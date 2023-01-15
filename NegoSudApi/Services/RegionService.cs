@@ -20,11 +20,11 @@ public class RegionService : IRegionService
     }
 
     //</inheritdoc> 
-    public async Task<Region?> GetRegionAsync(int id, bool includes = true)
+    public async Task<Region?> GetRegionAsync(int id, bool includeRelations = true)
     {
         try
         {
-            if (includes)
+            if (includeRelations)
             {
                 return await _context.Regions
                     .Include(r => r.Country)
@@ -64,7 +64,7 @@ public class RegionService : IRegionService
             Country? country = null;
             if(region.Country?.Id != null)
             {
-                country = await _countryService.GetCountryAsync(region.Country.Id, includes: false);
+                country = await _countryService.GetCountryAsync(region.Country.Id, includeRelations: false);
             }
             
             // If we found a country in the database
@@ -101,7 +101,7 @@ public class RegionService : IRegionService
         {
             if (region.Country?.Id != null)
             {
-                Country? country = await _countryService.GetCountryAsync(region.Country.Id, includes: false);
+                Country? country = await _countryService.GetCountryAsync(region.Country.Id, includeRelations: false);
                 // If we found a country in the database
                 if (country != null)
                 {

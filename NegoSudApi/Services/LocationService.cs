@@ -17,11 +17,11 @@ public class LocationService : ILocationService
     }
 
     //</inheritdoc>
-    public async Task<Location?> GetLocationAsync(int id, bool includes = true)
+    public async Task<Location?> GetLocationAsync(int id, bool includeRelations = true)
     {
         try
         {
-            if (includes)
+            if (includeRelations)
             {
                 return await _context.Locations
                     .Include(l => l.BottleLocations)
