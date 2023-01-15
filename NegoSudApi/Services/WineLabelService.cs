@@ -18,11 +18,11 @@ namespace NegoSudApi.Services
         }
 
         //</inheritdoc> 
-        public async Task<WineLabel?> GetWineLabelAsync(int id, bool includes = true)
+        public async Task<WineLabel?> GetWineLabelAsync(int id, bool includeRelations = true)
         {
             try
             {
-                if (includes)
+                if (includeRelations)
                 {
                     return await _context.WineLabels
                     .Include(c => c.Bottles)

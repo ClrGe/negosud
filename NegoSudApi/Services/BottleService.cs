@@ -80,7 +80,7 @@ public class BottleService : IBottleService
                 {
                     if (bottleStorageLocation.StorageLocation?.Id != null)
                     {
-                        StorageLocation? location = await _storageLocationService.GetStorageLocationAsync(bottleStorageLocation.StorageLocation.Id, includes: false);
+                        StorageLocation? location = await _storageLocationService.GetStorageLocationAsync(bottleStorageLocation.StorageLocation.Id, includeRelations: false);
                         if (location != null)
                         {
                             bottleStorageLocation.StorageLocation = location;
@@ -96,7 +96,7 @@ public class BottleService : IBottleService
                 {
                     if (bottleGrape.Grape?.Id != null)
                     {
-                        Grape? grape = await _grapeService.GetGrapeAsync(bottleGrape.Grape.Id, includes: false);
+                        Grape? grape = await _grapeService.GetGrapeAsync(bottleGrape.Grape.Id, includeRelations: false);
                         if (grape != null)
                         {
                             bottleGrape.Grape = grape;
@@ -108,7 +108,7 @@ public class BottleService : IBottleService
 
             if(bottle.WineLabel?.Id != null)
             {
-                WineLabel? wineLabel = await _wineLabelService.GetWineLabelAsync(bottle.WineLabel.Id, includes: false);
+                WineLabel? wineLabel = await _wineLabelService.GetWineLabelAsync(bottle.WineLabel.Id, includeRelations: false);
                 if(wineLabel != null) 
                 {
                     bottle.WineLabel = wineLabel;
@@ -162,7 +162,7 @@ public class BottleService : IBottleService
 
                 dbBottle.Full_Name = bottle.Full_Name;
                 dbBottle.Description = bottle.Description;
-                dbBottle.Label = bottle.Label;
+                dbBottle.WineLabel = bottle.WineLabel;
                 dbBottle.Volume = bottle.Volume;
                 dbBottle.Picture = bottle.Picture;
                 dbBottle.Year_Produced = bottle.Year_Produced;
@@ -181,34 +181,34 @@ public class BottleService : IBottleService
                 }
 
 
-                if (bottle.BottleLocations != null && dbBottle.BottleLocations != null)
+                if (bottle.BottleStorageLocations != null && dbBottle.BottleStorageLocations != null)
                 {
 
-                    ICollection<BottleLocation>? dbBottleStorageLocations = dbBottle.BottleLocations.ToList();
+                    ICollection<BottleStorageLocation>? dbBottleStorageLocations = dbBottle.BottleStorageLocations.ToList();
 
-                    foreach (BottleLocation bottleLocation in bottle.BottleLocations)
+                    foreach (BottleStorageLocation BottleStorageLocation in bottle.BottleStorageLocations)
                     {
-                        //if the BottleLocation already exists
-                        BottleLocation? existingBottleLocation = dbBottleStorageLocations.FirstOrDefault(bl => bl.Bottle_Id == bottleLocation.Bottle_Id && bl.Location_Id == bottleLocation.Location_Id);
+                        //if the BottleStorageLocation already exists
+                        BottleStorageLocation? existingBottleStorageLocation = dbBottleStorageLocations.FirstOrDefault(bl => bl.Bottle_Id == BottleStorageLocation.Bottle_Id && bl.StorageLocation_Id == BottleStorageLocation.StorageLocation_Id);
 
-                        if (existingBottleLocation != null)
+                        if (existingBottleStorageLocation != null)
                         {
-                            //update the existing BottleLocation
-                            existingBottleLocation.Quantity = bottleLocation.Quantity;
-                            _context.Entry(existingBottleLocation).State = EntityState.Modified;
-                            dbBottleStorageLocations.Remove(existingBottleLocation);
+                            //update the existing BottleStorageLocation
+                            existingBottleStorageLocation.Quantity = BottleStorageLocation.Quantity;
+                            _context.Entry(existingBottleStorageLocation).State = EntityState.Modified;
+                            dbBottleStorageLocations.Remove(existingBottleStorageLocation);
                         }
                         else
                         {
-                            // otherwise, add the new BottleLocation to the current bottle
-                            dbBottle.BottleLocations.Add(bottleLocation);
+                            // otherwise, add the new BottleStorageLocation to the current bottle
+                            dbBottle.BottleStorageLocations.Add(BottleStorageLocation);
                         }
 
                     }
 
-                    foreach (BottleLocation bottleLocationToDelete in dbBottleStorageLocations)
+                    foreach (BottleStorageLocation BottleStorageLocationToDelete in dbBottleStorageLocations)
                     {
-                        dbBottle.BottleLocations.Remove(bottleLocationToDelete);
+                        dbBottle.BottleStorageLocations.Remove(BottleStorageLocationToDelete);
                     }
 
                 }
