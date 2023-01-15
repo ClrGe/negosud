@@ -156,19 +156,19 @@ public class BottleService : IBottleService
                 if (bottle.BottleLocations != null && dbBottle.BottleLocations != null)
                 {
 
-                    ICollection<BottleLocation>? dbBottleLocations = dbBottle.BottleLocations.ToList();
+                    ICollection<BottleLocation>? dbBottleStorageLocations = dbBottle.BottleLocations.ToList();
 
                     foreach (BottleLocation bottleLocation in bottle.BottleLocations)
                     {
                         //if the BottleLocation already exists
-                        BottleLocation? existingBottleLocation = dbBottleLocations.FirstOrDefault(bl => bl.Bottle_Id == bottleLocation.Bottle_Id && bl.Location_Id == bottleLocation.Location_Id);
+                        BottleLocation? existingBottleLocation = dbBottleStorageLocations.FirstOrDefault(bl => bl.Bottle_Id == bottleLocation.Bottle_Id && bl.Location_Id == bottleLocation.Location_Id);
 
                         if (existingBottleLocation != null)
                         {
                             //update the existing BottleLocation
                             existingBottleLocation.Quantity = bottleLocation.Quantity;
                             _context.Entry(existingBottleLocation).State = EntityState.Modified;
-                            dbBottleLocations.Remove(existingBottleLocation);
+                            dbBottleStorageLocations.Remove(existingBottleLocation);
                         }
                         else
                         {
@@ -178,7 +178,7 @@ public class BottleService : IBottleService
 
                     }
 
-                    foreach (BottleLocation bottleLocationToDelete in dbBottleLocations)
+                    foreach (BottleLocation bottleLocationToDelete in dbBottleStorageLocations)
                     {
                         dbBottle.BottleLocations.Remove(bottleLocationToDelete);
                     }
