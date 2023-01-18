@@ -19,7 +19,7 @@ public class RegionService : IRegionService
         _countryService = countryService;
     }
 
-    //</inheritdoc> 
+    ///</inheritdoc> 
     public async Task<Region?> GetRegionAsync(int id, bool includes = true)
     {
         try
@@ -41,7 +41,7 @@ public class RegionService : IRegionService
         return null;
     }
 
-    //</inheritdoc> 
+    ///</inheritdoc> 
     public async Task<IEnumerable<Region>?> GetRegionsAsync()
     {
         try
@@ -56,7 +56,7 @@ public class RegionService : IRegionService
         return null;
     }
 
-    //</inheritdoc> 
+    ///</inheritdoc> 
     public async Task<Region?> AddRegionAsync(Region region)
     {
         try
@@ -93,7 +93,7 @@ public class RegionService : IRegionService
         return null;
     }
 
-    //</inheritdoc> 
+    ///</inheritdoc> 
     public async Task<Region?> UpdateRegionAsync(Region region)
     {
         try
@@ -111,7 +111,7 @@ public class RegionService : IRegionService
         return null;
     }
 
-    //</inheritdoc> 
+    ///</inheritdoc> 
     public async Task<bool?> DeleteRegionAsync(int id)
     {
         try

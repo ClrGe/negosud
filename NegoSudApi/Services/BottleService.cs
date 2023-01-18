@@ -29,7 +29,7 @@ public class BottleService : IBottleService
         _wineLabelService = wineLabelService;
     }
 
-    //</inheritdoc>  
+    ///</inheritdoc>  
     public async Task<Bottle?> GetBottleAsync(int id, bool includes = true)
     {
         try
@@ -54,7 +54,7 @@ public class BottleService : IBottleService
         return null;
     }
 
-    //</inheritdoc>  
+    ///</inheritdoc>  
     public async Task<IEnumerable<Bottle>?> GetBottlesAsync()
     {
         try
@@ -69,7 +69,7 @@ public class BottleService : IBottleService
         return null;
     }
 
-    //</inheritdoc>  
+    ///</inheritdoc>  
     public async Task<Bottle?> AddBottleAsync(Bottle bottle)
     {
         try
@@ -148,7 +148,7 @@ public class BottleService : IBottleService
         return null;
     }
 
-    //</inheritdoc>  
+    ///</inheritdoc>  
     public async Task<Bottle?> UpdateBottleAsync(Bottle bottle)
     {
         try
@@ -166,7 +166,7 @@ public class BottleService : IBottleService
         return null;
     }
 
-    //</inheritdoc>  
+    ///</inheritdoc>  
     public async Task<bool?> DeleteBottleAsync(int id)
     {
         try

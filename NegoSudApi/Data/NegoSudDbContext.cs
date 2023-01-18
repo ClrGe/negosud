@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
+using NegoSudApi.Services;
 
 namespace NegoSudApi.Data;
 
@@ -16,6 +17,7 @@ public class NegoSudDbContext : DbContext
     public virtual DbSet<StorageLocation> StorageLocations { get; set; }
     public virtual DbSet<Producer> Producers { get; set; }
     public virtual DbSet<Region> Regions { get; set; }
+    public virtual DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,10 +35,10 @@ public class NegoSudDbContext : DbContext
         {
             entity.ToTable(nameof(WineLabel));
             entity.HasKey(b => b.Id);
-            entity.Property(p => p.Created_By).HasMaxLength(200);
-            entity.Property(p => p.Updated_By).HasMaxLength(200);
-            entity.Property(t => t.Created_At).HasPrecision(0).ValueGeneratedOnAdd();
-            entity.Property(t => t.Updated_At).HasPrecision(0).ValueGeneratedOnUpdate();
+            entity.Property(p => p.CreatedBy).HasMaxLength(200);
+            entity.Property(p => p.UpdatedBy).HasMaxLength(200);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate();
         });
         
         modelBuilder.Entity<BottleGrape>(entity =>
@@ -121,7 +123,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate();
-            entity.HasKey(k => new {Bottle_Id = k.BottleId, Location_Id = k.LocationId});
+            entity.HasKey(k => new { k.BottleId, k.StorageLocationId});
             
             entity.HasOne(k => k.Bottle)
                 .WithMany(k => k.BottleStorageLocations)

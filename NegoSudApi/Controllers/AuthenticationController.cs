@@ -35,10 +35,4 @@ public class AuthenticationController : ControllerBase
         }
         return Task.FromResult<ActionResult<string>>(Unauthorized());
     }
-    
-    // [HttpPost("refresh")]
-    // public IActionResult RefreshToken(Token refreshToken)
-    // {
-    //     return StatusCode( StatusCodes.Status202Accepted,_jwtAuthenticationService.RefreshToken(refreshToken));
-    // }
 }

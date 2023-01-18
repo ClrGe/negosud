@@ -8,7 +8,7 @@ using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services;
 
-//</inheritdoc>
+////</inheritdoc>
 public class JwtAuthenticationService : IJwtAuthenticationService
 {
     private readonly IConfiguration _configuration;
@@ -22,7 +22,7 @@ public class JwtAuthenticationService : IJwtAuthenticationService
         _securePassword = securePassword;
     }
     
-    //</inheritdoc>
+    ////</inheritdoc>
     public string GenerateToken(string secret, List<Claim> claims)
     {
 
@@ -42,7 +42,7 @@ public class JwtAuthenticationService : IJwtAuthenticationService
 
     }
 
-    //</inheritdoc>
+    ////</inheritdoc>
     public User? Authenticate(string email, string password)
     {
         var dbUser = _context.Users.FirstOrDefault(u => u.Email ==  email);
