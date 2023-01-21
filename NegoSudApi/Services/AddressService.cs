@@ -1,18 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Drawing;
+using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
+using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services
 {
-    public class AddressService
+    public class AddressService : IAddressService
     {
         private readonly NegoSudDbContext _context;
         private readonly ILogger<AddressService> _logger;
+        private readonly ICityService _cityService;
 
-        public AddressService(NegoSudDbContext context, ILogger<AddressService> logger)
+        public AddressService(NegoSudDbContext context, ILogger<AddressService> logger, ICityService cityService)
         {
             _context = context;
             _logger = logger;
+            _cityService = cityService;
         }
 
         //<inheritdoc/>
@@ -55,18 +59,29 @@ namespace NegoSudApi.Services
         //<inheritdoc/>
         public async Task<Address?> AddAddressAsync(Address address)
         {
-            try
+            City? city = null;
+            if (address.City?.Id != null)
             {
-                Address newAddress = (await _context.Addresses.AddAsync(address)).Entity;
-                await _context.SaveChangesAsync();
-                return newAddress;
-            }
-            catch (Exception ex)
-            {
-                _logger.Log(LogLevel.Information, ex.ToString());
+                city = await _cityService.GetCityAsync(address.City.Id, includeRelations: false);
             }
 
-            return null;
+            // If we found a city in the database
+            if (city != null)
+            {
+                address.City = city;
+            }
+            // If we want to add a new city into the database from the AddAddress form
+            else if (address.City != null)
+            {
+                address.City = await _cityService.AddCityAsync(address.City);
+            }
+
+            // Create the region in the database
+            Address newAddress = (await _context.Addresses.AddAsync(address)).Entity;
+
+            await _context.SaveChangesAsync();
+
+            return newAddress;
         }
 
         //<inheritdoc/>
