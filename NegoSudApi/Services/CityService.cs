@@ -6,30 +6,29 @@ using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services
 {
-    public class WineLabelService : IWineLabelService
+    public class CityService : ICityService
     {
         private readonly NegoSudDbContext _context;
-        private readonly ILogger<WineLabelService> _logger;
+        private readonly ILogger<CityService> _logger;
 
-        public WineLabelService(NegoSudDbContext context, ILogger<WineLabelService> logger)
+        public CityService(NegoSudDbContext context, ILogger<CityService> logger)
         {
             _context = context;
             _logger = logger;
         }
-
-        //</inheritdoc> 
-        public async Task<WineLabel?> GetWineLabelAsync(int id, bool includeRelations = true)
+        //<inheritdoc/>
+        public async Task<City?> GetCityAsync(int id, bool includeRelations = true)
         {
             try
             {
                 if (includeRelations)
                 {
-                    return await _context.WineLabels
-                    .Include(c => c.Bottles)
+                    return await _context.Cities
+                    .Include(c => c.Addressess)
                     .FirstOrDefaultAsync(c => c.Id == id);
                 }
 
-                return await _context.WineLabels.FindAsync(id);
+                return await _context.Cities.FindAsync(id);
             }
             catch (Exception ex)
             {
@@ -39,12 +38,12 @@ namespace NegoSudApi.Services
             return null;
         }
 
-        //</inheritdoc> 
-        public async Task<IEnumerable<WineLabel>?> GetWineLabelsAsync()
+        //<inheritdoc/>
+        public async Task<IEnumerable<City>?> GetCitiesAsync()
         {
             try
             {
-                return await _context.WineLabels.ToListAsync();
+                return await _context.Cities.ToListAsync();
             }
             catch (Exception ex)
             {
@@ -54,14 +53,14 @@ namespace NegoSudApi.Services
             return null;
         }
 
-        //</inheritdoc> 
-        public async Task<WineLabel?> AddWineLabelAsync(WineLabel wineLabel)
+        //<inheritdoc/>
+        public async Task<City?> AddCityAsync(City city)
         {
             try
             {
-                WineLabel newWineLabel = (await _context.WineLabels.AddAsync(wineLabel)).Entity;
+                City newCity = (await _context.Cities.AddAsync(city)).Entity;
                 await _context.SaveChangesAsync();
-                return newWineLabel;
+                return newCity;
             }
             catch (Exception ex)
             {
@@ -71,15 +70,15 @@ namespace NegoSudApi.Services
             return null;
         }
 
-        //</inheritdoc> 
-        public async Task<WineLabel?> UpdateWineLabelAsync(WineLabel wineLabel)
+        //<inheritdoc/>
+        public async Task<City?> UpdateCityAsync(City city)
         {
             try
             {
-                _context.Entry(wineLabel).State = EntityState.Modified;
+                _context.Entry(city).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                return wineLabel;
+                return city;
             }
             catch (Exception ex)
             {
@@ -89,19 +88,19 @@ namespace NegoSudApi.Services
             return null;
         }
 
-        //</inheritdoc> 
-        public async Task<bool?> DeleteWineLabelAsync(int id)
+        //<inheritdoc/>
+        public async Task<bool?> DeleteCityAsync(int id)
         {
             try
             {
-                var dbWineLabel = await _context.WineLabels.FindAsync(id);
+                var dbCity = await _context.Cities.FindAsync(id);
 
-                if (dbWineLabel == null)
+                if (dbCity == null)
                 {
                     return false;
                 }
 
-                _context.WineLabels.Remove(dbWineLabel);
+                _context.Cities.Remove(dbCity);
                 await _context.SaveChangesAsync();
 
                 return true;

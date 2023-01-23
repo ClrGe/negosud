@@ -10,9 +10,9 @@ namespace NegoSudApi.Services.Interfaces
         /// Get a WineLabel entity from the database by its id, including or not subobjects and collections
         /// </summary>
         /// <param name="id">The WineLabel's id</param>
-        /// <param name="includes">Indicates whether or not subobjects and collections should be loaded</param>
+        /// <param name="includeRelations">Indicates whether or not subobjects and collections should be loaded</param>
         /// <returns>A WineLabel with the desired id, or null if it doesn't exist</returns>
-        Task<WineLabel?> GetWineLabelAsync(int id, bool includes = true);
+        Task<WineLabel?> GetWineLabelAsync(int id, bool includeRelations = true);
 
         /// <summary>
         /// Get an IEnumerable of WineLabels from the database

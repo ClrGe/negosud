@@ -9,9 +9,9 @@ public interface IProducerService
     /// Get a Producer entity from the database by its id, including or not subobjects and collections
     /// </summary>
     /// <param name="id">The Country's id</param>
-    /// <param name="includes">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
+    /// <param name="includeRelations">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
     /// <returns>A Producer with the desired id, or null if it doesn't exist</returns>
-    Task<Producer?> GetProducerAsync(int id, bool includes = true);
+    Task<Producer?> GetProducerAsync(int id, bool includeRelations = true);
 
     /// <summary>
     /// Get an IEnumerable of Producers from the database

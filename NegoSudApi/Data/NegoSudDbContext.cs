@@ -18,6 +18,8 @@ public class NegoSudDbContext : DbContext
     public virtual DbSet<Producer> Producers { get; set; }
     public virtual DbSet<Region> Regions { get; set; }
     public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<City> Cities { get; set; }
+    public virtual DbSet<Address> Addresses { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -114,6 +116,27 @@ public class NegoSudDbContext : DbContext
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate();
             entity.HasKey(k => k.Id);
             entity.HasMany(k => k.Producers).WithOne(k => k.Region);
+        });
+
+        modelBuilder.Entity<City>(entity =>
+        {
+            entity.ToTable(nameof(City));
+            entity.Property(p => p.CreatedBy).HasMaxLength(200);
+            entity.Property(p => p.UpdatedBy).HasMaxLength(200);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate();
+            entity.HasKey(k => k.Id);
+            entity.HasMany(k => k.Addressess).WithOne(k => k.City);
+        });
+
+        modelBuilder.Entity<Address>(entity =>
+        {
+            entity.ToTable(nameof(Address));
+            entity.Property(p => p.CreatedBy).HasMaxLength(200);
+            entity.Property(p => p.UpdatedBy).HasMaxLength(200);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate();
+            entity.HasKey(k => k.Id);
         });
 
         modelBuilder.Entity<BottleStorageLocation>(entity =>

@@ -7,6 +7,7 @@ using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using NegoSudApi.Data;
+using System;
 
 namespace NegoSudApi;
 
@@ -63,6 +64,8 @@ public class Startup
             });
         services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
         services.AddAuthorization();
+        services.AddScoped<ICityService, CityService>();
+        services.AddScoped<IAddressService, AddressService>();
 
         var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext") ??
                                throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");

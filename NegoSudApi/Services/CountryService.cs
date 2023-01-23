@@ -16,12 +16,12 @@ public class CountryService : ICountryService
         _logger = logger;
     }
 
-    ///</inheritdoc>    
-    public async Task<Country?> GetCountryAsync(int id, bool includes = true)
+    //</inheritdoc>    
+    public async Task<Country?> GetCountryAsync(int id, bool includeRelations = true)
     {
         try
         {
-            if (includes)
+            if (includeRelations)
             {
                 return await _context.Countries
                 .Include(c => c.Regions)
@@ -38,7 +38,7 @@ public class CountryService : ICountryService
         return null;
     }
 
-    ///</inheritdoc>    
+    //</inheritdoc>    
     public async Task<IEnumerable<Country>?> GetCountriesAsync()
     {
         try
@@ -53,7 +53,7 @@ public class CountryService : ICountryService
         return null;
     }
 
-    ///</inheritdoc>    
+    //</inheritdoc>    
     public async Task<Country?> AddCountryAsync(Country country)
     {
         try
@@ -70,7 +70,7 @@ public class CountryService : ICountryService
         return null;
     }
 
-    ///</inheritdoc>    
+    //</inheritdoc>    
     public async Task<Country?> UpdateCountryAsync(Country country)
     {
         try
@@ -88,7 +88,7 @@ public class CountryService : ICountryService
         return null;
     }
 
-    ///</inheritdoc>    
+    //</inheritdoc>    
     public async Task<bool?> DeleteCountryAsync(int id)
     {
         try

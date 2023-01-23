@@ -16,12 +16,12 @@ public class GrapeService : IGrapeService
         _logger = logger;
     }
 
-    ////</inheritdoc>
-    public async Task<Grape?> GetGrapeAsync(int id, bool includes = true)
+    //</inheritdoc>
+    public async Task<Grape?> GetGrapeAsync(int id, bool includeRelations = true)
     {
         try
         {
-            if (includes)
+            if (includeRelations)
             {
                 return await _context.Grapes
                     .Include(g => g.BottleGrapes)
@@ -38,7 +38,7 @@ public class GrapeService : IGrapeService
         return null;
     }
 
-    ////</inheritdoc>      
+    //</inheritdoc>      
     public async Task<IEnumerable<Grape>?> GetGrapesAsync()
     {
         try
@@ -53,7 +53,7 @@ public class GrapeService : IGrapeService
         return null;
     }
 
-    ////</inheritdoc>
+    //</inheritdoc>
     public async Task<Grape?> AddGrapeAsync(Grape grape)
     {
         try
@@ -70,7 +70,7 @@ public class GrapeService : IGrapeService
         return null;
     }
 
-    ////</inheritdoc>
+    //</inheritdoc>
     public async Task<Grape?> UpdateGrapeAsync(Grape grape)
     {
         try
@@ -87,7 +87,7 @@ public class GrapeService : IGrapeService
         return null;
     }
 
-    ////</inheritdoc>
+    //</inheritdoc>
     public async Task DeleteGrapeAsync(int id)
     {
         try

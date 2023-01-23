@@ -16,12 +16,12 @@ public class StorageLocationService : IStorageLocationService
         _logger = logger;
     }
 
-    ///</inheritdoc>
-    public async Task<StorageLocation?> GetStorageLocationAsync(int id, bool includes = true)
+    //</inheritdoc>
+    public async Task<StorageLocation?> GetStorageLocationAsync(int id, bool includeRelations = true)
     {
         try
         {
-            if (includes)
+            if (includeRelations)
             {
                 return await _context.StorageLocations
                     .Include(l => l.BottleStorageLocations)
@@ -38,7 +38,7 @@ public class StorageLocationService : IStorageLocationService
         return null;
     }
 
-    ///</inheritdoc>
+    //</inheritdoc>
     public async Task<IEnumerable<StorageLocation>?> GetStorageLocationsAsync()
     {
         try
@@ -53,7 +53,7 @@ public class StorageLocationService : IStorageLocationService
         return null;
     }
 
-    ///</inheritdoc>
+    //</inheritdoc>
     public async Task<StorageLocation?> AddStorageLocationAsync(StorageLocation storageLocation)
     {
         try
@@ -70,7 +70,7 @@ public class StorageLocationService : IStorageLocationService
         return null;
     }
 
-    ///</inheritdoc>
+    //</inheritdoc>
     public async Task<StorageLocation?> UpdateStorageLocationAsync(StorageLocation storageLocation)
     {
         try
@@ -87,7 +87,7 @@ public class StorageLocationService : IStorageLocationService
         return null;
     }
 
-    ///</inheritdoc>
+    //</inheritdoc>
     public async Task DeleteStorageLocationAsync(int id)
     {
         try

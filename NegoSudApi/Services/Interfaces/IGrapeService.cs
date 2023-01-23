@@ -8,9 +8,9 @@ public interface IGrapeService
     /// Get a Grape entity from the database by its id, including or not subobjects and collections
     /// </summary>
     /// <param name="id">The entity's id</param>
-    /// <param name="includes">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
+    /// <param name="includeRelations">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
     /// <returns>A Grape with the desired id, or null if it doesn't exist</returns>
-    public Task<Grape?> GetGrapeAsync(int id, bool includes = true);
+    public Task<Grape?> GetGrapeAsync(int id, bool includeRelations = true);
 
     /// <summary>
     /// Get an IEnumerable of Grapes Entities 
