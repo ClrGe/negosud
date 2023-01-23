@@ -10,19 +10,21 @@ public class ProducerService : IProducerService
 
     private readonly NegoSudDbContext _context;
     private readonly ILogger<ProducerService> _logger;
+    private readonly IRegionService _regionService;
 
-    public ProducerService(NegoSudDbContext context, ILogger<ProducerService> logger)
+    public ProducerService(NegoSudDbContext context, ILogger<ProducerService> logger, IRegionService regionService)
     {
         _context = context;
         _logger = logger;
+        _regionService = regionService;
     }
 
     //</inheritdoc> 
-    public async Task<Producer?> GetProducerAsync(int id, bool includes = true)
+    public async Task<Producer?> GetProducerAsync(int id, bool includeRelations = true)
     {
         try
         {
-            if (includes)
+            if (includeRelations)
             {
                 return await _context.Producers
                     .Include(p => p.Region)
@@ -59,9 +61,29 @@ public class ProducerService : IProducerService
     {
         try
         {
-            await _context.Producers.AddAsync(producer);
+            Region? region = null;
+            if (producer.Region?.Id != null)
+            {
+                region = await _regionService.GetRegionAsync(producer.Region.Id, includeRelations: false);
+            }
+            
+            // If we found a region in the database
+            if (region != null)
+            {
+                producer.Region = region;
+            }
+            // If we want to add a new region into the database from the AddProducerForm
+            else if (producer.Region!= null)
+            {
+                producer.Region = await _regionService.AddRegionAsync(producer.Region);
+            }
+
+            // Create the producer in the database
+            Producer newProducer = (await _context.Producers.AddAsync(producer)).Entity;
+
             await _context.SaveChangesAsync();
-            return await _context.Producers.FindAsync(producer.Id);
+
+            return newProducer;
         }
         catch (Exception ex)
         {
@@ -76,6 +98,16 @@ public class ProducerService : IProducerService
     {
         try
         {
+            if (producer.Region?.Id != null)
+            {
+                Region? region = await _regionService.GetRegionAsync(producer.Region.Id, includeRelations: false);
+                // If we found a region in the database
+                if (region != null)
+                {
+                    producer.Region = region;
+                }
+            }
+
             _context.Entry(producer).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 

@@ -1,6 +1,6 @@
 ﻿namespace NegoSudApi.Models;
 
-public class Location : IModelBase
+public class StorageLocation : IModelBase
 {
     public int Id { get; set; }
     public string? Name { get; set; }
@@ -8,6 +8,6 @@ public class Location : IModelBase
     public DateTime? Updated_At { get; set; }
     public string? Created_By { get; set; }
     public string? Updated_By { get; set; }
-    public virtual ICollection<BottleLocation>? BottleLocations { get; set; }
+    public virtual ICollection<BottleStorageLocation>? BottleStorageLocations { get; set; }
 
 }

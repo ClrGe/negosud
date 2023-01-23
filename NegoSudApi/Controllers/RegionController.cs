@@ -56,7 +56,7 @@ public class RegionController : ControllerBase
             return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
         }
 
-        return StatusCode(StatusCodes.Status200OK, dbRegion);
+        return StatusCode(StatusCodes.Status201Created, dbRegion);
     }
 
     // update existing record matching query

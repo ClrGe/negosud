@@ -51,7 +51,7 @@ namespace NegoSudApi.Controllers
                 return StatusCode(StatusCodes.Status204NoContent, $"No match - could not add content.");
             }
 
-            return CreatedAtAction("GetCountry", dbCountry);
+            return StatusCode(StatusCodes.Status201Created, dbCountry);
         }
 
         [HttpPut("{id}")]

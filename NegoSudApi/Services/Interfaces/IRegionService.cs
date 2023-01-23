@@ -9,28 +9,28 @@ public interface IRegionService
     /// Get a Region entity from the database by its id, including or not subobjects and collections
     /// </summary>
     /// <param name="id">The Country's id</param>
-    /// <param name="includes">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
-    /// <returns></returns>
-    Task<Region?> GetRegionAsync(int id, bool includes = true);
+    /// <param name="includeRelations">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
+    /// <returns>A Region with the desired id, or null if it doesn't exist</returns>
+    Task<Region?> GetRegionAsync(int id, bool includeRelations = true);
 
     /// <summary>
     /// Get an IEnumerable of Regions from the database
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A collection of Region</returns>
     Task<IEnumerable<Region>?> GetRegionsAsync();
 
     /// <summary>
     /// Create a new Region entity in the database
     /// </summary>
     /// <param name="region">The entity's model</param>
-    /// <returns></returns>
+    /// <returns>A Region</returns>
     Task<Region?> AddRegionAsync(Region region);
 
     /// <summary>
     /// Update a Region entity in the database from a new model
     /// </summary>
     /// <param name="region">The new entity's model</param>
-    /// <returns></returns>
+    /// <returns>A Region</returns>
     Task<Region?> UpdateRegionAsync(Region region);
 
     /// <summary>
