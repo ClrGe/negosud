@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers;

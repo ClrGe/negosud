@@ -40,7 +40,7 @@ public class UserController :ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCountries);
     }
 
-    [HttpPost]
+    [HttpPost("AddUser")]
     public async Task<ActionResult<User>> AddUserAsync(User user)
     {
         user.Password = _securePassword.Hash(user);
@@ -51,7 +51,7 @@ public class UserController :ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbUser);
     }
 
-    [HttpPut("{id}")]
+    [HttpPost("UpdateUser/{id}")]
     public async Task<IActionResult> UpdateUserAsync(int id, User user)
     {
         if (id != user.Id) return BadRequest();
@@ -64,7 +64,7 @@ public class UserController :ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbUser);
     }
 
-    [HttpDelete("{id}")]
+    [HttpPost("DeleteUser/{id}")]
     public async Task<IActionResult> DeleteUserAsync(int id)
     {
         bool? status = await _userService.DeleteUserAsync(id);

@@ -44,7 +44,7 @@ public class WineLabelController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbWineLabels);
     }
 
-    [HttpPost]
+    [HttpPost("WineLabel")]
     public async Task<ActionResult<WineLabel>> AddWineLabelAsync(WineLabel wineLabel)
     {
         WineLabel? dbWineLabel = await _wineLabelService.AddWineLabelAsync(wineLabel);
@@ -57,7 +57,7 @@ public class WineLabelController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbWineLabel);
     }
 
-    [HttpPut("{id}")]
+    [HttpPost("UpdateWineLabel/{id}")]
     public async Task<IActionResult> UpdateWineLabelAsync(int id, WineLabel wineLabel)
     {
         if (id != wineLabel.Id)
@@ -75,7 +75,7 @@ public class WineLabelController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbWineLabel);
     }
 
-    [HttpDelete("{id}")]
+    [HttpPost("DeleteWineLabel/{id}")]
     public async Task<IActionResult> DeleteWineLabelAsync(int id)
     {
         bool? status = await _wineLabelService.DeleteWineLabelAsync(id);

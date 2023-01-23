@@ -160,14 +160,14 @@ public class BottleService : IBottleService
             if (dbBottle != null)
             {
 
-                dbBottle.Full_Name = bottle.Full_Name;
+                dbBottle.FullName = bottle.FullName;
                 dbBottle.Description = bottle.Description;
                 dbBottle.WineLabel = bottle.WineLabel;
                 dbBottle.Volume = bottle.Volume;
                 dbBottle.Picture = bottle.Picture;
-                dbBottle.Year_Produced = bottle.Year_Produced;
-                dbBottle.Alcohol_Percentage = bottle.Alcohol_Percentage;
-                dbBottle.Current_Price = bottle.Current_Price;
+                dbBottle.YearProduced = bottle.YearProduced;
+                dbBottle.AlcoholPercentage = bottle.AlcoholPercentage;
+                dbBottle.CurrentPrice = bottle.CurrentPrice;
 
 
                 if (bottle.Producer != null)
@@ -189,7 +189,7 @@ public class BottleService : IBottleService
                     foreach (BottleStorageLocation BottleStorageLocation in bottle.BottleStorageLocations)
                     {
                         //if the BottleStorageLocation already exists
-                        BottleStorageLocation? existingBottleStorageLocation = dbBottleStorageLocations.FirstOrDefault(bl => bl.Bottle_Id == BottleStorageLocation.Bottle_Id && bl.StorageLocation_Id == BottleStorageLocation.StorageLocation_Id);
+                        BottleStorageLocation? existingBottleStorageLocation = dbBottleStorageLocations.FirstOrDefault(bl => bl.BottleId == BottleStorageLocation.BottleId && bl.StorageLocationId == BottleStorageLocation.StorageLocationId);
 
                         if (existingBottleStorageLocation != null)
                         {
@@ -222,12 +222,12 @@ public class BottleService : IBottleService
                     foreach (BottleGrape bottleGrape in bottle.BottleGrapes)
                     {
                         //if the BottleGrape already exists
-                        BottleGrape? existingBottleGrape = dbBottleGrapes.FirstOrDefault(bl => bl.Bottle_Id == bottleGrape.Bottle_Id && bl.Grape_Id == bottleGrape.Grape_Id);
+                        BottleGrape? existingBottleGrape = dbBottleGrapes.FirstOrDefault(bl => bl.BottleId == bottleGrape.BottleId && bl.GrapeId == bottleGrape.GrapeId);
 
                         if (existingBottleGrape != null)
                         {
                             //update the existing BottleGrape
-                            existingBottleGrape.Grape_Percentage = bottleGrape.Grape_Percentage;
+                            existingBottleGrape.GrapePercentage = bottleGrape.GrapePercentage;
                             _context.Entry(existingBottleGrape).State = EntityState.Modified;
                             dbBottleGrapes.Remove(existingBottleGrape);
                         }

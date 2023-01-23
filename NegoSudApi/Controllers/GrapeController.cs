@@ -38,7 +38,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbGrapes.ToList());
         }
 
-        [HttpPost]
+        [HttpPost("AddGrape")]
         public async Task<IActionResult> AddGrapeAsync(Grape grape)
         {
             Grape? dbGrape = await _grapeService.AddGrapeAsync(grape);
@@ -49,7 +49,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbGrape);
         }
 
-        [HttpPut("{id}")]
+        [HttpPost("UpdateGrape/{id}")]
         public async Task<IActionResult> UpdateGrapeAsync(int id, Grape grape)
         {
             if (id != grape.Id)
@@ -65,7 +65,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbGrape);
         }
 
-        [HttpDelete("{id}")]
+        [HttpPost("DeleteGrape/{id}")]
         public async Task<IActionResult> DeleteGrapeAsync(int id)
         {
             Grape? dbGrape = await _grapeService.GetGrapeAsync(id);

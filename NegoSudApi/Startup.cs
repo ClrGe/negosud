@@ -7,7 +7,6 @@ using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using NegoSudApi.Data;
-using System;
 
 namespace NegoSudApi;
 

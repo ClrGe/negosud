@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity;
 using NegoSudApi.Models;
-using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services;
 

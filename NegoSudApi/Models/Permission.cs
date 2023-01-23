@@ -1,17 +1,13 @@
-﻿using NegoSudApi.Models.Interfaces;
+using NegoSudApi.Models.Interfaces;
 
 namespace NegoSudApi.Models;
 
-public class City : IModelBase
+public class Permission : IModelBase
 {
     public int Id { get; set; }
-    public string? Name { get; set; }
-    public int? ZipCode { get; set; }
+    public string Access { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public string? CreatedBy { get; set; }
     public string? UpdatedBy { get; set; }
-
-    public virtual ICollection<Address>? Addressess { get; set; }
-      
 }

@@ -1,6 +1,3 @@
-using System.ComponentModel;
-using System.Security.Cryptography;
-using System.Text;
 using NegoSudApi.Models.Interfaces;
 
 namespace NegoSudApi.Models;
@@ -12,7 +9,7 @@ public class User : IModelBase
     public string LastName { get; set; }
     public int RoleId { get; set; }
     public string Email { get; set; }
-    [PasswordPropertyText]
+  
     public string Password { get; set; }
     
     public DateTime? CreatedAt { get; set; }

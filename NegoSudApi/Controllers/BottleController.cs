@@ -43,7 +43,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbBottles);
         }
 
-        [HttpPost]
+        [HttpPost("AddBottle")]
         public async Task<ActionResult<Bottle>> AddBottle(Bottle bottle)
         {
             Bottle? dbBottle = await _bottleService.AddBottleAsync(bottle);
@@ -56,7 +56,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbBottle);
         }
 
-        [HttpPut("{id}")]
+        [HttpPost("UpdateBottle/{id}")]
         public async Task<IActionResult> UpdateBottleAsync(int id, Bottle bottle)
         {
             if (id != bottle.Id)
@@ -74,7 +74,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbBottle);
         }
 
-        [HttpDelete("{id}")]
+        [HttpPost("DeleteBottle/{id}")]
         public async Task<IActionResult> DeleteBottleAsync(int id)
         {
             bool? status = await _bottleService.DeleteBottleAsync(id);

@@ -8,7 +8,7 @@ public class Bottle : IModelBase
     public string? FullName { get; set; }
     public string? Description { get; set; }
     public decimal? Volume { get; set; }
-    public byte[]? Picture { get; set; }
+    public string? Picture { get; set; }
     public int? YearProduced { get; set; }
     public decimal? AlcoholPercentage { get; set; }
     public decimal? CurrentPrice { get; set; }
