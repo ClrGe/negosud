@@ -55,6 +55,6 @@ public class AuthenticationController : ControllerBase
 
         if (dbUser == null) return StatusCode(StatusCodes.Status204NoContent, $"No match - could not add content.");
 
-        return StatusCode(StatusCodes.Status201Created, dbUser);
+        return StatusCode(StatusCodes.Status201Created, dbUser.Email);
     }
 }
