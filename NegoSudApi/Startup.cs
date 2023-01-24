@@ -76,7 +76,7 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, NegoSudDbContext dbContext)
     {
-        dbContext.Database.EnsureCreated();
+        dbContext.Database.Migrate();
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {

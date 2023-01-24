@@ -179,7 +179,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAdd().ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -190,7 +190,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAdd().ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
         });
         
         modelBuilder.Entity<Permission>(entity =>
