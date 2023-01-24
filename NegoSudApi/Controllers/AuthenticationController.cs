@@ -1,5 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Models;
+using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers;
@@ -10,16 +12,19 @@ public class AuthenticationController : ControllerBase
 {
     private readonly IConfiguration _configuration;
     private readonly IJwtAuthenticationService _jwtAuthenticationService;
-
-
-    public AuthenticationController(IConfiguration configuration, IJwtAuthenticationService jwtAuthenticationService)
+    private readonly IUserService _userService;
+    private readonly SecurePassword _securePassword;
+    
+    public AuthenticationController(IConfiguration configuration, IJwtAuthenticationService jwtAuthenticationService, IUserService userService, SecurePassword securePassword)
     {
         _configuration = configuration;
         _jwtAuthenticationService = jwtAuthenticationService;
+        _userService = userService;
+        _securePassword = securePassword;
     }
     
     [HttpPost]
-    [Route("login")]
+    [Route("Login")]
     public Task<ActionResult<string>> Login(string email, string password)
     {
         var dbUser = _jwtAuthenticationService.Authenticate(email, password);
@@ -33,5 +38,23 @@ public class AuthenticationController : ControllerBase
             return Task.FromResult<ActionResult<string>>(Ok(token));
         }
         return Task.FromResult<ActionResult<string>>(Unauthorized());
+    }
+    
+    [HttpPost]
+    [Route("Register")]
+    public async Task<ActionResult<string>> Register(string email, string password)
+    {
+        var userToAdd = new User
+        {
+            Email = email,
+            Password = password
+        };
+        
+        userToAdd.Password = _securePassword.Hash(userToAdd);
+        User? dbUser = await _userService.AddUserAsync(userToAdd);
+
+        if (dbUser == null) return StatusCode(StatusCodes.Status204NoContent, $"No match - could not add content.");
+
+        return StatusCode(StatusCodes.Status201Created, dbUser);
     }
 }
