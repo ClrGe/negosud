@@ -17,4 +17,6 @@ public class User : IModelBase
     
     public string? RefreshToken { get; set; }
     public DateTime? RefreshTokenExpiryTime { get; set; }
+    public virtual ICollection<Address>? Addresses { get; set; }
+
 }

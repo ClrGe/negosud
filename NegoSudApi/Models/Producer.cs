@@ -14,4 +14,5 @@ public class Producer : IModelBase
     
     public virtual ICollection<Bottle>? Bottles { get; set; }
     public virtual Region? Region { get; set; }
+    public virtual Address? Address { get; set; }
 }

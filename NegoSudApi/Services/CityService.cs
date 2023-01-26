@@ -23,7 +23,7 @@ public class CityService : ICityService
             if (includeRelations)
             {
                 return await _context.Cities
-                    .Include(c => c.Addressess)
+                    .Include(c => c.Addresses)
                     .FirstOrDefaultAsync(c => c.Id == id);
             }
 

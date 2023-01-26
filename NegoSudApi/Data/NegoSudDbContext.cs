@@ -136,7 +136,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
-            entity.HasMany(k => k.Addressess).WithOne(k => k.City);
+            entity.HasMany(k => k.Addresses).WithOne(k => k.City);
         });
 
         modelBuilder.Entity<Address>(entity =>

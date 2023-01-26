@@ -11,4 +11,5 @@ public class Role : IModelBase
     public DateTime? UpdatedAt { get; set; }
     public string? CreatedBy { get; set; }
     public string? UpdatedBy { get; set; }
+    public virtual Permission? Permission { get; set; }
 }
