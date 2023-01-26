@@ -12,4 +12,5 @@ public class Role : IModelBase
     public string? CreatedBy { get; set; }
     public string? UpdatedBy { get; set; }
     public virtual Permission? Permission { get; set; }
+    public virtual ICollection<User>? Users { get; set; }
 }
