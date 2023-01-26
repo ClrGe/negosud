@@ -23,7 +23,7 @@ public class Startup
     {
         services.AddMvc(options => options.EnableEndpointRouting = false)
             .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-        ;
+        
         services.AddSession();
         services.AddHttpLogging((options) =>
         {
@@ -39,6 +39,8 @@ public class Startup
         services.AddScoped<IRegionService, RegionService>();
         services.AddScoped<IWineLabelService, WineLabelService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ICityService, CityService>();
+        services.AddScoped<IAddressService, AddressService>();
         services.AddScoped<SecurePassword>();
         
         services.AddAuthentication(options =>
@@ -63,8 +65,7 @@ public class Startup
             });
         services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
         services.AddAuthorization();
-        services.AddScoped<ICityService, CityService>();
-        services.AddScoped<IAddressService, AddressService>();
+
 
         var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext") ??
                                throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
