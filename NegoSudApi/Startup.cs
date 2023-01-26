@@ -37,6 +37,8 @@ public class Startup
         services.AddScoped<IWineLabelService, WineLabelService>();
         services.AddScoped<ICityService, CityService>();
         services.AddScoped<IAddressService, AddressService>();
+        services.AddScoped<ICustomerOrderService, CustomerOrderService>();
+        services.AddScoped<ISupplierOrderService, SupplierOrderService>();
 
         var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext");
         //var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found."); ;
