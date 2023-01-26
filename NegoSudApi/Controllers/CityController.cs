@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -6,6 +7,7 @@ namespace NegoSudApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CityController : ControllerBase
     {
         private readonly ICityService _cityService;
@@ -41,7 +43,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCities);
         }
 
-        [HttpPost]
+        [HttpPost("AddCity")]
         public async Task<ActionResult<City>> AddCityAsync(City City)
         {
             City? dbCity = await _cityService.AddCityAsync(City);
@@ -54,7 +56,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbCity);
         }
 
-        [HttpPut("{id}")]
+        [HttpPost("UpdateCity/{id}")]
         public async Task<IActionResult> UpdateCityAsync(int id, City City)
         {
             if (id != City.Id)
@@ -72,7 +74,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCity);
         }
 
-        [HttpDelete("{id}")]
+        [HttpPost("DeleteCity/{id}")]
         public async Task<IActionResult> DeleteCityAsync(int id)
         {
             bool? status = await _cityService.DeleteCityAsync(id);

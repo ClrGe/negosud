@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -6,6 +7,7 @@ namespace NegoSudApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CountryController : ControllerBase
     {
         private readonly ICountryService _countryService;
@@ -41,7 +43,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCountries);
         }
 
-        [HttpPost]
+        [HttpPost("AddCountry")]
         public async Task<ActionResult<Country>> AddCountryAsync(Country country)
         {
             Country? dbCountry = await _countryService.AddCountryAsync(country);
@@ -54,7 +56,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbCountry);
         }
 
-        [HttpPut("{id}")]
+        [HttpPost("UpdateCountry/{id}")]
         public async Task<IActionResult> UpdateCountryAsync(int id, Country country)
         {
             if (id != country.Id)
@@ -72,7 +74,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCountry);
         }
 
-        [HttpDelete("{id}")]
+        [HttpPost("DeleteCountry/{id}")]
         public async Task<IActionResult> DeleteCountryAsync(int id)
         {
             bool? status = await _countryService.DeleteCountryAsync(id);
