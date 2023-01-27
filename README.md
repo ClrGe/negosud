@@ -2,7 +2,7 @@
 
 ### Stack : 
 - .NET 7 + EF Core
-- ? Flutter ?
+- GO
 
 ### Base de données
 
