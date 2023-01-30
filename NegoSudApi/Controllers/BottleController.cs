@@ -57,9 +57,9 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpPost("UpdateBottle")]
-        public async Task<IActionResult> UpdateBottleAsync(int id, Bottle bottle)
+        public async Task<IActionResult> UpdateBottleAsync(Bottle bottle)
         {
-            if (id != bottle.Id)
+            if (bottle == null)
             {
                 return BadRequest();
             }
@@ -68,7 +68,7 @@ namespace NegoSudApi.Controllers
 
             if (dbBottle == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query - could not update");
+                return StatusCode(StatusCodes.Status204NoContent, $"No city found for id: {bottle.Id} - could not update.");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbBottle);

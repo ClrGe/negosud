@@ -82,9 +82,9 @@ public class ProducerController : ControllerBase
     /// <param name="producer"></param>
     /// <returns></returns>
     [HttpPost("UpdateProducer")]
-    public async Task<IActionResult> UpdateProducerAsync(int id, Producer producer)
+    public async Task<IActionResult> UpdateProducerAsync(Producer producer)
     {
-        if (id != producer.Id)
+        if (producer == null)
         {
             return BadRequest();
         }
@@ -93,7 +93,7 @@ public class ProducerController : ControllerBase
 
         if (dbProducer == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {producer.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbProducer);

@@ -54,12 +54,12 @@ public class UserController :ControllerBase
     [HttpPost("UpdateUser")]
     public async Task<IActionResult> UpdateUserAsync(int id, User user)
     {
-        if (id != user.Id) return BadRequest();
+        if (user == null) return BadRequest();
         user.Password = _securePassword.Hash(user);
         User? dbUser = await _userService.UpdateUserAsync(user);
 
         if (dbUser == null)
-            return StatusCode(StatusCodes.Status204NoContent, $"No User found for id: {id} - could not update.");
+            return StatusCode(StatusCodes.Status204NoContent, $"No User found for id: {user.Id} - could not update.");
 
         return StatusCode(StatusCodes.Status200OK, dbUser);
     }

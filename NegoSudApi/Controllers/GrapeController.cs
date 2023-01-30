@@ -50,9 +50,9 @@ namespace NegoSudApi.Controllers
         }
 
         [HttpPost("UpdateGrape")]
-        public async Task<IActionResult> UpdateGrapeAsync(int id, Grape grape)
+        public async Task<IActionResult> UpdateGrapeAsync(Grape grape)
         {
-            if (id != grape.Id)
+            if (grape == null)
             {
                 return BadRequest();
             }
@@ -60,7 +60,7 @@ namespace NegoSudApi.Controllers
             Grape? dbGrape = await _grapeService.UpdateGrapeAsync(grape);
             if (dbGrape == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+                return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {grape.Id} - could not update.");
             }
             return StatusCode(StatusCodes.Status200OK, dbGrape);
         }

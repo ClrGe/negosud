@@ -77,9 +77,9 @@ public class RegionController : ControllerBase
     /// <param name="region"></param>
     /// <returns></returns>
     [HttpPost("UpdateRegion")]
-    public async Task<IActionResult> UpdateRegionAsync(int id, Region region)
+    public async Task<IActionResult> UpdateRegionAsync(Region region)
     {
-        if (id != region.Id)
+        if (region == null)
         {
             return BadRequest();
         }
@@ -88,7 +88,7 @@ public class RegionController : ControllerBase
 
         if (dbRegion == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {region.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbRegion);

@@ -82,9 +82,9 @@ public class SupplierController : ControllerBase
     /// <param name="supplier"></param>
     /// <returns></returns>
     [HttpPost("UpdateSupplier")]
-    public async Task<IActionResult> UpdateSupplierAsync(int id, Supplier supplier)
+    public async Task<IActionResult> UpdateSupplierAsync(Supplier supplier)
     {
-        if (id != supplier.Id)
+        if (supplier == null)
         {
             return BadRequest();
         }
@@ -93,7 +93,7 @@ public class SupplierController : ControllerBase
 
         if (dbSupplier == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {supplier.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbSupplier);

@@ -57,9 +57,9 @@ public class AddressController : ControllerBase
     }
 
     [HttpPost("UpdateAddress")]
-    public async Task<IActionResult> UpdateAddressAsync(int id, Address address)
+    public async Task<IActionResult> UpdateAddressAsync(Address address)
     {
-        if (id != address.Id)
+        if (address == null)
         {
             return BadRequest();
         }
@@ -68,7 +68,7 @@ public class AddressController : ControllerBase
 
         if (dbAddress == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No address found for id: {id} - could not update.");
+            return StatusCode(StatusCodes.Status204NoContent, $"No address found for id: {address.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbAddress);
