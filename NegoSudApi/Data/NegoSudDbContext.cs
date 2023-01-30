@@ -175,10 +175,10 @@ public class NegoSudDbContext : DbContext
         modelBuilder.Entity<CustomerOrder>(entity =>
         {
             entity.ToTable(nameof(CustomerOrder));
-            entity.Property(cO => cO.Created_By).HasMaxLength(200);
-            entity.Property(cO => cO.Updated_By).HasMaxLength(200);
-            entity.Property(cO => cO.Created_At).HasPrecision(0).ValueGeneratedOnAdd();
-            entity.Property(cO => cO.Updated_At).HasPrecision(0).ValueGeneratedOnUpdate();
+            entity.Property(cO => cO.CreatedBy).HasMaxLength(200);
+            entity.Property(cO => cO.UpdatedBy).HasMaxLength(200);
+            entity.Property(cO => cO.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(cO => cO.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
             entity.HasKey(cO => cO.Id);
             entity.HasOne(cO => cO.Customer);
             entity.HasMany(cO => cO.Lines).WithOne(k => k.CustomerOrder);
@@ -187,10 +187,10 @@ public class NegoSudDbContext : DbContext
         modelBuilder.Entity<CustomerOrderLine>(entity =>
         {
             entity.ToTable(nameof(CustomerOrderLine));
-            entity.Property(l => l.Created_By).HasMaxLength(200);
-            entity.Property(l => l.Updated_By).HasMaxLength(200);
-            entity.Property(l => l.Created_At).HasPrecision(0).ValueGeneratedOnAdd();
-            entity.Property(l => l.Updated_At).HasPrecision(0).ValueGeneratedOnUpdate();
+            entity.Property(l => l.CreatedBy).HasMaxLength(200);
+            entity.Property(l => l.UpdatedBy).HasMaxLength(200);
+            entity.Property(l => l.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(l => l.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
             entity.HasKey(l => l.Id);
             entity.HasOne(l => l.CustomerOrder).WithMany(k => k.Lines);
             entity.HasOne(l => l.Bottle);
@@ -199,10 +199,10 @@ public class NegoSudDbContext : DbContext
         modelBuilder.Entity<SupplierOrder>(entity =>
         {
             entity.ToTable(nameof(SupplierOrder));
-            entity.Property(cO => cO.Created_By).HasMaxLength(200);
-            entity.Property(cO => cO.Updated_By).HasMaxLength(200);
-            entity.Property(cO => cO.Created_At).HasPrecision(0).ValueGeneratedOnAdd();
-            entity.Property(cO => cO.Updated_At).HasPrecision(0).ValueGeneratedOnUpdate();
+            entity.Property(sO => sO.CreatedBy).HasMaxLength(200);
+            entity.Property(sO => sO.UpdatedBy).HasMaxLength(200);
+            entity.Property(sO => sO.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(sO => sO.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
             entity.HasKey(cO => cO.Id);
             entity.HasOne(cO => cO.Producer);
             entity.HasMany(cO => cO.Lines).WithOne(k => k.SupplierOrder);
@@ -211,10 +211,10 @@ public class NegoSudDbContext : DbContext
         modelBuilder.Entity<SupplierOrderLine>(entity =>
         {
             entity.ToTable(nameof(SupplierOrderLine));
-            entity.Property(l => l.Created_By).HasMaxLength(200);
-            entity.Property(l => l.Updated_By).HasMaxLength(200);
-            entity.Property(l => l.Created_At).HasPrecision(0).ValueGeneratedOnAdd();
-            entity.Property(l => l.Updated_At).HasPrecision(0).ValueGeneratedOnUpdate();
+            entity.Property(l => l.CreatedBy).HasMaxLength(200);
+            entity.Property(l => l.UpdatedBy).HasMaxLength(200);
+            entity.Property(l => l.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(l => l.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
             entity.HasKey(l => l.Id);
             entity.HasOne(l => l.SupplierOrder).WithMany(k => k.Lines);
             entity.HasOne(l => l.Bottle);

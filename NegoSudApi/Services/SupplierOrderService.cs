@@ -11,14 +11,18 @@ public class SupplierOrderService : ISupplierOrderService
     private readonly NegoSudDbContext _context;
     private readonly ILogger<SupplierOrderService> _logger;
     private readonly IProducerService _producerService;
+    private readonly IBottleService _bottleService;
+    
 
     public SupplierOrderService(NegoSudDbContext context,
                          ILogger<SupplierOrderService> logger,
-                         IProducerService producerService)
+                         IProducerService producerService,
+                         IBottleService bottleService)
     {
         _context = context;
         _logger = logger;
         _producerService = producerService;
+        _bottleService = bottleService;
     }
 
     //</inheritdoc>  
@@ -74,6 +78,21 @@ public class SupplierOrderService : ISupplierOrderService
                 }
             }
 
+            if (supplierOrder.Lines != null)
+            {
+                foreach (SupplierOrderLine line in supplierOrder.Lines)
+                {
+                    if (line.Bottle?.Id != null)
+                    {
+                        Bottle? bottle = await _bottleService.GetBottleAsync(line.Bottle.Id, includeRelations: false);
+                        if (bottle != null)
+                        {
+                            line.Bottle = bottle;
+                        }
+                    }
+                }
+            }
+
             SupplierOrder newSupplierOrder = (await _context.SupplierOrders.AddAsync(supplierOrder)).Entity;
 
             if (supplierOrder.Lines != null)
@@ -107,8 +126,8 @@ public class SupplierOrderService : ISupplierOrderService
 
                 dbSupplierOrder.Reference = supplierOrder.Reference;
                 dbSupplierOrder.Description = supplierOrder.Description;
-                dbSupplierOrder.Date_Order = supplierOrder.Date_Order;
-                dbSupplierOrder.Date_Delivery = supplierOrder.Date_Delivery;
+                dbSupplierOrder.DateOrder = supplierOrder.DateOrder;
+                dbSupplierOrder.DateDelivery = supplierOrder.DateDelivery;
 
 
                 if (supplierOrder.Producer != null)
@@ -129,8 +148,18 @@ public class SupplierOrderService : ISupplierOrderService
 
                     foreach (SupplierOrderLine Line in supplierOrder.Lines)
                     {
+
+                        if (Line.Bottle?.Id != null)
+                        {
+                            Bottle? bottle = await _bottleService.GetBottleAsync(Line.Bottle.Id, includeRelations: false);
+                            if (bottle != null)
+                            {
+                                Line.Bottle = bottle;
+                            }
+                        }
+
                         //if the Line already exists
-                        SupplierOrderLine? existingLine = dbLines.FirstOrDefault(l => l.SupplierOrder?.Id == Line.SupplierOrder?.Id);
+                        SupplierOrderLine? existingLine = dbLines.FirstOrDefault(l => l.Id == Line.Id);
 
                         if (existingLine != null)
                         {
@@ -175,11 +204,17 @@ public class SupplierOrderService : ISupplierOrderService
     {
         try
         {
-            var dbSupplierOrder = await _context.SupplierOrders.FindAsync(id);
+            //var dbSupplierOrder = await _context.SupplierOrders.FindAsync(id);
+            var dbSupplierOrder = await this.GetSupplierOrderAsync(id, true);
 
             if (dbSupplierOrder == null)
             {
                 return false;
+            }
+
+            if (dbSupplierOrder.Lines != null)
+            {
+                _context.RemoveRange(dbSupplierOrder.Lines);
             }
 
             _context.SupplierOrders.Remove(dbSupplierOrder);

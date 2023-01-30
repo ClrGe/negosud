@@ -10,13 +10,16 @@ public class CustomerOrderService : ICustomerOrderService
 {
     private readonly NegoSudDbContext _context;
     private readonly ILogger<CustomerOrderService> _logger;
-    //private readonly ICustomerService _customerService;
+    private readonly IBottleService _bottleService;
+    //pryivate readonly ICustomerService _customerService;
 
     public CustomerOrderService(NegoSudDbContext context,
-                         ILogger<CustomerOrderService> logger) //,ICustomerService customerService)
+                         ILogger<CustomerOrderService> logger,
+                         IBottleService bottleService) //,ICustomerService customerService)
     {
         _context = context;
         _logger = logger;
+        _bottleService = bottleService;
         //_customerService = customerService;
     }
 
@@ -71,6 +74,21 @@ public class CustomerOrderService : ICustomerOrderService
                 //{
                 //    customerOrder.Customer = customer;
                 //}
+            }
+
+            if(customerOrder.Lines != null)
+            {
+                foreach (CustomerOrderLine line in customerOrder.Lines)
+                {
+                    if (line.Bottle?.Id != null)
+                    {
+                        Bottle? bottle = await _bottleService.GetBottleAsync(line.Bottle.Id, includeRelations: false);
+                        if (bottle != null)
+                        {
+                            line.Bottle = bottle;
+                        }
+                    }
+                }
             }
 
             CustomerOrder newCustomerOrder = (await _context.CustomerOrders.AddAsync(customerOrder)).Entity;
@@ -128,8 +146,18 @@ public class CustomerOrderService : ICustomerOrderService
 
                     foreach (CustomerOrderLine Line in customerOrder.Lines)
                     {
+
+                        if (Line.Bottle?.Id != null)
+                        {
+                            Bottle? bottle = await _bottleService.GetBottleAsync(Line.Bottle.Id, includeRelations: false);
+                            if (bottle != null)
+                            {
+                                Line.Bottle = bottle;
+                            }
+                        }
+
                         //if the Line already exists
-                        CustomerOrderLine? existingLine = dbLines.FirstOrDefault(l => l.CustomerOrder?.Id == Line.CustomerOrder?.Id);
+                        CustomerOrderLine? existingLine = dbLines.FirstOrDefault(l => l.Id == Line.Id);
 
                         if (existingLine != null)
                         {
@@ -174,13 +202,19 @@ public class CustomerOrderService : ICustomerOrderService
     {
         try
         {
-            var dbCustomerOrder = await _context.CustomerOrders.FindAsync(id);
+            //var dbCustomerOrder = await _context.CustomerOrders.FindAsync(id);
+            var dbCustomerOrder = await this.GetCustomerOrderAsync(id,true);
 
             if (dbCustomerOrder == null)
             {
                 return false;
             }
 
+            if (dbCustomerOrder.Lines != null)
+            {
+            _context.RemoveRange(dbCustomerOrder.Lines);
+            }
+            
             _context.CustomerOrders.Remove(dbCustomerOrder);
             await _context.SaveChangesAsync();
 
