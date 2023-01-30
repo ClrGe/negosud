@@ -5,7 +5,7 @@ namespace NegoSudApi.Services.Interfaces;
 public interface IUserService
 {
     /// <summary>
-    /// Get an User entity from the database by its id, , including or not subobjects and collections
+    /// Get a User entity from the database by its id, including or not subobjects and collections
     /// </summary>
     /// <param name="id">The User's id</param>
     /// <returns>An User with the desired id, or null if it doesn't exist</returns>

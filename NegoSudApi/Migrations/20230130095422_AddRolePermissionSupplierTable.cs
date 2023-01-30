@@ -18,7 +18,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(3907),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(1396),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -31,7 +31,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(3697),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(1222),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -44,7 +44,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 535, DateTimeKind.Utc).AddTicks(7359),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 788, DateTimeKind.Utc).AddTicks(6805),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -57,7 +57,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 535, DateTimeKind.Utc).AddTicks(6981),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 788, DateTimeKind.Utc).AddTicks(6559),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -70,7 +70,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 533, DateTimeKind.Utc).AddTicks(4478),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(1700),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -83,7 +83,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 533, DateTimeKind.Utc).AddTicks(4231),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(1524),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -96,7 +96,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 536, DateTimeKind.Utc).AddTicks(1220),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 789, DateTimeKind.Utc).AddTicks(13),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -125,7 +125,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 536, DateTimeKind.Utc).AddTicks(1007),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 788, DateTimeKind.Utc).AddTicks(9830),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -138,7 +138,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(577),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(1963),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -151,7 +151,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(272),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(1702),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -164,7 +164,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 533, DateTimeKind.Utc).AddTicks(6967),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(8280),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -177,7 +177,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 533, DateTimeKind.Utc).AddTicks(6720),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(8044),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -196,7 +196,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 536, DateTimeKind.Utc).AddTicks(8900),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 789, DateTimeKind.Utc).AddTicks(3283),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -209,7 +209,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 536, DateTimeKind.Utc).AddTicks(8726),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 789, DateTimeKind.Utc).AddTicks(3096),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -236,7 +236,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 533, DateTimeKind.Utc).AddTicks(2257),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(9515),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -249,7 +249,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 533, DateTimeKind.Utc).AddTicks(2031),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(9319),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -262,7 +262,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(8965),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(6401),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -275,7 +275,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(8779),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(6167),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -288,7 +288,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(3890),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(5205),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -301,7 +301,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(3644),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(5010),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -314,7 +314,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(9809),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 788, DateTimeKind.Utc).AddTicks(1065),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -327,7 +327,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(9620),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 788, DateTimeKind.Utc).AddTicks(876),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -340,7 +340,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(4668),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(2167),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -353,7 +353,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(4483),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(1948),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -366,7 +366,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(1383),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 784, DateTimeKind.Utc).AddTicks(8855),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -379,7 +379,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(1104),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 784, DateTimeKind.Utc).AddTicks(8609),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -392,7 +392,7 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(7426),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(8691),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
@@ -405,12 +405,36 @@ namespace NegoSudApi.Migrations
                 type: "timestamp(0) with time zone",
                 precision: 0,
                 nullable: true,
-                defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(7201),
+                defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(8453),
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
                 oldDefaultValue: new DateTime(2023, 1, 24, 14, 29, 55, 375, DateTimeKind.Utc).AddTicks(8061));
+
+            migrationBuilder.CreateTable(
+                name: "PermissionRole",
+                columns: table => new
+                {
+                    permissionsid = table.Column<int>(name: "permissions_id", type: "integer", nullable: false),
+                    rolesid = table.Column<int>(name: "roles_id", type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_permission_role", x => new { x.permissionsid, x.rolesid });
+                    table.ForeignKey(
+                        name: "fk_permission_role_permissions_permissions_id",
+                        column: x => x.permissionsid,
+                        principalTable: "Permission",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_permission_role_roles_roles_id",
+                        column: x => x.rolesid,
+                        principalTable: "Role",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Supplier",
@@ -420,8 +444,8 @@ namespace NegoSudApi.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: true),
                     details = table.Column<string>(type: "text", nullable: true),
-                    createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 537, DateTimeKind.Utc).AddTicks(988)),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 537, DateTimeKind.Utc).AddTicks(1247)),
+                    createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 789, DateTimeKind.Utc).AddTicks(4114)),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 789, DateTimeKind.Utc).AddTicks(4328)),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     addressid = table.Column<int>(name: "address_id", type: "integer", nullable: true)
@@ -436,15 +460,14 @@ namespace NegoSudApi.Migrations
                         principalColumn: "id");
                 });
             
-
             migrationBuilder.CreateTable(
                 name: "BottleSupplier",
                 columns: table => new
                 {
                     bottleid = table.Column<int>(name: "bottle_id", type: "integer", nullable: false),
                     supplierid = table.Column<int>(name: "supplier_id", type: "integer", nullable: false),
-                    createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 536, DateTimeKind.Utc).AddTicks(2923)),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 536, DateTimeKind.Utc).AddTicks(3155)),
+                    createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(3748)),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(3968)),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true)
                 },
@@ -471,11 +494,6 @@ namespace NegoSudApi.Migrations
                 column: "role_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_role_permission_id",
-                table: "Role",
-                column: "permission_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_producer_address_id",
                 table: "Producer",
                 column: "address_id");
@@ -489,6 +507,11 @@ namespace NegoSudApi.Migrations
                 name: "ix_bottle_supplier_supplier_id",
                 table: "BottleSupplier",
                 column: "supplier_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_permission_role_roles_id",
+                table: "PermissionRole",
+                column: "roles_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_supplier_address_id",
@@ -507,13 +530,6 @@ namespace NegoSudApi.Migrations
                 table: "Producer",
                 column: "address_id",
                 principalTable: "Address",
-                principalColumn: "id");
-
-            migrationBuilder.AddForeignKey(
-                name: "fk_role_permissions_permission_id",
-                table: "Role",
-                column: "permission_id",
-                principalTable: "Permission",
                 principalColumn: "id");
 
             migrationBuilder.AddForeignKey(
@@ -536,10 +552,6 @@ namespace NegoSudApi.Migrations
                 table: "Producer");
 
             migrationBuilder.DropForeignKey(
-                name: "fk_role_permissions_permission_id",
-                table: "Role");
-
-            migrationBuilder.DropForeignKey(
                 name: "fk_user_roles_role_id",
                 table: "User");
 
@@ -547,15 +559,14 @@ namespace NegoSudApi.Migrations
                 name: "BottleSupplier");
 
             migrationBuilder.DropTable(
+                name: "PermissionRole");
+
+            migrationBuilder.DropTable(
                 name: "Supplier");
 
             migrationBuilder.DropIndex(
                 name: "ix_user_role_id",
                 table: "User");
-
-            migrationBuilder.DropIndex(
-                name: "ix_role_permission_id",
-                table: "Role");
 
             migrationBuilder.DropIndex(
                 name: "ix_producer_address_id",
@@ -584,7 +595,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(3907));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(1396));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "created_at",
@@ -597,7 +608,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(3697));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(1222));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "updated_at",
@@ -610,7 +621,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 535, DateTimeKind.Utc).AddTicks(7359));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 788, DateTimeKind.Utc).AddTicks(6805));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "created_at",
@@ -623,7 +634,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 535, DateTimeKind.Utc).AddTicks(6981));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 788, DateTimeKind.Utc).AddTicks(6559));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "updated_at",
@@ -636,7 +647,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 533, DateTimeKind.Utc).AddTicks(4478));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(1700));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "created_at",
@@ -649,7 +660,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 533, DateTimeKind.Utc).AddTicks(4231));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(1524));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "updated_at",
@@ -662,7 +673,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 536, DateTimeKind.Utc).AddTicks(1220));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 789, DateTimeKind.Utc).AddTicks(13));
 
             migrationBuilder.AlterColumn<int>(
                 name: "permission_id",
@@ -695,7 +706,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 536, DateTimeKind.Utc).AddTicks(1007));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 788, DateTimeKind.Utc).AddTicks(9830));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "updated_at",
@@ -708,7 +719,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(577));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(1963));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "created_at",
@@ -721,7 +732,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(272));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(1702));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "updated_at",
@@ -734,7 +745,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 533, DateTimeKind.Utc).AddTicks(6967));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(8280));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "created_at",
@@ -747,7 +758,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 533, DateTimeKind.Utc).AddTicks(6720));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(8044));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "updated_at",
@@ -760,7 +771,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 536, DateTimeKind.Utc).AddTicks(8900));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 789, DateTimeKind.Utc).AddTicks(3283));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "created_at",
@@ -773,7 +784,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 536, DateTimeKind.Utc).AddTicks(8726));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 789, DateTimeKind.Utc).AddTicks(3096));
 
             migrationBuilder.AlterColumn<string>(
                 name: "access",
@@ -796,7 +807,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 533, DateTimeKind.Utc).AddTicks(2257));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(9515));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "created_at",
@@ -809,7 +820,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 533, DateTimeKind.Utc).AddTicks(2031));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(9319));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "updated_at",
@@ -822,7 +833,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(8965));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(6401));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "created_at",
@@ -835,7 +846,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(8779));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(6167));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "updated_at",
@@ -848,7 +859,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(3890));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(5205));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "created_at",
@@ -861,7 +872,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(3644));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(5010));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "updated_at",
@@ -874,7 +885,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(9809));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 788, DateTimeKind.Utc).AddTicks(1065));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "created_at",
@@ -887,7 +898,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(9620));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 788, DateTimeKind.Utc).AddTicks(876));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "updated_at",
@@ -900,7 +911,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(4668));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(2167));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "created_at",
@@ -913,7 +924,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(4483));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(1948));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "updated_at",
@@ -926,7 +937,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(1383));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 784, DateTimeKind.Utc).AddTicks(8855));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "created_at",
@@ -939,7 +950,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 532, DateTimeKind.Utc).AddTicks(1104));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 784, DateTimeKind.Utc).AddTicks(8609));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "updated_at",
@@ -952,7 +963,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(7426));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(8691));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "created_at",
@@ -965,7 +976,7 @@ namespace NegoSudApi.Migrations
                 oldType: "timestamp(0) with time zone",
                 oldPrecision: 0,
                 oldNullable: true,
-                oldDefaultValue: new DateTime(2023, 1, 26, 23, 17, 39, 534, DateTimeKind.Utc).AddTicks(7201));
+                oldDefaultValue: new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(8453));
         }
     }
 }
