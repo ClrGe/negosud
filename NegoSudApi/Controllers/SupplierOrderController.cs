@@ -41,7 +41,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbSupplierOrders);
         }
 
-        [HttpPost]
+        [HttpPost("AddSupplierOrder")]
         public async Task<ActionResult<SupplierOrder>> AddSupplierOrder(SupplierOrder supplierOrder)
         {
             SupplierOrder? dbSupplierOrder = await _supplierOrderService.AddSupplierOrderAsync(supplierOrder);
@@ -54,11 +54,10 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbSupplierOrder);
         }
 
-        //[HttpPost]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSupplierOrderAsync(int id, SupplierOrder supplierOrder)
+        [HttpPost("UpdateSupplierOrder")]
+        public async Task<IActionResult> UpdateSupplierOrderAsync(SupplierOrder supplierOrder)
         {
-            if (id != supplierOrder.Id)
+            if (supplierOrder == null)
             {
                 return BadRequest();
             }
@@ -73,8 +72,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
         }
 
-        //[HttpPost]
-        [HttpDelete("{id}")]
+        [HttpPost("DeleteSupplierOrder")]
         public async Task<IActionResult> DeleteSupplierOrderAsync(int id)
         {
             bool? status = await _supplierOrderService.DeleteSupplierOrderAsync(id);
