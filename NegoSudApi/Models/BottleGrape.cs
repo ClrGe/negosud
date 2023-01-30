@@ -1,14 +1,16 @@
+using NegoSudApi.Models.Interfaces;
+
 namespace NegoSudApi.Models;
 
 public class BottleGrape : IModelBase
 {
-    public int Grape_Id { get; set; }
-    public int Bottle_Id { get; set; }
-    public int? Grape_Percentage { get; set; }
-    public DateTime? Created_At { get; set; }
-    public DateTime? Updated_At { get; set; }
-    public string? Created_By { get; set; }
-    public string? Updated_By { get; set; }
+    public int GrapeId { get; set; }
+    public int BottleId { get; set; }
+    public decimal? GrapePercentage { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public string? CreatedBy { get; set; }
+    public string? UpdatedBy { get; set; }
 
     public virtual Bottle? Bottle { get; set; }
     public virtual Grape? Grape { get; set; }

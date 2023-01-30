@@ -1,33 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services;
 
-public class CityService : ICityService
+public class UserService : IUserService
 {
     private readonly NegoSudDbContext _context;
-    private readonly ILogger<CityService> _logger;
+    private readonly ILogger<UserService> _logger;
 
-    public CityService(NegoSudDbContext context, ILogger<CityService> logger)
+    public UserService(NegoSudDbContext context, ILogger<UserService> logger)
     {
         _context = context;
         _logger = logger;
     }
-    //<inheritdoc/>
-    public async Task<City?> GetCityAsync(int id, bool includeRelations = true)
+
+    // </inheritdoc>
+    public async Task<User?> GetUserAsync(int id)
     {
         try
         {
-            if (includeRelations)
-            {
-                return await _context.Cities
-                    .Include(c => c.Addresses)
-                    .FirstOrDefaultAsync(c => c.Id == id);
-            }
-
-            return await _context.Cities.FindAsync(id);
+            if (_context.Users != null) return await _context.Users.FindAsync(id);
         }
         catch (Exception ex)
         {
@@ -37,12 +31,11 @@ public class CityService : ICityService
         return null;
     }
 
-    //<inheritdoc/>
-    public async Task<IEnumerable<City>?> GetCitiesAsync()
+    public async Task<IEnumerable<User>?> GetUsersAsync()
     {
         try
         {
-            return await _context.Cities.ToListAsync();
+            if (_context.Users != null) return await _context.Users.ToListAsync();
         }
         catch (Exception ex)
         {
@@ -52,14 +45,13 @@ public class CityService : ICityService
         return null;
     }
 
-    //<inheritdoc/>
-    public async Task<City?> AddCityAsync(City city)
+    public async Task<User?> AddUserAsync(User user)
     {
         try
         {
-            City newCity = (await _context.Cities.AddAsync(city)).Entity;
+            await _context.AddAsync(user);
             await _context.SaveChangesAsync();
-            return newCity;
+            return await _context.Users.FindAsync(user.Id);
         }
         catch (Exception ex)
         {
@@ -69,15 +61,13 @@ public class CityService : ICityService
         return null;
     }
 
-    //<inheritdoc/>
-    public async Task<City?> UpdateCityAsync(City city)
+    public async Task<User?> UpdateUserAsync(User user)
     {
         try
         {
-            _context.Entry(city).State = EntityState.Modified;
+            _context.Entry(user).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-
-            return city;
+            return user;
         }
         catch (Exception ex)
         {
@@ -87,21 +77,16 @@ public class CityService : ICityService
         return null;
     }
 
-    //<inheritdoc/>
-    public async Task<bool?> DeleteCityAsync(int id)
+    public async Task<bool?> DeleteUserAsync(int id)
     {
         try
         {
-            var dbCity = await _context.Cities.FindAsync(id);
-
-            if (dbCity == null)
-            {
+            User? userResult = await _context.Users.FindAsync(id);
+            if (userResult == null)
                 return false;
-            }
 
-            _context.Cities.Remove(dbCity);
+            _context.Users.Remove(userResult);
             await _context.SaveChangesAsync();
-
             return true;
         }
         catch (Exception ex)

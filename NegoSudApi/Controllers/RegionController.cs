@@ -1,13 +1,13 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers;
 
-
 [ApiController]
 [Route("api/[controller]")]
-
+[Authorize]
 public class RegionController : ControllerBase
 {
     private readonly IRegionService _regionService;
@@ -17,7 +17,11 @@ public class RegionController : ControllerBase
         _regionService = regionService;
     }
 
-    // method to return a region matching query
+    /// <summary>
+    /// Method to return a region matching query
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetRegionAsync(int id)
     {
@@ -31,7 +35,10 @@ public class RegionController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbRegion);
     }
 
-    // method to return all existing regions
+    /// <summary>
+    /// Method to return all existing regions
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> GetRegionsAsync()
     {
@@ -45,8 +52,12 @@ public class RegionController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbRegions);
     }
 
-    // method to add a new region to the database
-    [HttpPost]
+    /// <summary>
+    /// Method to add a new region to the database
+    /// </summary>
+    /// <param name="region"></param>
+    /// <returns></returns>
+    [HttpPost("AddRegion")]
     public async Task<ActionResult<Region>> AddRegionAsync(Region region)
     {
         Region? dbRegion = await _regionService.AddRegionAsync(region);
@@ -59,8 +70,13 @@ public class RegionController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbRegion);
     }
 
-    // update existing record matching query
-    [HttpPut("{id}")]
+    /// <summary>
+    /// Update existing record matching query
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="region"></param>
+    /// <returns></returns>
+    [HttpPost("UpdateRegion/{id}")]
     public async Task<IActionResult> UpdateRegionAsync(int id, Region region)
     {
         if (id != region.Id)
@@ -77,9 +93,13 @@ public class RegionController : ControllerBase
 
         return StatusCode(StatusCodes.Status200OK, dbRegion);
     }
-
-    // delete individual region matching query 
-    [HttpDelete("{id}")]
+    
+    /// <summary>
+    /// Delete individual region matching query 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpPost("DeleteRegion/{id}")]
     public async Task<IActionResult> DeleteRegionAsync(int id)
     {
         Region? dbRegion = await _regionService.GetRegionAsync(id);

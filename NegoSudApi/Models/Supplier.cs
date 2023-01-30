@@ -2,16 +2,16 @@
 
 namespace NegoSudApi.Models;
 
-public class City : IModelBase
+public class Supplier : IModelBase
 {
     public int Id { get; set; }
     public string? Name { get; set; }
-    public int? ZipCode { get; set; }
+    public string? Details { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public string? CreatedBy { get; set; }
     public string? UpdatedBy { get; set; }
-
-    public virtual ICollection<Address>? Addresses { get; set; }
-      
+    
+    public virtual ICollection<Bottle>? Bottles { get; set; }
+    public virtual Address? Address { get; set; }
 }
