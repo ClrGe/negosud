@@ -41,7 +41,6 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCustomerOrders);
         }
 
-        //[HttpPost]
         [HttpPost("AddCustomerOrder")]
         public async Task<ActionResult<CustomerOrder>> AddCustomerOrder(CustomerOrder customerOrder)
         {
@@ -55,7 +54,6 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbCustomerOrder);
         }
 
-        //[HttpPut("{id}")]
         [HttpPost("UpdateCustomerOrder")]
         public async Task<IActionResult> UpdateCustomerOrderAsync(CustomerOrder customerOrder)
         {
@@ -74,7 +72,6 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
         }
 
-        //[HttpDelete("{id}")]
         [HttpPost("DeleteCustomerOrder")]
         public async Task<IActionResult> DeleteCustomerOrderAsync(int id)
         {
