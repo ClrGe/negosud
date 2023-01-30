@@ -56,7 +56,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbCity);
         }
 
-        [HttpPost("UpdateCity/{id}")]
+        [HttpPost("UpdateCity")]
         public async Task<IActionResult> UpdateCityAsync(int id, City City)
         {
             if (id != City.Id)
@@ -74,7 +74,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCity);
         }
 
-        [HttpPost("DeleteCity/{id}")]
+        [HttpPost("DeleteCity")]
         public async Task<IActionResult> DeleteCityAsync(int id)
         {
             bool? status = await _cityService.DeleteCityAsync(id);

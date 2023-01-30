@@ -47,7 +47,7 @@ public class RoleController :ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbRole);
     }
 
-    [HttpPost("UpdateRole/{id}")]
+    [HttpPost("UpdateRole")]
     public async Task<IActionResult> UpdateRoleAsync(int id, Role role)
     {
         if (id != role.Id) return BadRequest();
@@ -59,7 +59,7 @@ public class RoleController :ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbRole);
     }
 
-    [HttpPost("DeleteRole/{id}")]
+    [HttpPost("DeleteRole")]
     public async Task<IActionResult> DeleteRoleAsync(int id)
     {
         bool? status = await _roleService.DeleteRoleAsync(id);

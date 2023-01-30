@@ -56,7 +56,7 @@ public class AddressController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbAddress);
     }
 
-    [HttpPost("UpdateAddress/{id}")]
+    [HttpPost("UpdateAddress")]
     public async Task<IActionResult> UpdateAddressAsync(int id, Address address)
     {
         if (id != address.Id)
@@ -74,7 +74,7 @@ public class AddressController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbAddress);
     }
 
-    [HttpPost("DeleteAddress/{id}")]
+    [HttpPost("DeleteAddress")]
     public async Task<IActionResult> DeleteAddressAsync(int id)
     {
         bool? status = await _addressService.DeleteAddressAsync(id);

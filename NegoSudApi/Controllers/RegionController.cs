@@ -76,7 +76,7 @@ public class RegionController : ControllerBase
     /// <param name="id"></param>
     /// <param name="region"></param>
     /// <returns></returns>
-    [HttpPost("UpdateRegion/{id}")]
+    [HttpPost("UpdateRegion")]
     public async Task<IActionResult> UpdateRegionAsync(int id, Region region)
     {
         if (id != region.Id)
@@ -99,7 +99,7 @@ public class RegionController : ControllerBase
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    [HttpPost("DeleteRegion/{id}")]
+    [HttpPost("DeleteRegion")]
     public async Task<IActionResult> DeleteRegionAsync(int id)
     {
         Region? dbRegion = await _regionService.GetRegionAsync(id);

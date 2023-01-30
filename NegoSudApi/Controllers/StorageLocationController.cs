@@ -53,7 +53,7 @@ public class StorageLocationController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbStorageLocation);
     }
 
-    [HttpPost("UpdateStorageLocation/{id}")]
+    [HttpPost("UpdateStorageLocation")]
     public async Task<IActionResult> UpdateStorageLocationAsync(int id, StorageLocation storageLocation)
     {
         if (id != storageLocation.Id)
@@ -70,7 +70,7 @@ public class StorageLocationController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbStorageLocation);
     }
 
-    [HttpPost("DeleteStorageLocation/{id}")]
+    [HttpPost("DeleteStorageLocation")]
     public async Task<IActionResult> DeleteStorageLocationAsync(int id)
     {
         StorageLocation? dbStorageLocation = await _storageLocationService.GetStorageLocationAsync(id);

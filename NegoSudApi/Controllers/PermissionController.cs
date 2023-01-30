@@ -44,7 +44,7 @@ public class PermissionController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbPermissions);
     }
 
-    [HttpPost("Permission")]
+    [HttpPost("AddPermission")]
     public async Task<ActionResult<Permission>> AddPermissionAsync(Permission permission)
     {
         Permission? dbPermission = await _permissionService.AddPermissionAsync(permission);

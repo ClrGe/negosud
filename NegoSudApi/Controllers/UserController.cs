@@ -51,7 +51,7 @@ public class UserController :ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbUser);
     }
 
-    [HttpPost("UpdateUser/{id}")]
+    [HttpPost("UpdateUser")]
     public async Task<IActionResult> UpdateUserAsync(int id, User user)
     {
         if (id != user.Id) return BadRequest();
@@ -64,7 +64,7 @@ public class UserController :ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbUser);
     }
 
-    [HttpPost("DeleteUser/{id}")]
+    [HttpPost("DeleteUser")]
     public async Task<IActionResult> DeleteUserAsync(int id)
     {
         bool? status = await _userService.DeleteUserAsync(id);

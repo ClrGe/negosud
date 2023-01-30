@@ -81,7 +81,7 @@ public class ProducerController : ControllerBase
     /// <param name="id"></param>
     /// <param name="producer"></param>
     /// <returns></returns>
-    [HttpPost("UpdateProducer/{id}")]
+    [HttpPost("UpdateProducer")]
     public async Task<IActionResult> UpdateProducerAsync(int id, Producer producer)
     {
         if (id != producer.Id)
@@ -105,7 +105,7 @@ public class ProducerController : ControllerBase
     /// </summary>
     /// <param name="id">The producer's id to delete</param>
     /// <returns>Status code</returns>
-    [HttpPost("DeleteProducer/{id}")]
+    [HttpPost("DeleteProducer")]
     public async Task<IActionResult> DeleteProducerAsync(int id)
     {
         Producer? producer = await _producerService.GetProducerAsync(id);

@@ -49,7 +49,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbGrape);
         }
 
-        [HttpPost("UpdateGrape/{id}")]
+        [HttpPost("UpdateGrape")]
         public async Task<IActionResult> UpdateGrapeAsync(int id, Grape grape)
         {
             if (id != grape.Id)
@@ -65,7 +65,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbGrape);
         }
 
-        [HttpPost("DeleteGrape/{id}")]
+        [HttpPost("DeleteGrape")]
         public async Task<IActionResult> DeleteGrapeAsync(int id)
         {
             Grape? dbGrape = await _grapeService.GetGrapeAsync(id);

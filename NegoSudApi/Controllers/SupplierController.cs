@@ -81,7 +81,7 @@ public class SupplierController : ControllerBase
     /// <param name="id"></param>
     /// <param name="supplier"></param>
     /// <returns></returns>
-    [HttpPost("UpdateSupplier/{id}")]
+    [HttpPost("UpdateSupplier")]
     public async Task<IActionResult> UpdateSupplierAsync(int id, Supplier supplier)
     {
         if (id != supplier.Id)
@@ -105,7 +105,7 @@ public class SupplierController : ControllerBase
     /// </summary>
     /// <param name="id">The Supplier's id to delete</param>
     /// <returns>Status code</returns>
-    [HttpPost("DeleteSupplier/{id}")]
+    [HttpPost("DeleteSupplier")]
     public async Task<IActionResult> DeleteSupplierAsync(int id)
     {
         Supplier? dbSupplier = await _supplierService.GetSupplierAsync(id);

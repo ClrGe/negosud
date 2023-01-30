@@ -56,7 +56,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbBottle);
         }
 
-        [HttpPost("UpdateBottle/{id}")]
+        [HttpPost("UpdateBottle")]
         public async Task<IActionResult> UpdateBottleAsync(int id, Bottle bottle)
         {
             if (id != bottle.Id)
@@ -74,7 +74,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbBottle);
         }
 
-        [HttpPost("DeleteBottle/{id}")]
+        [HttpPost("DeleteBottle")]
         public async Task<IActionResult> DeleteBottleAsync(int id)
         {
             bool? status = await _bottleService.DeleteBottleAsync(id);
