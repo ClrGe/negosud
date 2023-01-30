@@ -37,5 +37,5 @@ public interface IStorageLocationService
     /// </summary>
     /// <param name="id">The entity id</param>
     /// <returns></returns>
-    public Task DeleteStorageLocationAsync(int id);
+    public Task<bool> DeleteStorageLocationAsync(int id);
 }

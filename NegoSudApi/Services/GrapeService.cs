@@ -88,7 +88,7 @@ public class GrapeService : IGrapeService
     }
 
     //</inheritdoc>
-    public async Task DeleteGrapeAsync(int id)
+    public async Task<bool> DeleteGrapeAsync(int id)
     {
         try
         {
@@ -97,12 +97,15 @@ public class GrapeService : IGrapeService
             {
                 _context.Grapes.Remove(grape);
                 await _context.SaveChangesAsync();
+                return true;
             }
         }
         catch (Exception ex)
         {
             _logger.Log(LogLevel.Information, ex.ToString());
         }
+
+        return false;
     }
 }
 

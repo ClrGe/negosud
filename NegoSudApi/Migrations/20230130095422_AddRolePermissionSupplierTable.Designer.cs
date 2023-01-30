@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NegoSudApi.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NegoSudApi.Migrations
 {
     [DbContext(typeof(NegoSudDbContext))]
-    partial class NegoSudDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230130095422_AddRolePermissionSupplierTable")]
+    partial class AddRolePermissionSupplierTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,25 +24,6 @@ namespace NegoSudApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("BottleSupplier", b =>
-                {
-                    b.Property<int>("BottlesId")
-                        .HasColumnType("integer")
-                        .HasColumnName("bottles_id");
-
-                    b.Property<int>("SuppliersId")
-                        .HasColumnType("integer")
-                        .HasColumnName("suppliers_id");
-
-                    b.HasKey("BottlesId", "SuppliersId")
-                        .HasName("pk_bottle_supplier");
-
-                    b.HasIndex("SuppliersId")
-                        .HasDatabaseName("ix_bottle_supplier_suppliers_id");
-
-                    b.ToTable("bottle_supplier", (string)null);
-                });
 
             modelBuilder.Entity("NegoSudApi.Models.Address", b =>
                 {
@@ -895,26 +879,9 @@ namespace NegoSudApi.Migrations
                     b.HasIndex("RolesId")
                         .HasDatabaseName("ix_permission_role_roles_id");
 
-                    b.ToTable("permission_role", (string)null);
+                    b.ToTable("PermissionRole", (string)null);
                 });
-
-            modelBuilder.Entity("BottleSupplier", b =>
-                {
-                    b.HasOne("NegoSudApi.Models.Bottle", null)
-                        .WithMany()
-                        .HasForeignKey("BottlesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_bottle_supplier_bottles_bottles_id");
-
-                    b.HasOne("NegoSudApi.Models.Supplier", null)
-                        .WithMany()
-                        .HasForeignKey("SuppliersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_bottle_supplier_suppliers_suppliers_id");
-                });
-
+            
             modelBuilder.Entity("NegoSudApi.Models.Address", b =>
                 {
                     b.HasOne("NegoSudApi.Models.City", "City")

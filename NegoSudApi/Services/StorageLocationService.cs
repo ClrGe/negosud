@@ -88,7 +88,7 @@ public class StorageLocationService : IStorageLocationService
     }
 
     //</inheritdoc>
-    public async Task DeleteStorageLocationAsync(int id)
+    public async Task<bool> DeleteStorageLocationAsync(int id)
     {
         try
         {
@@ -97,12 +97,15 @@ public class StorageLocationService : IStorageLocationService
             {
                 _context.StorageLocations.Remove(location);
                 await _context.SaveChangesAsync();
+                return true;
             }
         }
         catch (Exception ex)
         {
             _logger.Log(LogLevel.Information, ex.ToString());
         }
+
+        return false;
     }
 }
 

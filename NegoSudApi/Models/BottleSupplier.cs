@@ -2,14 +2,16 @@ using NegoSudApi.Models.Interfaces;
 
 namespace NegoSudApi.Models;
 
-public class Permission : IModelBase
+public class BottleSupplier : IModelBase
 {
-    public int Id { get; set; }
-    public string? Access { get; set; }
-    public string? Name { get; set; }
+    public int BottleId { get; set; }
+    public int SupplierId { get; set; }
+    
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public string? CreatedBy { get; set; }
     public string? UpdatedBy { get; set; }
-    public virtual ICollection<Role>? Roles { get; set; }
+    
+    public virtual Bottle? Bottle { get; set; }
+    public virtual Supplier? Supplier { get; set; }
 }

@@ -13,5 +13,7 @@ public class Supplier : IModelBase
     public string? UpdatedBy { get; set; }
     
     public virtual ICollection<Bottle>? Bottles { get; set; }
+    public virtual ICollection<BottleSupplier>? BottleSuppliers { get; set; }
+
     public virtual Address? Address { get; set; }
 }

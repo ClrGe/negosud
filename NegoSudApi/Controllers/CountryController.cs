@@ -56,10 +56,10 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbCountry);
         }
 
-        [HttpPost("UpdateCountry/{id}")]
-        public async Task<IActionResult> UpdateCountryAsync(int id, Country country)
+        [HttpPost("UpdateCountry")]
+        public async Task<IActionResult> UpdateCountryAsync(Country country)
         {
-            if (id != country.Id)
+            if (country == null)
             {
                 return BadRequest();
             }
@@ -68,13 +68,13 @@ namespace NegoSudApi.Controllers
 
             if (dbCountry == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {id} - could not update.");
+                return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {country.Id} - could not update.");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbCountry);
         }
 
-        [HttpPost("DeleteCountry/{id}")]
+        [HttpPost("DeleteCountry")]
         public async Task<IActionResult> DeleteCountryAsync(int id)
         {
             bool? status = await _countryService.DeleteCountryAsync(id);

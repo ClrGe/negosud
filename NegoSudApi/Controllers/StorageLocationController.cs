@@ -53,10 +53,10 @@ public class StorageLocationController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbStorageLocation);
     }
 
-    [HttpPost("UpdateStorageLocation/{id}")]
-    public async Task<IActionResult> UpdateStorageLocationAsync(int id, StorageLocation storageLocation)
+    [HttpPost("UpdateStorageLocation")]
+    public async Task<IActionResult> UpdateStorageLocationAsync(StorageLocation storageLocation)
     {
-        if (id != storageLocation.Id)
+        if (storageLocation == null)
         {
             return BadRequest();
         }
@@ -64,13 +64,13 @@ public class StorageLocationController : ControllerBase
         StorageLocation? dbStorageLocation = await _storageLocationService.UpdateStorageLocationAsync(storageLocation);
         if (dbStorageLocation == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {storageLocation.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbStorageLocation);
     }
 
-    [HttpPost("DeleteStorageLocation/{id}")]
+    [HttpPost("DeleteStorageLocation")]
     public async Task<IActionResult> DeleteStorageLocationAsync(int id)
     {
         StorageLocation? dbStorageLocation = await _storageLocationService.GetStorageLocationAsync(id);
