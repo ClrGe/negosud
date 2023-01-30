@@ -5,23 +5,23 @@ using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services;
 
-public class UserService : IUserService
+public class RoleService : IRoleService
 {
     private readonly NegoSudDbContext _context;
-    private readonly ILogger<UserService> _logger;
+    private readonly ILogger<RoleService> _logger;
 
-    public UserService(NegoSudDbContext context, ILogger<UserService> logger)
+    public RoleService(NegoSudDbContext context, ILogger<RoleService> logger)
     {
         _context = context;
         _logger = logger;
     }
 
     // </inheritdoc>
-    public async Task<User?> GetUserAsync(int id)
+    public async Task<Role?> GetRoleAsync(int id)
     {
         try
         {
-            return await _context.Users.FindAsync(id);
+            return await _context.Roles.FindAsync(id);
         }
         catch (Exception ex)
         {
@@ -32,11 +32,11 @@ public class UserService : IUserService
     }
 
     // </inheritdoc>
-    public async Task<IEnumerable<User>?> GetUsersAsync()
+    public async Task<IEnumerable<Role>?> GetRolesAsync()
     {
         try
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Roles.ToListAsync();
         }
         catch (Exception ex)
         {
@@ -47,13 +47,13 @@ public class UserService : IUserService
     }
 
     // </inheritdoc>
-    public async Task<User?> AddUserAsync(User user)
+    public async Task<Role?> AddRoleAsync(Role role)
     {
         try
         {
-            await _context.AddAsync(user);
+            await _context.AddAsync(role);
             await _context.SaveChangesAsync();
-            return await _context.Users.FindAsync(user.Id);
+            return await _context.Roles.FindAsync(role.Id);
         }
         catch (Exception ex)
         {
@@ -64,13 +64,13 @@ public class UserService : IUserService
     }
 
     // </inheritdoc>
-    public async Task<User?> UpdateUserAsync(User user)
+    public async Task<Role?> UpdateRoleAsync(Role role)
     {
         try
         {
-            _context.Entry(user).State = EntityState.Modified;
+            _context.Entry(role).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return user;
+            return role;
         }
         catch (Exception ex)
         {
@@ -81,15 +81,15 @@ public class UserService : IUserService
     }
 
     // </inheritdoc>
-    public async Task<bool?> DeleteUserAsync(int id)
+    public async Task<bool?> DeleteRoleAsync(int id)
     {
         try
         {
-            User? userResult = await _context.Users.FindAsync(id);
-            if (userResult == null)
+            Role? roleResult = await _context.Roles.FindAsync(id);
+            if (roleResult == null)
                 return false;
 
-            _context.Users.Remove(userResult);
+            _context.Roles.Remove(roleResult);
             await _context.SaveChangesAsync();
             return true;
         }

@@ -57,10 +57,10 @@ public class WineLabelController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbWineLabel);
     }
 
-    [HttpPost("UpdateWineLabel/{id}")]
-    public async Task<IActionResult> UpdateWineLabelAsync(int id, WineLabel wineLabel)
+    [HttpPost("UpdateWineLabel")]
+    public async Task<IActionResult> UpdateWineLabelAsync(WineLabel wineLabel)
     {
-        if (id != wineLabel.Id)
+        if (wineLabel == null)
         {
             return BadRequest();
         }
@@ -69,13 +69,13 @@ public class WineLabelController : ControllerBase
 
         if (dbWineLabel == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query - could not update");
+            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {wineLabel.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbWineLabel);
     }
 
-    [HttpPost("DeleteWineLabel/{id}")]
+    [HttpPost("DeleteWineLabel")]
     public async Task<IActionResult> DeleteWineLabelAsync(int id)
     {
         bool? status = await _wineLabelService.DeleteWineLabelAsync(id);

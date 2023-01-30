@@ -5,23 +5,23 @@ using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services;
 
-public class UserService : IUserService
+public class PermissionService : IPermissionService
 {
     private readonly NegoSudDbContext _context;
-    private readonly ILogger<UserService> _logger;
+    private readonly ILogger<PermissionService> _logger;
 
-    public UserService(NegoSudDbContext context, ILogger<UserService> logger)
+    public PermissionService(NegoSudDbContext context, ILogger<PermissionService> logger)
     {
         _context = context;
         _logger = logger;
     }
-
-    // </inheritdoc>
-    public async Task<User?> GetUserAsync(int id)
+    
+    // </inheritdoc
+    public async Task<Permission?> GetPermissionAsync(int id)
     {
         try
         {
-            return await _context.Users.FindAsync(id);
+            return await _context.Permissions.FindAsync(id);
         }
         catch (Exception ex)
         {
@@ -32,11 +32,11 @@ public class UserService : IUserService
     }
 
     // </inheritdoc>
-    public async Task<IEnumerable<User>?> GetUsersAsync()
+    public async Task<IEnumerable<Permission>?> GetPermissionsAsync()
     {
         try
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Permissions.ToListAsync();
         }
         catch (Exception ex)
         {
@@ -46,14 +46,14 @@ public class UserService : IUserService
         return null;
     }
 
-    // </inheritdoc>
-    public async Task<User?> AddUserAsync(User user)
+    // </inheritdoc
+    public async Task<Permission?> AddPermissionAsync(Permission permission)
     {
         try
         {
-            await _context.AddAsync(user);
+            Permission newPermission = (await _context.Permissions.AddAsync(permission)).Entity;
             await _context.SaveChangesAsync();
-            return await _context.Users.FindAsync(user.Id);
+            return newPermission;
         }
         catch (Exception ex)
         {
@@ -63,34 +63,39 @@ public class UserService : IUserService
         return null;
     }
 
-    // </inheritdoc>
-    public async Task<User?> UpdateUserAsync(User user)
+    // </inheritdoc
+    public async Task<Permission?> UpdatePermissionAsync(Permission permission)
     {
         try
         {
-            _context.Entry(user).State = EntityState.Modified;
+            _context.Entry(permission).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return user;
+
+            return permission;
         }
         catch (Exception ex)
         {
             _logger.Log(LogLevel.Information, ex.ToString());
         }
-
+        
         return null;
     }
 
-    // </inheritdoc>
-    public async Task<bool?> DeleteUserAsync(int id)
+    // </inheritdoc
+    public async Task<bool?> DeletePermissionAsync(int id)
     {
         try
         {
-            User? userResult = await _context.Users.FindAsync(id);
-            if (userResult == null)
+            var dbPermission = await _context.Permissions.FindAsync(id);
+
+            if (dbPermission == null)
+            {
                 return false;
+            }
 
-            _context.Users.Remove(userResult);
+            _context.Permissions.Remove(dbPermission);
             await _context.SaveChangesAsync();
+
             return true;
         }
         catch (Exception ex)

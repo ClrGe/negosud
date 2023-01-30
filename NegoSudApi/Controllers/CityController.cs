@@ -56,25 +56,25 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbCity);
         }
 
-        [HttpPost("UpdateCity/{id}")]
-        public async Task<IActionResult> UpdateCityAsync(int id, City City)
+        [HttpPost("UpdateCity")]
+        public async Task<IActionResult> UpdateCityAsync(City city)
         {
-            if (id != City.Id)
+            if (city == null)
             {
                 return BadRequest();
             }
 
-            City? dbCity = await _cityService.UpdateCityAsync(City);
+            City? dbCity = await _cityService.UpdateCityAsync(city);
 
             if (dbCity == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No city found for id: {id} - could not update.");
+                return StatusCode(StatusCodes.Status204NoContent, $"No city found for id: {city.Id} - could not update.");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbCity);
         }
 
-        [HttpPost("DeleteCity/{id}")]
+        [HttpPost("DeleteCity")]
         public async Task<IActionResult> DeleteCityAsync(int id)
         {
             bool? status = await _cityService.DeleteCityAsync(id);

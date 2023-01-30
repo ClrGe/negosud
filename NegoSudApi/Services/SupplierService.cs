@@ -1,34 +1,34 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services;
 
-public class CountryService : ICountryService
+public class SupplierService : ISupplierService
 {
-    private readonly NegoSudDbContext _context;
-    private readonly ILogger<CountryService> _logger;
 
-    public CountryService(NegoSudDbContext context, ILogger<CountryService> logger)
+    private readonly NegoSudDbContext _context;
+    private readonly ILogger<SupplierService> _logger;
+
+    public SupplierService(NegoSudDbContext context, ILogger<SupplierService> logger)
     {
         _context = context;
         _logger = logger;
     }
 
-    //</inheritdoc>    
-    public async Task<Country?> GetCountryAsync(int id, bool includeRelations = true)
+    //</inheritdoc> 
+    public async Task<Supplier?> GetSupplierAsync(int id, bool includeRelations = true)
     {
         try
         {
             if (includeRelations)
             {
-                return await _context.Countries
-                .Include(c => c.Regions)
-                .FirstOrDefaultAsync(c => c.Id == id);
+                return await _context.Suppliers
+                    .Include(p => p.Bottles)
+                    .FirstOrDefaultAsync(p => p.Id == id);
             }
-
-            return await _context.Countries.FindAsync(id);
+            return await _context.Suppliers.FindAsync(id);
         }
         catch (Exception ex)
         {
@@ -38,12 +38,13 @@ public class CountryService : ICountryService
         return null;
     }
 
-    //</inheritdoc>    
-    public async Task<IEnumerable<Country>?> GetCountriesAsync()
+
+
+    public async Task<IEnumerable<Supplier>?> GetSuppliersAsync()
     {
         try
         {
-            return await _context.Countries.ToListAsync();
+            return await _context.Suppliers.ToListAsync();
         }
         catch (Exception ex)
         {
@@ -53,32 +54,16 @@ public class CountryService : ICountryService
         return null;
     }
 
-    //</inheritdoc>    
-    public async Task<Country?> AddCountryAsync(Country country)
+    //</inheritdoc> 
+    public async Task<Supplier?> AddSupplierAsync(Supplier Supplier)
     {
         try
         {
-            Country newCountry = (await _context.Countries.AddAsync(country)).Entity;
-            await _context.SaveChangesAsync();
-            return newCountry;
-        }
-        catch (Exception ex)
-        {
-            _logger.Log(LogLevel.Information, ex.ToString());
-        }
+            Supplier newSupplier = (await _context.Suppliers.AddAsync(Supplier)).Entity;
 
-        return null;
-    }
-
-    //</inheritdoc>    
-    public async Task<Country?> UpdateCountryAsync(Country country)
-    {
-        try
-        {
-            _context.Entry(country).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return country;
+            return newSupplier;
         }
         catch (Exception ex)
         {
@@ -88,19 +73,37 @@ public class CountryService : ICountryService
         return null;
     }
 
-    //</inheritdoc>    
-    public async Task<bool?> DeleteCountryAsync(int id)
+    //</inheritdoc> 
+    public async Task<Supplier?> UpdateSupplierAsync(Supplier Supplier)
     {
         try
         {
-            var dbCountry = await _context.Countries.FindAsync(id);
+            _context.Entry(Supplier).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
-            if (dbCountry == null)
+            return Supplier;
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
+        }
+
+        return null;
+    }
+
+    //</inheritdoc> 
+    public async Task<bool?> DeleteSupplierAsync(int id)
+    {
+        try
+        {
+            Supplier? supplierResult = await _context.Suppliers.FindAsync(id);
+
+            if (supplierResult == null)
             {
                 return false;
             }
 
-            _context.Countries.Remove(dbCountry);
+            _context.Suppliers.Remove(supplierResult);
             await _context.SaveChangesAsync();
 
             return true;
@@ -112,5 +115,4 @@ public class CountryService : ICountryService
 
         return false;
     }
-
 }

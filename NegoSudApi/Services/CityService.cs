@@ -15,7 +15,8 @@ public class CityService : ICityService
         _context = context;
         _logger = logger;
     }
-    //<inheritdoc/>
+    
+    // </inheritdoc>
     public async Task<City?> GetCityAsync(int id, bool includeRelations = true)
     {
         try
@@ -37,7 +38,7 @@ public class CityService : ICityService
         return null;
     }
 
-    //<inheritdoc/>
+    // </inheritdoc>
     public async Task<IEnumerable<City>?> GetCitiesAsync()
     {
         try
@@ -52,7 +53,7 @@ public class CityService : ICityService
         return null;
     }
 
-    //<inheritdoc/>
+    // </inheritdoc>
     public async Task<City?> AddCityAsync(City city)
     {
         try
@@ -69,7 +70,7 @@ public class CityService : ICityService
         return null;
     }
 
-    //<inheritdoc/>
+    // </inheritdoc>
     public async Task<City?> UpdateCityAsync(City city)
     {
         try
@@ -87,7 +88,7 @@ public class CityService : ICityService
         return null;
     }
 
-    //<inheritdoc/>
+    // </inheritdoc>
     public async Task<bool?> DeleteCityAsync(int id)
     {
         try
@@ -109,6 +110,6 @@ public class CityService : ICityService
             _logger.Log(LogLevel.Information, ex.ToString());
         }
 
-        return null;
+        return false;
     }
 }

@@ -37,5 +37,5 @@ public interface IGrapeService
     /// </summary>
     /// <param name="id">The entity's id</param>
     /// <returns></returns>
-    public Task DeleteGrapeAsync(int id);
+    public Task<bool> DeleteGrapeAsync(int id);
 }

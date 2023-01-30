@@ -25,14 +25,14 @@ public class AuthenticationController : ControllerBase
     
     [HttpPost]
     [Route("Login")]
-    public Task<ActionResult<string>> Login(string email, string password)
+    public Task<ActionResult<string>> Login(Register register)
     {
-        var dbUser = _jwtAuthenticationService.Authenticate(email, password);
+        var dbUser = _jwtAuthenticationService.Authenticate(register.Email, register.Email);
         if (dbUser != null)
         {
             var claims = new List<Claim>
             {
-                new(ClaimTypes.Email, email)
+                new(ClaimTypes.Email, register.Email)
             };
             var token = _jwtAuthenticationService.GenerateToken(_configuration["Jwt:Key"]!, claims);
             return Task.FromResult<ActionResult<string>>(Ok(token));
@@ -42,12 +42,12 @@ public class AuthenticationController : ControllerBase
     
     [HttpPost]
     [Route("Register")]
-    public async Task<ActionResult<string>> Register(string email, string password)
+    public async Task<ActionResult<string>> Register(Register register)
     {
         var userToAdd = new User
         {
-            Email = email,
-            Password = password
+            Email = register.Email,
+            Password = register.Email
         };
         
         userToAdd.Password = _securePassword.Hash(userToAdd);

@@ -21,6 +21,7 @@ public class NegoSudDbContext : DbContext
     public virtual DbSet<Address> Addresses { get; set; }
     public virtual DbSet<Role> Roles { get; set; }
     public virtual DbSet<Permission> Permissions { get; set; }
+    public virtual DbSet<Supplier> Suppliers { get; set; }
 
     public virtual DbSet<CustomerOrder> CustomerOrders { get; set; }
     public virtual DbSet<SupplierOrder> SupplierOrders { get; set; }
@@ -103,6 +104,26 @@ public class NegoSudDbContext : DbContext
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
+        });
+        
+        modelBuilder.Entity<BottleSupplier>(entity =>
+        {
+            entity.ToTable(nameof(BottleSupplier));
+            entity.Property(p => p.CreatedBy).HasMaxLength(200);
+            entity.Property(p => p.UpdatedBy).HasMaxLength(200);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.HasKey(k => new { k.BottleId, k.SupplierId});
+            
+            entity.HasOne(k => k.Bottle)
+                .WithMany(k => k.BottleSuppliers)
+                .HasForeignKey(k => k.BottleId)
+                .HasPrincipalKey(k => k.Id);
+            
+            entity.HasOne(k => k.Supplier)
+                .WithMany(k => k.BottleSuppliers)
+                .HasForeignKey(k => k.SupplierId)
+                .HasPrincipalKey(k => k.Id);
         });
 
         modelBuilder.Entity<Producer>(entity =>
@@ -230,6 +251,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAdd().ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.HasMany(a => a.Addresses).WithOne(u => u.User);
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -241,8 +263,10 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAdd().ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.HasMany(a => a.Users).WithOne(r => r.Role);
         });
         
+       
         modelBuilder.Entity<Permission>(entity =>
         {
             entity.ToTable(nameof(Permission));
@@ -252,6 +276,19 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.HasMany(p => p.Roles).WithMany(r => r.Permissions);
+        });
+        
+        modelBuilder.Entity<Supplier>(entity =>
+        {
+            entity.ToTable(nameof(Supplier));
+            entity.Property(p => p.CreatedBy).HasMaxLength(200);
+            entity.Property(p => p.UpdatedBy).HasMaxLength(200);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.HasKey(k => k.Id);
+            entity.Property(i => i.Id).UseIdentityColumn();
+            entity.HasMany(k => k.Bottles).WithMany(k => k.Suppliers);
         });
     }
 }
