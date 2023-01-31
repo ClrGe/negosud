@@ -236,7 +236,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(l => l.UpdatedBy).HasMaxLength(200);
             entity.Property(l => l.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
             entity.Property(l => l.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
-            entity.HasKey(l => l.Id);
+            entity.HasKey(l => l.Id).UseIdentityColumn();
             entity.HasOne(l => l.SupplierOrder).WithMany(k => k.Lines);
             entity.HasOne(l => l.Bottle);
         });
