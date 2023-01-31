@@ -27,7 +27,7 @@ public class AuthenticationController : ControllerBase
     [Route("Login")]
     public Task<ActionResult<string>> Login(Register register)
     {
-        var dbUser = _jwtAuthenticationService.Authenticate(register.Email, register.Email);
+        var dbUser = _jwtAuthenticationService.Authenticate(register.Email, register.Password);
         if (dbUser != null)
         {
             var claims = new List<Claim>

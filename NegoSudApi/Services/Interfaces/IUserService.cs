@@ -32,7 +32,7 @@ public interface IUserService
     Task<User?> UpdateUserAsync(User user);
 
     /// <summary>
-    /// Delete an User entity from the database
+    /// Delete a User entity from the database
     /// </summary>
     /// <param name="id">The entity's id</param>
     /// <returns></returns>
