@@ -16,7 +16,7 @@ namespace NegoSudApi.Models
         public DateTime? DateOrder { get; set; }
         public DateTime? DateDelivery { get; set; }
 
-        public virtual Producer? Producer { get; set; }
+        public virtual Supplier? Supplier { get; set; }
         public virtual ICollection<SupplierOrderLine>? Lines { get; set; }
     }
 }

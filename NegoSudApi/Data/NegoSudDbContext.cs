@@ -225,7 +225,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(sO => sO.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
             entity.Property(sO => sO.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
             entity.HasKey(cO => cO.Id);
-            entity.HasOne(cO => cO.Producer);
+            entity.HasOne(cO => cO.Supplier);
             entity.HasMany(cO => cO.Lines).WithOne(k => k.SupplierOrder);
         });
 

@@ -10,18 +10,18 @@ public class SupplierOrderService : ISupplierOrderService
 {
     private readonly NegoSudDbContext _context;
     private readonly ILogger<SupplierOrderService> _logger;
-    private readonly IProducerService _producerService;
+    private readonly ISupplierService _supplierService;
     private readonly IBottleService _bottleService;
     
 
     public SupplierOrderService(NegoSudDbContext context,
                          ILogger<SupplierOrderService> logger,
-                         IProducerService producerService,
+                         ISupplierService supplierService,
                          IBottleService bottleService)
     {
         _context = context;
         _logger = logger;
-        _producerService = producerService;
+        _supplierService = supplierService;
         _bottleService = bottleService;
     }
 
@@ -33,7 +33,7 @@ public class SupplierOrderService : ISupplierOrderService
             if (includeRelations)
             {
                 return await _context.SupplierOrders
-                    .Include(sO => sO.Producer)
+                    .Include(sO => sO.Supplier)
                     .Include(sO => sO.Lines)
                     .ThenInclude(l => l.Bottle)
                     .FirstOrDefaultAsync(cO => cO.Id == id);
@@ -69,12 +69,12 @@ public class SupplierOrderService : ISupplierOrderService
         try
         {
       
-            if(supplierOrder.Producer?.Id != null)
+            if(supplierOrder.Supplier?.Id != null)
             {
-                Producer? producer = await _producerService.GetProducerAsync(supplierOrder.Producer.Id, includeRelations: false);
-                if(producer != null)
+                Supplier? supplier = await _supplierService.GetSupplierAsync(supplierOrder.Supplier.Id, includeRelations: false);
+                if(supplier != null)
                 {
-                    supplierOrder.Producer = producer;
+                    supplierOrder.Supplier = supplier;
                 }
             }
 
@@ -130,13 +130,13 @@ public class SupplierOrderService : ISupplierOrderService
                 dbSupplierOrder.DateDelivery = supplierOrder.DateDelivery;
 
 
-                if (supplierOrder.Producer != null)
+                if (supplierOrder.Supplier != null)
                 {
-                    Producer? producer = await _producerService.GetProducerAsync(supplierOrder.Producer.Id, includeRelations: false);
-                    // If we found a producer in the database
-                    if (producer != null)
+                    Supplier? supplier = await _supplierService.GetSupplierAsync(supplierOrder.Supplier.Id, includeRelations: false);
+                    // If we found a supplier in the database
+                    if (supplier != null)
                     {
-                        dbSupplierOrder.Producer = producer;
+                        dbSupplierOrder.Supplier = supplier;
                     }
                 }
 
