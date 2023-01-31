@@ -20,7 +20,6 @@ public class CustomerOrderService : ICustomerOrderService
         _context = context;
         _logger = logger;
         _bottleService = bottleService;
-        //_customerService = customerService;
     }
 
     //</inheritdoc>  
