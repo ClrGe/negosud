@@ -11,7 +11,6 @@ public class CustomerOrderService : ICustomerOrderService
     private readonly NegoSudDbContext _context;
     private readonly ILogger<CustomerOrderService> _logger;
     private readonly IBottleService _bottleService;
-    //pryivate readonly ICustomerService _customerService;
 
     public CustomerOrderService(NegoSudDbContext context,
                          ILogger<CustomerOrderService> logger,
