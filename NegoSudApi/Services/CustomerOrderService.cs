@@ -11,14 +11,17 @@ public class CustomerOrderService : ICustomerOrderService
     private readonly NegoSudDbContext _context;
     private readonly ILogger<CustomerOrderService> _logger;
     private readonly IBottleService _bottleService;
+    private readonly IUserService _userService;
 
     public CustomerOrderService(NegoSudDbContext context,
                          ILogger<CustomerOrderService> logger,
-                         IBottleService bottleService) //,ICustomerService customerService)
+                         IBottleService bottleService,
+                         IUserService userService)
     {
         _context = context;
         _logger = logger;
         _bottleService = bottleService;
+        _userService = userService;
     }
 
     //</inheritdoc>  
@@ -67,11 +70,11 @@ public class CustomerOrderService : ICustomerOrderService
       
             if(customerOrder.Customer?.Id != null)
             {
-                //Customer? customer = await _customerService.GetcustomerAsync(customerOrder.Customer.Id, includeRelations: false);
-                //if(customer != null)
-                //{
-                //    customerOrder.Customer = customer;
-                //}
+                User? customer = await _userService.GetUserAsync(customerOrder.Customer.Id);
+                if (customer != null)
+                {
+                    customerOrder.Customer = customer;
+                }
             }
 
             if(customerOrder.Lines != null)
@@ -128,12 +131,12 @@ public class CustomerOrderService : ICustomerOrderService
 
                 if (customerOrder.Customer != null)
                 {
-                    //Customer? customer = await _customerService.GetCustomerAsync(customerOrder.Customer.Id, includeRelations: false);
-                    //// If we found a customer in the database
-                    //if (customer != null)
-                    //{
-                    //    dbCustomerOrder.Customer = customer;
-                    //}
+                    User? customer = await _userService.GetUserAsync(customerOrder.Customer.Id);
+                    // If we found a customer in the database
+                    if (customer != null)
+                    {
+                        dbCustomerOrder.Customer = customer;
+                    }
                 }
 
 
