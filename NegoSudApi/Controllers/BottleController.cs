@@ -7,7 +7,7 @@ namespace NegoSudApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class BottleController : ControllerBase
     {
         private readonly IBottleService _bottleService;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -6,6 +7,7 @@ namespace NegoSudApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CustomerOrderController : ControllerBase
     {
         private readonly ICustomerOrderService _customerOrderService;
