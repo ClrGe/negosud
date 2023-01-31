@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -6,6 +7,7 @@ namespace NegoSudApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class GrapeController : ControllerBase
     {
         private readonly IGrapeService _grapeService;
@@ -36,7 +38,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbGrapes.ToList());
         }
 
-        [HttpPost]
+        [HttpPost("AddGrape")]
         public async Task<IActionResult> AddGrapeAsync(Grape grape)
         {
             Grape? dbGrape = await _grapeService.AddGrapeAsync(grape);
@@ -47,10 +49,10 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbGrape);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateGrapeAsync(int id, Grape grape)
+        [HttpPost("UpdateGrape")]
+        public async Task<IActionResult> UpdateGrapeAsync(Grape grape)
         {
-            if (id != grape.Id)
+            if (grape == null)
             {
                 return BadRequest();
             }
@@ -58,12 +60,12 @@ namespace NegoSudApi.Controllers
             Grape? dbGrape = await _grapeService.UpdateGrapeAsync(grape);
             if (dbGrape == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+                return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {grape.Id} - could not update.");
             }
             return StatusCode(StatusCodes.Status200OK, dbGrape);
         }
 
-        [HttpDelete("{id}")]
+        [HttpPost("DeleteGrape")]
         public async Task<IActionResult> DeleteGrapeAsync(int id)
         {
             Grape? dbGrape = await _grapeService.GetGrapeAsync(id);

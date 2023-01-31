@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
@@ -8,7 +9,7 @@ namespace NegoSudApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-
+[Authorize]
 public class ProducerController : ControllerBase
 {
     private readonly IProducerService _producerService;
@@ -18,7 +19,12 @@ public class ProducerController : ControllerBase
         _producerService = producerService;
     }
 
-    // method to return a producer matching query
+    
+    /// <summary>
+    /// Method to return a producer matching query
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetProducerAsync(int id)
     {
@@ -32,7 +38,10 @@ public class ProducerController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbProducer);
     }
 
-    // method to return all existing producers
+    /// <summary>
+    /// Method to return all existing producers
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> GetProducersAsync()
     {
@@ -46,8 +55,13 @@ public class ProducerController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbProducers);
     }
 
-    // method to add a new producer to the database
-    [HttpPost]
+    
+    /// <summary>
+    /// Method to add a new producer to the database
+    /// </summary>
+    /// <param name="producer"></param>
+    /// <returns></returns>
+    [HttpPost("AddProducer")]
     public async Task<ActionResult<Producer>> AddProducerAsync(Producer producer)
     {
         Producer? dbProducer = await _producerService.AddProducerAsync(producer);
@@ -60,11 +74,17 @@ public class ProducerController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbProducer);
     }
 
-    // update existing record matching query
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProducerAsync(int id, Producer producer)
+    
+    /// <summary>
+    /// update existing record matching query
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="producer"></param>
+    /// <returns></returns>
+    [HttpPost("UpdateProducer")]
+    public async Task<IActionResult> UpdateProducerAsync(Producer producer)
     {
-        if (id != producer.Id)
+        if (producer == null)
         {
             return BadRequest();
         }
@@ -73,14 +93,19 @@ public class ProducerController : ControllerBase
 
         if (dbProducer == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {producer.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbProducer);
     }
-
-    // delete individual producer matching query 
-    [HttpDelete("{id}")]
+    
+    
+    /// <summary>
+    /// Delete individual producer matching query
+    /// </summary>
+    /// <param name="id">The producer's id to delete</param>
+    /// <returns>Status code</returns>
+    [HttpPost("DeleteProducer")]
     public async Task<IActionResult> DeleteProducerAsync(int id)
     {
         Producer? producer = await _producerService.GetProducerAsync(id);

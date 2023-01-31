@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -6,6 +7,7 @@ namespace NegoSudApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class WineLabelController : ControllerBase
 {
     private readonly IWineLabelService _wineLabelService;
@@ -42,7 +44,7 @@ public class WineLabelController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbWineLabels);
     }
 
-    [HttpPost]
+    [HttpPost("WineLabel")]
     public async Task<ActionResult<WineLabel>> AddWineLabelAsync(WineLabel wineLabel)
     {
         WineLabel? dbWineLabel = await _wineLabelService.AddWineLabelAsync(wineLabel);
@@ -55,10 +57,10 @@ public class WineLabelController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbWineLabel);
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateWineLabelAsync(int id, WineLabel wineLabel)
+    [HttpPost("UpdateWineLabel")]
+    public async Task<IActionResult> UpdateWineLabelAsync(WineLabel wineLabel)
     {
-        if (id != wineLabel.Id)
+        if (wineLabel == null)
         {
             return BadRequest();
         }
@@ -67,13 +69,13 @@ public class WineLabelController : ControllerBase
 
         if (dbWineLabel == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query - could not update");
+            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {wineLabel.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbWineLabel);
     }
 
-    [HttpDelete("{id}")]
+    [HttpPost("DeleteWineLabel")]
     public async Task<IActionResult> DeleteWineLabelAsync(int id)
     {
         bool? status = await _wineLabelService.DeleteWineLabelAsync(id);

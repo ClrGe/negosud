@@ -6,7 +6,7 @@ public interface IBottleService
 {
 
     /// <summary>
-    /// Get a Bottle entity from the database by its id, , including or not subobjects and collections
+    /// Get a Bottle entity from the database by its id, including or not subobjects and collections
     /// </summary>
     /// <param name="id">The Bottle's id</param>
     /// <param name="includeRelations">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>

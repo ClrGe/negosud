@@ -148,7 +148,7 @@ public class RegionService : IRegionService
             _logger.Log(LogLevel.Information, ex.ToString());
         }
 
-        return null;
+        return false;
     }
 }
 

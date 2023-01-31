@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -6,6 +7,7 @@ namespace NegoSudApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class BottleController : ControllerBase
     {
         private readonly IBottleService _bottleService;
@@ -41,23 +43,23 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbBottles);
         }
 
-        [HttpPost]
+        [HttpPost("AddBottle")]
         public async Task<ActionResult<Bottle>> AddBottle(Bottle bottle)
         {
             Bottle? dbBottle = await _bottleService.AddBottleAsync(bottle);
 
             if (dbBottle == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"{bottle.Full_Name} could not be added.");
+                return StatusCode(StatusCodes.Status204NoContent, $"{bottle.FullName} could not be added.");
             }
 
             return StatusCode(StatusCodes.Status201Created, dbBottle);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBottleAsync(int id, Bottle bottle)
+        [HttpPost("UpdateBottle")]
+        public async Task<IActionResult> UpdateBottleAsync(Bottle bottle)
         {
-            if (id != bottle.Id)
+            if (bottle == null)
             {
                 return BadRequest();
             }
@@ -66,13 +68,13 @@ namespace NegoSudApi.Controllers
 
             if (dbBottle == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query - could not update");
+                return StatusCode(StatusCodes.Status204NoContent, $"No city found for id: {bottle.Id} - could not update.");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbBottle);
         }
 
-        [HttpDelete("{id}")]
+        [HttpPost("DeleteBottle")]
         public async Task<IActionResult> DeleteBottleAsync(int id)
         {
             bool? status = await _bottleService.DeleteBottleAsync(id);

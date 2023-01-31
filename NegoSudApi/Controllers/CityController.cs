@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -6,6 +7,7 @@ namespace NegoSudApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CityController : ControllerBase
     {
         private readonly ICityService _cityService;
@@ -41,7 +43,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCities);
         }
 
-        [HttpPost]
+        [HttpPost("AddCity")]
         public async Task<ActionResult<City>> AddCityAsync(City City)
         {
             City? dbCity = await _cityService.AddCityAsync(City);
@@ -54,25 +56,25 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbCity);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCityAsync(int id, City City)
+        [HttpPost("UpdateCity")]
+        public async Task<IActionResult> UpdateCityAsync(City city)
         {
-            if (id != City.Id)
+            if (city == null)
             {
                 return BadRequest();
             }
 
-            City? dbCity = await _cityService.UpdateCityAsync(City);
+            City? dbCity = await _cityService.UpdateCityAsync(city);
 
             if (dbCity == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No city found for id: {id} - could not update.");
+                return StatusCode(StatusCodes.Status204NoContent, $"No city found for id: {city.Id} - could not update.");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbCity);
         }
 
-        [HttpDelete("{id}")]
+        [HttpPost("DeleteCity")]
         public async Task<IActionResult> DeleteCityAsync(int id)
         {
             bool? status = await _cityService.DeleteCityAsync(id);

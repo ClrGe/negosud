@@ -1,88 +1,90 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Controllers
+namespace NegoSudApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class AddressController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class AddressController : ControllerBase
+    private readonly IAddressService _addressService;
+
+    public AddressController(IAddressService addressService)
     {
-        private readonly IAddressService _addressService;
+        _addressService = addressService;
+    }
 
-        public AddressController(IAddressService addressService)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetAddressAsync(int id)
+    {
+        Address? dbAddress = await _addressService.GetAddressAsync(id);
+
+        if (dbAddress == null)
         {
-            _addressService = addressService;
+            return StatusCode(StatusCodes.Status204NoContent, $"No address found for id: {id}");
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetAddressAsync(int id)
+        return StatusCode(StatusCodes.Status200OK, dbAddress);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAddressesAsync()
+    {
+        IEnumerable<Address>? dbAddresses = await _addressService.GetAddressesAsync();
+
+        if (dbAddresses == null)
         {
-            Address? dbAddress = await _addressService.GetAddressAsync(id);
-
-            if (dbAddress == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No address found for id: {id}");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbAddress);
+            return StatusCode(StatusCodes.Status204NoContent, "No addresses in database");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAddressesAsync()
+        return StatusCode(StatusCodes.Status200OK, dbAddresses);
+    }
+
+    [HttpPost("AddAddress")]
+    public async Task<ActionResult<Address>> AddAddressAsync(Address address)
+    {
+        Address? dbAddress = await _addressService.AddAddressAsync(address);
+
+        if (dbAddress == null)
         {
-            IEnumerable<Address>? dbAddresses = await _addressService.GetAddressesAsync();
-
-            if (dbAddresses == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, "No addresses in database");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbAddresses);
+            return StatusCode(StatusCodes.Status204NoContent, $"No match - could not add content.");
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Address>> AddAddressAsync(Address address)
+        return StatusCode(StatusCodes.Status201Created, dbAddress);
+    }
+
+    [HttpPost("UpdateAddress")]
+    public async Task<IActionResult> UpdateAddressAsync(Address address)
+    {
+        if (address == null)
         {
-            Address? dbAddress = await _addressService.AddAddressAsync(address);
-
-            if (dbAddress == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match - could not add content.");
-            }
-
-            return StatusCode(StatusCodes.Status201Created, dbAddress);
+            return BadRequest();
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAddressAsync(int id, Address address)
+        Address? dbAddress = await _addressService.UpdateAddressAsync(address);
+
+        if (dbAddress == null)
         {
-            if (id != address.Id)
-            {
-                return BadRequest();
-            }
-
-            Address? dbAddress = await _addressService.UpdateAddressAsync(address);
-
-            if (dbAddress == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No address found for id: {id} - could not update.");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbAddress);
+            return StatusCode(StatusCodes.Status204NoContent, $"No address found for id: {address.Id} - could not update.");
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAddressAsync(int id)
+        return StatusCode(StatusCodes.Status200OK, dbAddress);
+    }
+
+    [HttpPost("DeleteAddress")]
+    public async Task<IActionResult> DeleteAddressAsync(int id)
+    {
+        bool? status = await _addressService.DeleteAddressAsync(id);
+
+        if (status == false)
         {
-            bool? status = await _addressService.DeleteAddressAsync(id);
-
-            if (status == false)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No address found for id: {id} - could not delete");
-            }
-
-            return StatusCode(StatusCodes.Status200OK);
+            return StatusCode(StatusCodes.Status204NoContent, $"No address found for id: {id} - could not delete");
         }
+
+        return StatusCode(StatusCodes.Status200OK);
     }
 }
+
