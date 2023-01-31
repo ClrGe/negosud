@@ -18,7 +18,7 @@ public class AddressService : IAddressService
         _cityService = cityService;
     }
 
-    /// <inheritdoc />
+    // <inheritdoc />
     public async Task<Address?> GetAddressAsync(int id, bool includeRelations = true)
     {
         try
@@ -40,7 +40,7 @@ public class AddressService : IAddressService
         return null;
     }
 
-    /// <inheritdoc />
+    // <inheritdoc />
     public async Task<IEnumerable<Address>?> GetAddressesAsync()
     {
         try
@@ -55,7 +55,7 @@ public class AddressService : IAddressService
         return null;
     }
 
-    /// <inheritdoc />
+    // <inheritdoc />
     public async Task<Address?> AddAddressAsync(Address address)
     {
         City? city = null;
@@ -83,7 +83,7 @@ public class AddressService : IAddressService
         return newAddress;
     }
 
-    /// <inheritdoc />
+    // <inheritdoc />
     public async Task<Address?> UpdateAddressAsync(Address address)
     {
         try
@@ -101,7 +101,7 @@ public class AddressService : IAddressService
         return null;
     }
 
-    /// <inheritdoc />
+    // <inheritdoc />
     public async Task<bool?> DeleteAddressAsync(int id)
     {
         try

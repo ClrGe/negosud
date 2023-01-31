@@ -47,19 +47,19 @@ public class RoleController :ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbRole);
     }
 
-    [HttpPost("UpdateRole/{id}")]
-    public async Task<IActionResult> UpdateRoleAsync(int id, Role role)
+    [HttpPost("UpdateRole")]
+    public async Task<IActionResult> UpdateRoleAsync(Role role)
     {
-        if (id != role.Id) return BadRequest();
+        if (role == null) return BadRequest();
         Role? dbRole = await _roleService.UpdateRoleAsync(role);
 
         if (dbRole == null)
-            return StatusCode(StatusCodes.Status204NoContent, $"No Role found for id: {id} - could not update.");
+            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {role.Id} - could not update.");
 
         return StatusCode(StatusCodes.Status200OK, dbRole);
     }
 
-    [HttpPost("DeleteRole/{id}")]
+    [HttpPost("DeleteRole")]
     public async Task<IActionResult> DeleteRoleAsync(int id)
     {
         bool? status = await _roleService.DeleteRoleAsync(id);

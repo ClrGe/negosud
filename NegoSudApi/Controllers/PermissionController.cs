@@ -44,7 +44,7 @@ public class PermissionController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbPermissions);
     }
 
-    [HttpPost("Permission")]
+    [HttpPost("AddPermission")]
     public async Task<ActionResult<Permission>> AddPermissionAsync(Permission permission)
     {
         Permission? dbPermission = await _permissionService.AddPermissionAsync(permission);
@@ -58,9 +58,9 @@ public class PermissionController : ControllerBase
     }
 
     [HttpPost("UpdatePermission/{id}")]
-    public async Task<IActionResult> UpdatePermissionAsync(int id, Permission permission)
+    public async Task<IActionResult> UpdatePermissionAsync(Permission permission)
     {
-        if (id != permission.Id)
+        if (permission == null)
         {
             return BadRequest();
         }
@@ -69,7 +69,7 @@ public class PermissionController : ControllerBase
 
         if (dbPermission == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query - could not update");
+            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {permission.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbPermission);

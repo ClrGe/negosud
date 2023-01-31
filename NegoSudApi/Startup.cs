@@ -41,7 +41,13 @@ public class Startup
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ICityService, CityService>();
         services.AddScoped<IAddressService, AddressService>();
+        services.AddScoped<ISupplierService, SupplierService>();
+        services.AddScoped<IRoleService, RoleService>();
+        services.AddScoped<IPermissionService, PermissionService>();
+        
         services.AddScoped<SecurePassword>();
+        services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
+
         
         services.AddAuthentication(options =>
             {
@@ -63,7 +69,6 @@ public class Startup
                     ValidateIssuerSigningKey = true
                 };
             });
-        services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
         services.AddAuthorization();
 
 

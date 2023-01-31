@@ -81,10 +81,10 @@ public class SupplierController : ControllerBase
     /// <param name="id"></param>
     /// <param name="supplier"></param>
     /// <returns></returns>
-    [HttpPost("UpdateSupplier/{id}")]
-    public async Task<IActionResult> UpdateSupplierAsync(int id, Supplier supplier)
+    [HttpPost("UpdateSupplier")]
+    public async Task<IActionResult> UpdateSupplierAsync(Supplier supplier)
     {
-        if (id != supplier.Id)
+        if (supplier == null)
         {
             return BadRequest();
         }
@@ -93,7 +93,7 @@ public class SupplierController : ControllerBase
 
         if (dbSupplier == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {supplier.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbSupplier);
@@ -105,7 +105,7 @@ public class SupplierController : ControllerBase
     /// </summary>
     /// <param name="id">The Supplier's id to delete</param>
     /// <returns>Status code</returns>
-    [HttpPost("DeleteSupplier/{id}")]
+    [HttpPost("DeleteSupplier")]
     public async Task<IActionResult> DeleteSupplierAsync(int id)
     {
         Supplier? dbSupplier = await _supplierService.GetSupplierAsync(id);

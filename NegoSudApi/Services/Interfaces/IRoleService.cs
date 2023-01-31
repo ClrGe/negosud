@@ -5,10 +5,9 @@ namespace NegoSudApi.Services.Interfaces;
 public interface IRoleService
 {
     /// <summary>
-    /// Get an Role entity from the database by its id, , including or not subobjects and collections
+    /// Get a Role entity from the database by its id, including or not subobjects and collections
     /// </summary>
     /// <param name="id">The Role's id</param>
-    /// <param name="includeRelations">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
     /// <returns>An Role with the desired id, or null if it doesn't exist</returns>
     Task<Role?> GetRoleAsync(int id);
 
@@ -26,14 +25,14 @@ public interface IRoleService
     Task<Role?> AddRoleAsync(Role role);
 
     /// <summary>
-    /// Update an Role entity in the database from a new model
+    /// Update a Role entity in the database from a new model
     /// </summary>
     /// <param name="role">The new entity's model</param>
     /// <returns>An Role</returns>
     Task<Role?> UpdateRoleAsync(Role role);
 
     /// <summary>
-    /// Delete an Role entity from the database
+    /// Delete a Role entity from the database
     /// </summary>
     /// <param name="id">The entity's id</param>
     /// <returns></returns>
