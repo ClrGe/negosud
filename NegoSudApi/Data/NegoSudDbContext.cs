@@ -23,6 +23,8 @@ public class NegoSudDbContext : DbContext
     public virtual DbSet<Permission> Permissions { get; set; }
     public virtual DbSet<Supplier> Suppliers { get; set; }
 
+    public virtual DbSet<CustomerOrder> CustomerOrders { get; set; }
+    public virtual DbSet<SupplierOrder> SupplierOrders { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Bottle>(entity =>
@@ -47,7 +49,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
         });
-        
+
         modelBuilder.Entity<BottleGrape>(entity =>
         {
             entity.ToTable(nameof(BottleGrape));
@@ -61,14 +63,14 @@ public class NegoSudDbContext : DbContext
                 .WithMany(k => k.BottleGrapes)
                 .HasForeignKey(k => k.BottleId)
                 .HasPrincipalKey(k => k.Id);
-            
+
             entity.HasOne(k => k.Grape)
                 .WithMany(k => k.BottleGrapes)
                 .HasForeignKey(k => k.GrapeId)
                 .HasPrincipalKey(k => k.Id);
-            
+
         });
-        
+
         modelBuilder.Entity<Country>(entity =>
         {
             entity.ToTable(nameof(Country));
@@ -92,7 +94,7 @@ public class NegoSudDbContext : DbContext
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
         });
-        
+
         modelBuilder.Entity<StorageLocation>(entity =>
         {
             entity.ToTable(nameof(StorageLocation));
@@ -184,11 +186,63 @@ public class NegoSudDbContext : DbContext
                 .WithMany(k => k.BottleStorageLocations)
                 .HasForeignKey(k => k.BottleId)
                 .HasPrincipalKey(k => k.Id);
-            
+
             entity.HasOne(k => k.StorageLocation)
                 .WithMany(k => k.BottleStorageLocations)
                 .HasForeignKey(k => k.StorageLocationId)
                 .HasPrincipalKey(k => k.Id);
+        });
+
+        modelBuilder.Entity<CustomerOrder>(entity =>
+        {
+            entity.ToTable(nameof(CustomerOrder));
+            entity.Property(cO => cO.CreatedBy).HasMaxLength(200);
+            entity.Property(cO => cO.UpdatedBy).HasMaxLength(200);
+            entity.Property(cO => cO.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(cO => cO.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.HasKey(cO => cO.Id);
+            entity.Property(cO => cO.Id).UseIdentityColumn();
+            entity.HasOne(cO => cO.Customer);
+            entity.HasMany(cO => cO.Lines).WithOne(k => k.CustomerOrder);
+        });
+
+        modelBuilder.Entity<CustomerOrderLine>(entity =>
+        {
+            entity.ToTable(nameof(CustomerOrderLine));
+            entity.Property(l => l.CreatedBy).HasMaxLength(200);
+            entity.Property(l => l.UpdatedBy).HasMaxLength(200);
+            entity.Property(l => l.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(l => l.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.HasKey(l => l.Id);
+            entity.Property(l => l.Id).UseIdentityColumn();
+            entity.HasOne(l => l.CustomerOrder).WithMany(k => k.Lines);
+            entity.HasOne(l => l.Bottle);
+        });
+
+        modelBuilder.Entity<SupplierOrder>(entity =>
+        {
+            entity.ToTable(nameof(SupplierOrder));
+            entity.Property(sO => sO.CreatedBy).HasMaxLength(200);
+            entity.Property(sO => sO.UpdatedBy).HasMaxLength(200);
+            entity.Property(sO => sO.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(sO => sO.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.HasKey(cO => cO.Id);
+            entity.Property(cO => cO.Id).UseIdentityColumn();
+            entity.HasOne(cO => cO.Supplier);
+            entity.HasMany(cO => cO.Lines).WithOne(k => k.SupplierOrder);
+        });
+
+        modelBuilder.Entity<SupplierOrderLine>(entity =>
+        {
+            entity.ToTable(nameof(SupplierOrderLine));
+            entity.Property(l => l.CreatedBy).HasMaxLength(200);
+            entity.Property(l => l.UpdatedBy).HasMaxLength(200);
+            entity.Property(l => l.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(l => l.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.HasKey(l => l.Id);
+            entity.Property(l => l.Id).UseIdentityColumn();
+            entity.HasOne(l => l.SupplierOrder).WithMany(k => k.Lines);
+            entity.HasOne(l => l.Bottle);
         });
 
 
