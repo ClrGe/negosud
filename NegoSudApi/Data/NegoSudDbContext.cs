@@ -200,7 +200,8 @@ public class NegoSudDbContext : DbContext
             entity.Property(cO => cO.UpdatedBy).HasMaxLength(200);
             entity.Property(cO => cO.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
             entity.Property(cO => cO.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
-            entity.HasKey(cO => cO.Id).UseIdentityColumn();
+            entity.HasKey(cO => cO.Id);
+            entity.Property(cO => cO.Id).UseIdentityColumn();
             entity.HasOne(cO => cO.Customer);
             entity.HasMany(cO => cO.Lines).WithOne(k => k.CustomerOrder);
         });
@@ -212,7 +213,8 @@ public class NegoSudDbContext : DbContext
             entity.Property(l => l.UpdatedBy).HasMaxLength(200);
             entity.Property(l => l.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
             entity.Property(l => l.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
-            entity.HasKey(l => l.Id).UseIdentityColumn();
+            entity.HasKey(l => l.Id);
+            entity.Property(l => l.Id).UseIdentityColumn();
             entity.HasOne(l => l.CustomerOrder).WithMany(k => k.Lines);
             entity.HasOne(l => l.Bottle);
         });
@@ -224,7 +226,8 @@ public class NegoSudDbContext : DbContext
             entity.Property(sO => sO.UpdatedBy).HasMaxLength(200);
             entity.Property(sO => sO.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
             entity.Property(sO => sO.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
-            entity.HasKey(cO => cO.Id).UseIdentityColumn();
+            entity.HasKey(cO => cO.Id);
+            entity.Property(cO => cO.Id).UseIdentityColumn();
             entity.HasOne(cO => cO.Supplier);
             entity.HasMany(cO => cO.Lines).WithOne(k => k.SupplierOrder);
         });
@@ -236,7 +239,8 @@ public class NegoSudDbContext : DbContext
             entity.Property(l => l.UpdatedBy).HasMaxLength(200);
             entity.Property(l => l.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
             entity.Property(l => l.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
-            entity.HasKey(l => l.Id).UseIdentityColumn();
+            entity.HasKey(l => l.Id);
+            entity.Property(l => l.Id).UseIdentityColumn();
             entity.HasOne(l => l.SupplierOrder).WithMany(k => k.Lines);
             entity.HasOne(l => l.Bottle);
         });
