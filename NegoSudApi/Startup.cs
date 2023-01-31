@@ -29,6 +29,7 @@ public class Startup
         {
             options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.Request;
         });
+        
         services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo {Title = "NegoSudWebAPI", Version = "v1"}));
 
         services.AddScoped<IGrapeService, GrapeService>();
@@ -76,7 +77,6 @@ public class Startup
         var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext") ??
                                throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
         
-
         services.AddDbContext<NegoSudDbContext>(options =>
             options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
     }
@@ -88,7 +88,7 @@ public class Startup
         app.UseSwaggerUI(c =>
         {
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "NegoSudWebAPI");
-            c.RoutePrefix = string.Empty;
+            c.RoutePrefix = "api/doc";
         });
 
         app.UseHttpLogging();
