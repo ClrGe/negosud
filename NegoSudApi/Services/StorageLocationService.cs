@@ -9,33 +9,24 @@ public class StorageLocationService : IStorageLocationService
 {
     private readonly NegoSudDbContext _context;
     private readonly ILogger<StorageLocationService> _logger;
+    private readonly IGetStorageLocationService _getStorageLocationService;
+    private readonly IGetBottleService _getBottleService;
 
-    public StorageLocationService(NegoSudDbContext context, ILogger<StorageLocationService> logger)
+    public StorageLocationService(NegoSudDbContext context,
+                                  ILogger<StorageLocationService> logger,
+                                  IGetStorageLocationService getStorageLocationService,
+                                  IGetBottleService getBottleService)
     {
         _context = context;
         _logger = logger;
+        _getStorageLocationService = getStorageLocationService;
+        _getBottleService = getBottleService;
     }
 
     //</inheritdoc>
     public async Task<StorageLocation?> GetStorageLocationAsync(int id, bool includeRelations = true)
     {
-        try
-        {
-            if (includeRelations)
-            {
-                return await _context.StorageLocations
-                    .Include(l => l.BottleStorageLocations)
-                    .ThenInclude(bl => bl.Bottle)
-                    .FirstOrDefaultAsync(l => l.Id == id);
-            }
-            return await _context.StorageLocations.FindAsync(id);
-        }
-        catch (Exception ex)
-        {
-            _logger.Log(LogLevel.Information, ex.ToString());
-        }
-
-        return null;
+        return await _getStorageLocationService.GetStorageLocationAsync(id, includeRelations);
     }
 
     //</inheritdoc>
@@ -58,9 +49,32 @@ public class StorageLocationService : IStorageLocationService
     {
         try
         {
-            StorageLocation newLocation = (await _context.StorageLocations.AddAsync(storageLocation)).Entity;
+
+            if (storageLocation.BottleStorageLocations != null)
+            {
+                foreach (BottleStorageLocation bottleStorageLocation in storageLocation.BottleStorageLocations)
+                {
+                    if (bottleStorageLocation.Bottle?.Id != null)
+                    {
+                        Bottle? bottle = await _getBottleService.GetBottleAsync(bottleStorageLocation.Bottle.Id, includeRelations: false);
+                        if (bottle != null)
+                        {
+                            bottleStorageLocation.Bottle = bottle;
+                            bottleStorageLocation.StorageLocation = storageLocation;
+                        }
+                    }
+                }
+            }
+
+            StorageLocation newStorageLocation = (await _context.StorageLocations.AddAsync(storageLocation)).Entity;
+
+            if (storageLocation.BottleStorageLocations != null)
+            {
+                await _context.AddRangeAsync(storageLocation.BottleStorageLocations);
+            }
+
             await _context.SaveChangesAsync();
-            return newLocation;
+            return newStorageLocation;
         }
         catch (Exception ex)
         {
@@ -75,9 +89,51 @@ public class StorageLocationService : IStorageLocationService
     {
         try
         {
-            _context.Entry(storageLocation).State = EntityState.Modified;
+
+            StorageLocation? dbStorageLocation = await this.GetStorageLocationAsync(storageLocation.Id, includeRelations: true);
+
+            if (dbStorageLocation != null)
+            {
+                dbStorageLocation.Name = storageLocation.Name;
+
+            if (storageLocation.BottleStorageLocations != null && dbStorageLocation.BottleStorageLocations != null)
+            {
+
+                ICollection<BottleStorageLocation>? dbBottleStorageLocations = dbStorageLocation.BottleStorageLocations.ToList();
+
+                foreach (BottleStorageLocation BottleStorageLocation in storageLocation.BottleStorageLocations)
+                {
+                    //if the BottleStorageLocation already exists
+                    BottleStorageLocation? existingBottleStorageLocation = dbBottleStorageLocations.FirstOrDefault(bl => bl.BottleId == BottleStorageLocation.BottleId && bl.StorageLocationId == BottleStorageLocation.StorageLocationId);
+
+                    if (existingBottleStorageLocation != null)
+                    {
+                        //update the existing BottleStorageLocation
+                        existingBottleStorageLocation.Quantity = BottleStorageLocation.Quantity;
+                        _context.Entry(existingBottleStorageLocation).State = EntityState.Modified;
+                        dbBottleStorageLocations.Remove(existingBottleStorageLocation);
+                    }
+                    else
+                    {
+                        // otherwise, add the new BottleStorageLocation to the current storageLocation
+                        dbStorageLocation.BottleStorageLocations.Add(BottleStorageLocation);
+                    }
+
+                }
+
+                foreach (BottleStorageLocation BottleStorageLocationToDelete in dbBottleStorageLocations)
+                {
+                    dbStorageLocation.BottleStorageLocations.Remove(BottleStorageLocationToDelete);
+                }
+
+            }
+
+            _context.Entry(dbStorageLocation).State = EntityState.Modified;
+            
             await _context.SaveChangesAsync();
-            return storageLocation;
+            
+            return dbStorageLocation;
+            }
         }
         catch (Exception ex)
         {

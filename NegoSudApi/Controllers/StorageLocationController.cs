@@ -7,7 +7,7 @@ namespace NegoSudApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+//[Authorize]
 public class StorageLocationController : ControllerBase
 {
     private readonly IStorageLocationService _storageLocationService;
@@ -23,7 +23,7 @@ public class StorageLocationController : ControllerBase
         StorageLocation? dbStorageLocation = await _storageLocationService.GetStorageLocationAsync(id);
         if (dbStorageLocation == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            return StatusCode(StatusCodes.Status204NoContent, $"No StorageLocation found for id: {id}");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbStorageLocation);
@@ -35,7 +35,7 @@ public class StorageLocationController : ControllerBase
         IEnumerable<StorageLocation>? dbStorageLocations = await _storageLocationService.GetStorageLocationsAsync();
         if (dbStorageLocations == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            return StatusCode(StatusCodes.Status204NoContent, "No StorageLocations in database");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbStorageLocations.ToList());
@@ -47,7 +47,7 @@ public class StorageLocationController : ControllerBase
         StorageLocation? dbStorageLocation = await _storageLocationService.AddStorageLocationAsync(storageLocation);
         if (dbStorageLocation == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            return StatusCode(StatusCodes.Status204NoContent, $"{storageLocation.Name} could not be added.");
         }
 
         return StatusCode(StatusCodes.Status201Created, dbStorageLocation);
@@ -64,7 +64,7 @@ public class StorageLocationController : ControllerBase
         StorageLocation? dbStorageLocation = await _storageLocationService.UpdateStorageLocationAsync(storageLocation);
         if (dbStorageLocation == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {storageLocation.Id} - could not update.");
+            return StatusCode(StatusCodes.Status204NoContent, $"No StorageLocation found for id: {storageLocation.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbStorageLocation);
@@ -76,7 +76,7 @@ public class StorageLocationController : ControllerBase
         StorageLocation? dbStorageLocation = await _storageLocationService.GetStorageLocationAsync(id);
         if (dbStorageLocation == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            return StatusCode(StatusCodes.Status204NoContent, $"No StorageLocation found for id: {id} - could not be deleted");
         }
 
         await _storageLocationService.DeleteStorageLocationAsync(id);

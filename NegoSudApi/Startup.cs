@@ -32,10 +32,12 @@ public class Startup
         
         services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo {Title = "NegoSudWebAPI", Version = "v1"}));
 
-        services.AddScoped<IGrapeService, GrapeService>();
         services.AddScoped<IBottleService, BottleService>();
-        services.AddScoped<ICountryService, CountryService>();
         services.AddScoped<IStorageLocationService, StorageLocationService>();
+        services.AddScoped<IGetStorageLocationService, GetStorageLocationService>();
+        services.AddScoped<IGetBottleService, GetBottleService>();
+        services.AddScoped<IGrapeService, GrapeService>();
+        services.AddScoped<ICountryService, CountryService>();
         services.AddScoped<IProducerService, ProducerService>();
         services.AddScoped<IRegionService, RegionService>();
         services.AddScoped<IWineLabelService, WineLabelService>();
