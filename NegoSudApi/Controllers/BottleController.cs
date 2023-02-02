@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
@@ -16,7 +17,6 @@ namespace NegoSudApi.Controllers
         {
             _bottleService = bottleService;
         }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBottleAsync(int id)
         {
@@ -26,10 +26,11 @@ namespace NegoSudApi.Controllers
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No Bottle found for id: {id}");
             }
+            Response.Headers.Add( "Access-Control-Allow-Origin", "*");
 
             return StatusCode(StatusCodes.Status200OK, dbBottle);
         }
-
+        
         [HttpGet]
         public async Task<IActionResult> GetBottlesAsync()
         {
@@ -39,6 +40,7 @@ namespace NegoSudApi.Controllers
             {
                 return StatusCode(StatusCodes.Status204NoContent, "No bottles in database");
             }
+            Response.Headers.Add( "Access-Control-Allow-Origin", "*");
 
             return StatusCode(StatusCodes.Status200OK, dbBottles);
         }
