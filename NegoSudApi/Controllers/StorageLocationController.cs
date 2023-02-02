@@ -7,7 +7,7 @@ namespace NegoSudApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+//[Authorize]
 public class StorageLocationController : ControllerBase
 {
     private readonly IStorageLocationService _storageLocationService;

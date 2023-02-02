@@ -100,8 +100,8 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(StorageLocation));
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
         });

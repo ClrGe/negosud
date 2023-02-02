@@ -362,6 +362,21 @@ namespace NegoSudApi.Migrations
                 name: "ix_region_country_id",
                 table: "Region",
                 column: "country_id");
+
+            migrationBuilder.Sql(@"
+                CREATE OR REPLACE FUNCTION update_timestamp()
+                RETURNS TRIGGER AS $$
+                BEGIN
+                  NEW.updated_at = NOW();
+                  RETURN NEW;
+                END;
+                $$ LANGUAGE plpgsql;
+                
+                CREATE TRIGGER update_timestamp_trigger
+                BEFORE UPDATE ON ""StorageLocation""
+                FOR EACH ROW
+                EXECUTE FUNCTION update_timestamp();
+            ");
         }
 
         /// <inheritdoc />
