@@ -13,13 +13,14 @@ public class BottleService : IBottleService
     private readonly IGrapeService _grapeService;
     private readonly IStorageLocationService _storageLocationService;
     private readonly IWineLabelService _wineLabelService;
+    private readonly ISupplierService _supplierService;
 
     public BottleService(NegoSudDbContext context,
                          ILogger<BottleService> logger,
                          IProducerService producerService,
                          IGrapeService grapeService,
                          IStorageLocationService storageLocationService,
-                         IWineLabelService wineLabelService)
+                         IWineLabelService wineLabelService, ISupplierService supplierService)
     {
         _context = context;
         _logger = logger;
@@ -27,6 +28,7 @@ public class BottleService : IBottleService
         _grapeService = grapeService;
         _storageLocationService = storageLocationService;
         _wineLabelService = wineLabelService;
+        _supplierService = supplierService;
     }
 
     //</inheritdoc>  
@@ -186,33 +188,80 @@ public class BottleService : IBottleService
 
                     ICollection<BottleStorageLocation>? dbBottleStorageLocations = dbBottle.BottleStorageLocations.ToList();
 
-                    foreach (BottleStorageLocation BottleStorageLocation in bottle.BottleStorageLocations)
+                    foreach (BottleStorageLocation bottleStorageLocation in bottle.BottleStorageLocations)
                     {
                         //if the BottleStorageLocation already exists
-                        BottleStorageLocation? existingBottleStorageLocation = dbBottleStorageLocations.FirstOrDefault(bl => bl.BottleId == BottleStorageLocation.BottleId && bl.StorageLocationId == BottleStorageLocation.StorageLocationId);
+                        BottleStorageLocation? existingBottleStorageLocation = dbBottleStorageLocations.FirstOrDefault(bl => bl.BottleId == bottleStorageLocation.BottleId && bl.StorageLocationId == bottleStorageLocation.StorageLocationId);
 
                         if (existingBottleStorageLocation != null)
                         {
                             //update the existing BottleStorageLocation
-                            existingBottleStorageLocation.Quantity = BottleStorageLocation.Quantity;
+                            existingBottleStorageLocation.Quantity = bottleStorageLocation.Quantity;
                             _context.Entry(existingBottleStorageLocation).State = EntityState.Modified;
                             dbBottleStorageLocations.Remove(existingBottleStorageLocation);
                         }
                         else
                         {
+                            if (bottleStorageLocation.StorageLocation?.Id != null)
+                            {
+                                StorageLocation? location = await _storageLocationService.GetStorageLocationAsync(bottleStorageLocation.StorageLocation.Id, includeRelations: false);
+                                if (location != null)
+                                {
+                                    bottleStorageLocation.StorageLocation = location;
+                                    bottleStorageLocation.Bottle = bottle;
+                                }
+                            }
                             // otherwise, add the new BottleStorageLocation to the current bottle
-                            dbBottle.BottleStorageLocations.Add(BottleStorageLocation);
+                            dbBottle.BottleStorageLocations.Add(bottleStorageLocation);
                         }
 
                     }
 
-                    foreach (BottleStorageLocation BottleStorageLocationToDelete in dbBottleStorageLocations)
+                    foreach (BottleStorageLocation bottleStorageLocationToDelete in dbBottleStorageLocations)
                     {
-                        dbBottle.BottleStorageLocations.Remove(BottleStorageLocationToDelete);
+                        dbBottle.BottleStorageLocations.Remove(bottleStorageLocationToDelete);
                     }
 
                 }
 
+                if (bottle.BottleSuppliers != null && dbBottle.BottleSuppliers != null)
+                {
+                    ICollection<BottleSupplier>? dbBottleSuppliers = dbBottle.BottleSuppliers.ToList();
+
+                    foreach (BottleSupplier bottleSupplier in bottle.BottleSuppliers)
+                    {
+                        //if the BottleSupplier already exists
+                        BottleSupplier? existingSupplier = dbBottleSuppliers.FirstOrDefault(bs => bs.BottleId == bottleSupplier.BottleId && bs.SupplierId == bottleSupplier.SupplierId);
+
+                        if (existingSupplier != null)
+                        {
+                            //update the existing BottleStorageLocation
+                            existingSupplier.Supplier = bottleSupplier.Supplier;
+                            _context.Entry(existingSupplier).State = EntityState.Modified;
+                            dbBottleSuppliers.Remove(existingSupplier);
+                        }
+                        else
+                        {
+                            if (bottleSupplier.Supplier?.Id != null)
+                            {
+                                Supplier? supplier = await _supplierService.GetSupplierAsync(bottleSupplier.Supplier.Id, includeRelations: false);
+                                if (supplier != null)
+                                {
+                                    bottleSupplier.Supplier = supplier;
+                                    bottleSupplier.Bottle = bottle;
+                                }
+                            }
+                            // otherwise, add the new BottleStorageLocation to the current bottle
+                            dbBottle.BottleSuppliers.Add(bottleSupplier);
+                        }
+
+                    }
+
+                    foreach (BottleSupplier bottleSupplierToDelete in dbBottleSuppliers)
+                    {
+                        dbBottle.BottleSuppliers.Remove(bottleSupplierToDelete);
+                    }
+                }
 
                 if (bottle.BottleGrapes != null && dbBottle.BottleGrapes != null)
                 {
