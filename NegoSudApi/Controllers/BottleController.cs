@@ -23,7 +23,7 @@ namespace NegoSudApi.Controllers
 
             if (dbBottle == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Bottle found for id: {id}");
+                return StatusCode(StatusCodes.Status404NotFound, $"No Bottle found for id: {id}");
             }
             Response.Headers.Add( "Access-Control-Allow-Origin", "*");
 
@@ -37,7 +37,7 @@ namespace NegoSudApi.Controllers
 
             if (dbBottles == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, "No bottles in database");
+                return StatusCode(StatusCodes.Status404NotFound, "No bottles in database");
             }
             Response.Headers.Add( "Access-Control-Allow-Origin", "*");
 
@@ -51,7 +51,7 @@ namespace NegoSudApi.Controllers
 
             if (dbBottle == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"{bottle.FullName} could not be added.");
+                return StatusCode(StatusCodes.Status404NotFound, $"{bottle.FullName} could not be added.");
             }
 
             return StatusCode(StatusCodes.Status201Created, dbBottle);
@@ -69,7 +69,7 @@ namespace NegoSudApi.Controllers
 
             if (dbBottle == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No city found for id: {bottle.Id} - could not update.");
+                return StatusCode(StatusCodes.Status404NotFound, $"No bottle found for id: {bottle.Id} - could not update.");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbBottle);
@@ -82,7 +82,7 @@ namespace NegoSudApi.Controllers
 
             if (status == false)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Bottle found for id: {id} - could not be deleted");
+                return StatusCode(StatusCodes.Status404NotFound, $"No bottle found for id: {id} - could not be deleted");
             }
 
             return StatusCode(StatusCodes.Status200OK);

@@ -24,7 +24,7 @@ namespace NegoSudApi.Controllers
 
             if (dbCustomerOrder == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No customerOrder found for id: {id}");
+                return StatusCode(StatusCodes.Status404NotFound, $"No customerOrder found for id: {id}");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
@@ -37,7 +37,7 @@ namespace NegoSudApi.Controllers
 
             if (dbCustomerOrders == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, "No customerOrders in database");
+                return StatusCode(StatusCodes.Status404NotFound, "No customerOrders in database");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbCustomerOrders);
@@ -50,7 +50,7 @@ namespace NegoSudApi.Controllers
 
             if (dbCustomerOrder == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"{customerOrder.Reference} could not be added.");
+                return StatusCode(StatusCodes.Status404NotFound, $"{customerOrder.Reference} could not be added.");
             }
 
             return StatusCode(StatusCodes.Status201Created, dbCustomerOrder);
@@ -68,7 +68,7 @@ namespace NegoSudApi.Controllers
 
             if (dbCustomerOrder == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query - could not update");
+                return StatusCode(StatusCodes.Status404NotFound, $"No match for query - could not update");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
@@ -81,7 +81,7 @@ namespace NegoSudApi.Controllers
 
             if (status == false)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No CustomerOrder found for id: {id} - could not be deleted");
+                return StatusCode(StatusCodes.Status404NotFound, $"No CustomerOrder found for id: {id} - could not be deleted");
             }
 
             return StatusCode(StatusCodes.Status200OK);

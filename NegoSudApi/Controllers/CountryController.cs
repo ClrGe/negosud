@@ -24,7 +24,7 @@ namespace NegoSudApi.Controllers
 
             if (dbCountry == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {id}");
+                return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {id}");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbCountry);
@@ -37,7 +37,7 @@ namespace NegoSudApi.Controllers
 
             if (dbCountries == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, "No countries in database");
+                return StatusCode(StatusCodes.Status404NotFound, "No countries in database");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbCountries);
@@ -50,7 +50,7 @@ namespace NegoSudApi.Controllers
 
             if (dbCountry == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match - could not add content.");
+                return StatusCode(StatusCodes.Status404NotFound, $"No match - could not add content.");
             }
 
             return StatusCode(StatusCodes.Status201Created, dbCountry);
@@ -68,7 +68,7 @@ namespace NegoSudApi.Controllers
 
             if (dbCountry == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {country.Id} - could not update.");
+                return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {country.Id} - could not update.");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbCountry);
@@ -81,7 +81,7 @@ namespace NegoSudApi.Controllers
 
             if (status == false)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {id} - could not delete");
+                return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {id} - could not delete");
             }
 
             return StatusCode(StatusCodes.Status200OK);

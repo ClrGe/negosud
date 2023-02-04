@@ -24,7 +24,7 @@ public class AddressController : ControllerBase
 
         if (dbAddress == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No address found for id: {id}");
+            return StatusCode(StatusCodes.Status404NotFound, $"No address found for id: {id}");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbAddress);
@@ -37,7 +37,7 @@ public class AddressController : ControllerBase
 
         if (dbAddresses == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, "No addresses in database");
+            return StatusCode(StatusCodes.Status404NotFound, "No addresses in database");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbAddresses);
@@ -50,7 +50,7 @@ public class AddressController : ControllerBase
 
         if (dbAddress == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match - could not add content.");
+            return StatusCode(StatusCodes.Status404NotFound, $"No match - could not add content.");
         }
 
         return StatusCode(StatusCodes.Status201Created, dbAddress);
@@ -68,7 +68,7 @@ public class AddressController : ControllerBase
 
         if (dbAddress == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No address found for id: {address.Id} - could not update.");
+            return StatusCode(StatusCodes.Status404NotFound, $"No address found for id: {address.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbAddress);
@@ -81,7 +81,7 @@ public class AddressController : ControllerBase
 
         if (status == false)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No address found for id: {id} - could not delete");
+            return StatusCode(StatusCodes.Status404NotFound, $"No address found for id: {id} - could not delete");
         }
 
         return StatusCode(StatusCodes.Status200OK);

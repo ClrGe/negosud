@@ -29,7 +29,7 @@ public class RegionController : ControllerBase
 
         if (dbRegion == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            return StatusCode(StatusCodes.Status404NotFound, $"No Region found for id: {id}");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbRegion);
@@ -46,7 +46,7 @@ public class RegionController : ControllerBase
 
         if (dbRegions == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            return StatusCode(StatusCodes.Status404NotFound, $"No Region found in database");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbRegions);
@@ -64,7 +64,7 @@ public class RegionController : ControllerBase
 
         if (dbRegion == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            return StatusCode(StatusCodes.Status404NotFound, $"{region.Name} could not be added.");
         }
 
         return StatusCode(StatusCodes.Status201Created, dbRegion);
@@ -88,7 +88,7 @@ public class RegionController : ControllerBase
 
         if (dbRegion == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {region.Id} - could not update.");
+            return StatusCode(StatusCodes.Status404NotFound, $"No Region found for id: {region.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbRegion);
@@ -106,7 +106,7 @@ public class RegionController : ControllerBase
 
         if (dbRegion == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+            return StatusCode(StatusCodes.Status404NotFound, $"No Region found for id: {id} - could not be deleted");
         }
 
         await _regionService.DeleteRegionAsync(id);

@@ -24,7 +24,7 @@ namespace NegoSudApi.Controllers
 
             if (dbCity == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No city found for id: {id}");
+                return StatusCode(StatusCodes.Status404NotFound, $"No city found for id: {id}");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbCity);
@@ -37,7 +37,7 @@ namespace NegoSudApi.Controllers
 
             if (dbCities == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, "No cities in database");
+                return StatusCode(StatusCodes.Status404NotFound, "No cities in database");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbCities);
@@ -50,7 +50,7 @@ namespace NegoSudApi.Controllers
 
             if (dbCity == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match - could not add content.");
+                return StatusCode(StatusCodes.Status404NotFound, $"No match - could not add content.");
             }
 
             return StatusCode(StatusCodes.Status201Created, dbCity);
@@ -68,7 +68,7 @@ namespace NegoSudApi.Controllers
 
             if (dbCity == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No city found for id: {city.Id} - could not update.");
+                return StatusCode(StatusCodes.Status404NotFound, $"No city found for id: {city.Id} - could not update.");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbCity);
@@ -81,7 +81,7 @@ namespace NegoSudApi.Controllers
 
             if (status == false)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No city found for id: {id} - could not delete");
+                return StatusCode(StatusCodes.Status404NotFound, $"No city found for id: {id} - could not delete");
             }
 
             return StatusCode(StatusCodes.Status200OK);

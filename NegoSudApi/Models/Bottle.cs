@@ -22,7 +22,6 @@ public class Bottle : IModelBase
     public virtual ICollection<BottleStorageLocation>? BottleStorageLocations { get; set; }
     public virtual ICollection<BottleGrape>? BottleGrapes { get; set; }
     public virtual ICollection<BottleSupplier>? BottleSuppliers { get; set; }
-    public virtual ICollection<Supplier>? Suppliers { get; set; }
     public virtual Producer? Producer { get; set; }
     public virtual WineLabel? WineLabel { get; set; }
 }

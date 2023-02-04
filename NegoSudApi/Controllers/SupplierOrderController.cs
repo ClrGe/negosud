@@ -24,7 +24,7 @@ namespace NegoSudApi.Controllers
 
             if (dbSupplierOrder == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No supplierOrder found for id: {id}");
+                return StatusCode(StatusCodes.Status404NotFound, $"No supplier order found for id: {id}");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
@@ -37,7 +37,7 @@ namespace NegoSudApi.Controllers
 
             if (dbSupplierOrders == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, "No supplierOrders in database");
+                return StatusCode(StatusCodes.Status404NotFound, "No supplier orders in database");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbSupplierOrders);
@@ -50,7 +50,7 @@ namespace NegoSudApi.Controllers
 
             if (dbSupplierOrder == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"{supplierOrder.Reference} could not be added.");
+                return StatusCode(StatusCodes.Status404NotFound, $"{supplierOrder.Reference} could not be added.");
             }
 
             return StatusCode(StatusCodes.Status201Created, dbSupplierOrder);
@@ -68,7 +68,7 @@ namespace NegoSudApi.Controllers
 
             if (dbSupplierOrder == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query - could not update");
+                return StatusCode(StatusCodes.Status404NotFound, $"No Supplier Order found for id: {supplierOrder.Id} - could not update.");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
@@ -81,7 +81,7 @@ namespace NegoSudApi.Controllers
 
             if (status == false)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No SupplierOrder found for id: {id} - could not be deleted");
+                return StatusCode(StatusCodes.Status404NotFound, $"No Supplier Order found for id: {id} - could not be deleted");
             }
 
             return StatusCode(StatusCodes.Status200OK);

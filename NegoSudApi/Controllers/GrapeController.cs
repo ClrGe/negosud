@@ -22,7 +22,7 @@ namespace NegoSudApi.Controllers
             Grape? dbGrape = await _grapeService.GetGrapeAsync(id);
             if (dbGrape == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+                return StatusCode(StatusCodes.Status404NotFound, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, dbGrape);
         }
@@ -33,7 +33,7 @@ namespace NegoSudApi.Controllers
             IEnumerable<Grape>? dbGrapes = await _grapeService.GetGrapesAsync();
             if (dbGrapes == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+                return StatusCode(StatusCodes.Status404NotFound, $"No match for query");
             }
             return StatusCode(StatusCodes.Status200OK, dbGrapes.ToList());
         }
@@ -44,7 +44,7 @@ namespace NegoSudApi.Controllers
             Grape? dbGrape = await _grapeService.AddGrapeAsync(grape);
             if (dbGrape == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+                return StatusCode(StatusCodes.Status404NotFound, $"No match for query");
             }
             return StatusCode(StatusCodes.Status201Created, dbGrape);
         }
@@ -60,7 +60,7 @@ namespace NegoSudApi.Controllers
             Grape? dbGrape = await _grapeService.UpdateGrapeAsync(grape);
             if (dbGrape == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {grape.Id} - could not update.");
+                return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {grape.Id} - could not update.");
             }
             return StatusCode(StatusCodes.Status200OK, dbGrape);
         }
@@ -71,7 +71,7 @@ namespace NegoSudApi.Controllers
             Grape? dbGrape = await _grapeService.GetGrapeAsync(id);
             if (dbGrape == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query");
+                return StatusCode(StatusCodes.Status404NotFound, $"No match for query");
             }
             await _grapeService.DeleteGrapeAsync(id);
             return StatusCode(StatusCodes.Status200OK);

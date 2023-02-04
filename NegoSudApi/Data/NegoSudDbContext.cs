@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Transactions;
+using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
 
 namespace NegoSudApi.Data;
@@ -34,8 +35,8 @@ public class NegoSudDbContext : DbContext
             entity.Property(i => i.Id).UseIdentityColumn();
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
             entity.HasIndex(i => i.WineType);
         });
 
@@ -46,8 +47,8 @@ public class NegoSudDbContext : DbContext
             entity.Property(i => i.Id).UseIdentityColumn();
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
         });
 
         modelBuilder.Entity<BottleGrape>(entity =>
@@ -55,8 +56,8 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(BottleGrape));
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
             entity.HasKey(k => new {k.BottleId,k.GrapeId});
 
             entity.HasOne(k => k.Bottle)
@@ -76,8 +77,8 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(Country));
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
 
@@ -89,8 +90,8 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(Grape));
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
         });
@@ -100,8 +101,8 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(StorageLocation));
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
         });
@@ -111,8 +112,8 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(BottleSupplier));
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
             entity.HasKey(k => new { k.BottleId, k.SupplierId});
             
             entity.HasOne(k => k.Bottle)
@@ -131,8 +132,8 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(Producer));
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
             entity.HasMany(k => k.Bottles).WithOne(k => k.Producer);
@@ -143,8 +144,8 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(Region));
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
             entity.HasMany(k => k.Producers).WithOne(k => k.Region);
@@ -155,8 +156,8 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(City));
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
             entity.HasMany(k => k.Addresses).WithOne(k => k.City);
@@ -167,10 +168,11 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(Address));
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
+            entity.HasOne(a => a.Supplier).WithOne(s => s.Address).HasForeignKey<Supplier>(s => s.Id);
         });
 
         modelBuilder.Entity<BottleStorageLocation>(entity =>
@@ -178,8 +180,8 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(BottleStorageLocation));
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
             entity.HasKey(k => new { k.BottleId, k.StorageLocationId});
             
             entity.HasOne(k => k.Bottle)
@@ -198,8 +200,8 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(CustomerOrder));
             entity.Property(cO => cO.CreatedBy).HasMaxLength(200);
             entity.Property(cO => cO.UpdatedBy).HasMaxLength(200);
-            entity.Property(cO => cO.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(cO => cO.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(cO => cO.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(cO => cO.UpdatedAt).HasPrecision(0);
             entity.HasKey(cO => cO.Id);
             entity.Property(cO => cO.Id).UseIdentityColumn();
             entity.HasOne(cO => cO.Customer);
@@ -211,8 +213,8 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(CustomerOrderLine));
             entity.Property(l => l.CreatedBy).HasMaxLength(200);
             entity.Property(l => l.UpdatedBy).HasMaxLength(200);
-            entity.Property(l => l.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(l => l.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(l => l.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(l => l.UpdatedAt).HasPrecision(0);
             entity.HasKey(l => l.Id);
             entity.Property(l => l.Id).UseIdentityColumn();
             entity.HasOne(l => l.CustomerOrder).WithMany(k => k.Lines);
@@ -224,8 +226,8 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(SupplierOrder));
             entity.Property(sO => sO.CreatedBy).HasMaxLength(200);
             entity.Property(sO => sO.UpdatedBy).HasMaxLength(200);
-            entity.Property(sO => sO.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(sO => sO.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(sO => sO.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(sO => sO.UpdatedAt).HasPrecision(0);
             entity.HasKey(cO => cO.Id);
             entity.Property(cO => cO.Id).UseIdentityColumn();
             entity.HasOne(cO => cO.Supplier);
@@ -237,8 +239,8 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(SupplierOrderLine));
             entity.Property(l => l.CreatedBy).HasMaxLength(200);
             entity.Property(l => l.UpdatedBy).HasMaxLength(200);
-            entity.Property(l => l.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(l => l.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(l => l.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(l => l.UpdatedAt).HasPrecision(0);
             entity.HasKey(l => l.Id);
             entity.Property(l => l.Id).UseIdentityColumn();
             entity.HasOne(l => l.SupplierOrder).WithMany(k => k.Lines);
@@ -253,8 +255,8 @@ public class NegoSudDbContext : DbContext
             entity.Property(i => i.Id).UseIdentityColumn();
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAdd().ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
             entity.HasMany(a => a.Addresses).WithOne(u => u.User);
         });
 
@@ -265,8 +267,8 @@ public class NegoSudDbContext : DbContext
             entity.Property(i => i.Id).UseIdentityColumn();
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAdd().ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
             entity.HasMany(a => a.Users).WithOne(r => r.Role);
         });
         
@@ -278,8 +280,8 @@ public class NegoSudDbContext : DbContext
             entity.Property(i => i.Id).UseIdentityColumn();
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
             entity.HasMany(p => p.Roles).WithMany(r => r.Permissions);
         });
         
@@ -288,11 +290,11 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(Supplier));
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
-            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValue(DateTime.UtcNow);
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnUpdate().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0);
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
-            entity.HasMany(k => k.Bottles).WithMany(k => k.Suppliers);
+            entity.HasOne(s => s.Address);
         });
     }
 }

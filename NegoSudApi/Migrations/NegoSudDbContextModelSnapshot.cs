@@ -22,25 +22,6 @@ namespace NegoSudApi.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BottleSupplier", b =>
-                {
-                    b.Property<int>("BottlesId")
-                        .HasColumnType("integer")
-                        .HasColumnName("bottles_id");
-
-                    b.Property<int>("SuppliersId")
-                        .HasColumnType("integer")
-                        .HasColumnName("suppliers_id");
-
-                    b.HasKey("BottlesId", "SuppliersId")
-                        .HasName("pk_bottle_supplier");
-
-                    b.HasIndex("SuppliersId")
-                        .HasDatabaseName("ix_bottle_supplier_suppliers_id");
-
-                    b.ToTable("bottle_supplier", (string)null);
-                });
-
             modelBuilder.Entity("NegoSudApi.Models.Address", b =>
                 {
                     b.Property<int>("Id")
@@ -58,7 +39,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 990, DateTimeKind.Utc).AddTicks(3635))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -75,10 +55,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("label");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 990, DateTimeKind.Utc).AddTicks(4319))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -119,7 +97,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 983, DateTimeKind.Utc).AddTicks(5591))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -148,10 +125,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("producer_id");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 983, DateTimeKind.Utc).AddTicks(6355))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -204,7 +179,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 984, DateTimeKind.Utc).AddTicks(3362))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -217,10 +191,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("grape_percentage");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 984, DateTimeKind.Utc).AddTicks(3827))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -251,7 +223,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 991, DateTimeKind.Utc).AddTicks(206))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -264,10 +235,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("quantity");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 991, DateTimeKind.Utc).AddTicks(879))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -298,7 +267,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 986, DateTimeKind.Utc).AddTicks(9671))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -307,10 +275,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("created_by");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 987, DateTimeKind.Utc).AddTicks(152))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -340,7 +306,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 989, DateTimeKind.Utc).AddTicks(5330))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -353,10 +318,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 989, DateTimeKind.Utc).AddTicks(5888))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -387,7 +350,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 985, DateTimeKind.Utc).AddTicks(4937))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -400,10 +362,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 985, DateTimeKind.Utc).AddTicks(5472))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -438,7 +398,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 992, DateTimeKind.Utc).AddTicks(5434))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -467,10 +426,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("reference");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 992, DateTimeKind.Utc).AddTicks(6331))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -504,7 +461,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 993, DateTimeKind.Utc).AddTicks(2570))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -521,10 +477,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("quantity");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 993, DateTimeKind.Utc).AddTicks(3285))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -557,7 +511,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 986, DateTimeKind.Utc).AddTicks(1281))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -570,10 +523,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("grape_type");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 986, DateTimeKind.Utc).AddTicks(1881))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -608,7 +559,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 996, DateTimeKind.Utc).AddTicks(6620))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -621,10 +571,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 996, DateTimeKind.Utc).AddTicks(7249))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -655,7 +603,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 988, DateTimeKind.Utc).AddTicks(910))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -676,10 +623,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("region_id");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 988, DateTimeKind.Utc).AddTicks(1596))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -716,7 +661,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 988, DateTimeKind.Utc).AddTicks(8415))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -729,10 +673,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 988, DateTimeKind.Utc).AddTicks(9066))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -762,7 +704,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 995, DateTimeKind.Utc).AddTicks(9015))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -779,10 +720,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("permission_id");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 995, DateTimeKind.Utc).AddTicks(9633))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -809,7 +748,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 986, DateTimeKind.Utc).AddTicks(5377))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -822,10 +760,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 986, DateTimeKind.Utc).AddTicks(5895))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -848,15 +784,10 @@ namespace NegoSudApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AddressId")
-                        .HasColumnType("integer")
-                        .HasColumnName("address_id");
-
                     b.Property<DateTime?>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 996, DateTimeKind.Utc).AddTicks(9893))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -873,10 +804,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 997, DateTimeKind.Utc).AddTicks(624))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -886,9 +815,6 @@ namespace NegoSudApi.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_supplier");
-
-                    b.HasIndex("AddressId")
-                        .HasDatabaseName("ix_supplier_address_id");
 
                     b.ToTable("Supplier", (string)null);
                 });
@@ -914,7 +840,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 993, DateTimeKind.Utc).AddTicks(6919))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -943,10 +868,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("supplier_id");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 993, DateTimeKind.Utc).AddTicks(7690))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -980,7 +903,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 994, DateTimeKind.Utc).AddTicks(3547))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -997,10 +919,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("supplier_order_id");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 994, DateTimeKind.Utc).AddTicks(4294))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -1033,7 +953,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 995, DateTimeKind.Utc).AddTicks(893))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -1070,10 +989,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("role_id");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 995, DateTimeKind.Utc).AddTicks(1593))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -1103,7 +1020,6 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 984, DateTimeKind.Utc).AddTicks(992))
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -1116,10 +1032,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("label");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 31, 9, 20, 36, 984, DateTimeKind.Utc).AddTicks(1591))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -1150,23 +1064,6 @@ namespace NegoSudApi.Migrations
                         .HasDatabaseName("ix_permission_role_roles_id");
 
                     b.ToTable("permission_role", (string)null);
-                });
-
-            modelBuilder.Entity("BottleSupplier", b =>
-                {
-                    b.HasOne("NegoSudApi.Models.Bottle", null)
-                        .WithMany()
-                        .HasForeignKey("BottlesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_bottle_supplier_bottles_bottles_id");
-
-                    b.HasOne("NegoSudApi.Models.Supplier", null)
-                        .WithMany()
-                        .HasForeignKey("SuppliersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_bottle_supplier_suppliers_suppliers_id");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.Address", b =>
@@ -1323,9 +1220,11 @@ namespace NegoSudApi.Migrations
             modelBuilder.Entity("NegoSudApi.Models.Supplier", b =>
                 {
                     b.HasOne("NegoSudApi.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .HasConstraintName("fk_supplier_address_address_id");
+                        .WithOne("Supplier")
+                        .HasForeignKey("NegoSudApi.Models.Supplier", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_supplier_address_id");
 
                     b.Navigation("Address");
                 });
@@ -1382,6 +1281,11 @@ namespace NegoSudApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_permission_role_roles_roles_id");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.Address", b =>
+                {
+                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.Bottle", b =>

@@ -53,7 +53,7 @@ public class AuthenticationController : ControllerBase
         userToAdd.Password = _securePassword.Hash(userToAdd);
         User? dbUser = await _userService.AddUserAsync(userToAdd);
 
-        if (dbUser == null) return StatusCode(StatusCodes.Status204NoContent, $"No match - could not add content.");
+        if (dbUser == null) return StatusCode(StatusCodes.Status404NotFound, $"No match - could not add content.");
 
         return StatusCode(StatusCodes.Status201Created, dbUser.Email);
     }

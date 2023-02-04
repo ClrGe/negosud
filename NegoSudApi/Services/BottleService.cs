@@ -42,6 +42,8 @@ public class BottleService : IBottleService
                     .Include(b => b.Producer)
                     .Include(b => b.BottleStorageLocations)
                     .ThenInclude(bl => bl.StorageLocation)
+                    .Include(b => b.BottleSuppliers)
+                    .ThenInclude(bs => bs.Supplier)
                     .Include(b => b.BottleGrapes)
                     .ThenInclude(bg => bg.Grape)
                     .FirstOrDefaultAsync(b => b.Id == id);
@@ -282,6 +284,15 @@ public class BottleService : IBottleService
                         }
                         else
                         {
+                            if (bottleGrape.Grape?.Id != null)
+                            {
+                                Grape? grape = await _grapeService.GetGrapeAsync(bottleGrape.Grape.Id, includeRelations: false);
+                                if (grape != null)
+                                {
+                                    bottleGrape.Grape = grape;
+                                    bottleGrape.Bottle = bottle;
+                                }
+                            }
                             // otherwise, add the new BottleGrape to the current bottle
                             dbBottle.BottleGrapes.Add(bottleGrape);
                         }

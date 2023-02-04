@@ -24,7 +24,7 @@ public class PermissionController : ControllerBase
 
         if (dbPermission == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No Permission found for id: {id}");
+            return StatusCode(StatusCodes.Status404NotFound, $"No Permission found for id: {id}");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbPermission);
@@ -37,8 +37,7 @@ public class PermissionController : ControllerBase
 
         if (dbPermissions == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, "No Permissions" +
-                " in database");
+            return StatusCode(StatusCodes.Status404NotFound, "No Permissions found in database");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbPermissions);
@@ -51,7 +50,7 @@ public class PermissionController : ControllerBase
 
         if (dbPermission == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"{permission.Name} could not be added.");
+            return StatusCode(StatusCodes.Status404NotFound, $"{permission.Name} could not be added.");
         }
 
         return StatusCode(StatusCodes.Status201Created, dbPermission);
@@ -69,7 +68,7 @@ public class PermissionController : ControllerBase
 
         if (dbPermission == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {permission.Id} - could not update.");
+            return StatusCode(StatusCodes.Status404NotFound, $"No permission found for id: {permission.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbPermission);
@@ -82,7 +81,7 @@ public class PermissionController : ControllerBase
 
         if (status == false)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No Permission found for id: {id} - could not be deleted");
+            return StatusCode(StatusCodes.Status404NotFound, $"No Permission found for id: {id} - could not be deleted");
         }
 
         return StatusCode(StatusCodes.Status200OK);

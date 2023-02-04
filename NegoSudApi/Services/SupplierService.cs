@@ -25,7 +25,8 @@ public class SupplierService : ISupplierService
             if (includeRelations)
             {
                 return await _context.Suppliers
-                    .Include(p => p.Bottles)
+                    .Include(p => p.BottleSuppliers)
+                    .ThenInclude(bs => bs.Bottle)
                     .FirstOrDefaultAsync(p => p.Id == id);
             }
             return await _context.Suppliers.FindAsync(id);
