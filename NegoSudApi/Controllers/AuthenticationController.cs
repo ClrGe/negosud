@@ -69,7 +69,9 @@ public class AuthenticationController : ControllerBase
         var userToAdd = new User
         {
             Email = register.Email,
-            Password = register.Email
+            Password = register.Password,
+            FirstName = register.FirstName,
+            LastName = register.LastName,
         };
         
         userToAdd.Password = _securePassword.Hash(userToAdd);
