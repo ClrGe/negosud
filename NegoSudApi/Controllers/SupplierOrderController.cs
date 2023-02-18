@@ -3,88 +3,87 @@ using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Controllers
+namespace NegoSudApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class SupplierOrderController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class SupplierOrderController : ControllerBase
+    private readonly ISupplierOrderService _supplierOrderService;
+
+    public SupplierOrderController(ISupplierOrderService supplierOrderService)
     {
-        private readonly ISupplierOrderService _supplierOrderService;
+        _supplierOrderService = supplierOrderService;
+    }
 
-        public SupplierOrderController(ISupplierOrderService supplierOrderService)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetSupplierOrderAsync(int id)
+    {
+        SupplierOrder? dbSupplierOrder = await _supplierOrderService.GetSupplierOrderAsync(id);
+
+        if (dbSupplierOrder == null)
         {
-            _supplierOrderService = supplierOrderService;
+            return StatusCode(StatusCodes.Status404NotFound, $"No supplier order found for id: {id}");
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetSupplierOrderAsync(int id)
+        return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetSupplierOrdersAsync()
+    {
+        var dbSupplierOrders = await _supplierOrderService.GetSupplierOrdersAsync();
+
+        if (dbSupplierOrders == null)
         {
-            SupplierOrder? dbSupplierOrder = await _supplierOrderService.GetSupplierOrderAsync(id);
-
-            if (dbSupplierOrder == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, $"No supplier order found for id: {id}");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
+            return StatusCode(StatusCodes.Status404NotFound, "No supplier orders in database");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetSupplierOrdersAsync()
+        return StatusCode(StatusCodes.Status200OK, dbSupplierOrders);
+    }
+
+    [HttpPost("AddSupplierOrder")]
+    public async Task<ActionResult<SupplierOrder>> AddSupplierOrder(SupplierOrder supplierOrder)
+    {
+        SupplierOrder? dbSupplierOrder = await _supplierOrderService.AddSupplierOrderAsync(supplierOrder);
+
+        if (dbSupplierOrder == null)
         {
-            var dbSupplierOrders = await _supplierOrderService.GetSupplierOrdersAsync();
-
-            if (dbSupplierOrders == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, "No supplier orders in database");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbSupplierOrders);
+            return StatusCode(StatusCodes.Status404NotFound, $"{supplierOrder.Reference} could not be added.");
         }
 
-        [HttpPost("AddSupplierOrder")]
-        public async Task<ActionResult<SupplierOrder>> AddSupplierOrder(SupplierOrder supplierOrder)
+        return StatusCode(StatusCodes.Status201Created, dbSupplierOrder);
+    }
+
+    [HttpPost("UpdateSupplierOrder")]
+    public async Task<IActionResult> UpdateSupplierOrderAsync(SupplierOrder supplierOrder)
+    {
+        if (supplierOrder == null)
         {
-            SupplierOrder? dbSupplierOrder = await _supplierOrderService.AddSupplierOrderAsync(supplierOrder);
-
-            if (dbSupplierOrder == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, $"{supplierOrder.Reference} could not be added.");
-            }
-
-            return StatusCode(StatusCodes.Status201Created, dbSupplierOrder);
+            return BadRequest();
         }
 
-        [HttpPost("UpdateSupplierOrder")]
-        public async Task<IActionResult> UpdateSupplierOrderAsync(SupplierOrder supplierOrder)
+        SupplierOrder? dbSupplierOrder = await _supplierOrderService.UpdateSupplierOrderAsync(supplierOrder);
+
+        if (dbSupplierOrder == null)
         {
-            if (supplierOrder == null)
-            {
-                return BadRequest();
-            }
-
-            SupplierOrder? dbSupplierOrder = await _supplierOrderService.UpdateSupplierOrderAsync(supplierOrder);
-
-            if (dbSupplierOrder == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, $"No Supplier Order found for id: {supplierOrder.Id} - could not update.");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
+            return StatusCode(StatusCodes.Status404NotFound, $"No Supplier Order found for id: {supplierOrder.Id} - could not update.");
         }
 
-        [HttpPost("DeleteSupplierOrder")]
-        public async Task<IActionResult> DeleteSupplierOrderAsync(int id)
+        return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
+    }
+
+    [HttpPost("DeleteSupplierOrder")]
+    public async Task<IActionResult> DeleteSupplierOrderAsync(int id)
+    {
+        bool? status = await _supplierOrderService.DeleteSupplierOrderAsync(id);
+
+        if (status == false)
         {
-            bool? status = await _supplierOrderService.DeleteSupplierOrderAsync(id);
-
-            if (status == false)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, $"No Supplier Order found for id: {id} - could not be deleted");
-            }
-
-            return StatusCode(StatusCodes.Status200OK);
+            return StatusCode(StatusCodes.Status404NotFound, $"No Supplier Order found for id: {id} - could not be deleted");
         }
+
+        return StatusCode(StatusCodes.Status200OK);
     }
 }

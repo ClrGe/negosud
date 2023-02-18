@@ -3,88 +3,87 @@ using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Controllers
+namespace NegoSudApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class CountryController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class CountryController : ControllerBase
+    private readonly ICountryService _countryService;
+
+    public CountryController(ICountryService countryService)
     {
-        private readonly ICountryService _countryService;
+        _countryService = countryService;
+    }
 
-        public CountryController(ICountryService countryService)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCountryAsync(int id)
+    {
+        Country? dbCountry = await _countryService.GetCountryAsync(id);
+
+        if (dbCountry == null)
         {
-            _countryService = countryService;
+            return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {id}");
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCountryAsync(int id)
+        return StatusCode(StatusCodes.Status200OK, dbCountry);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetCountriesAsync()
+    {
+        IEnumerable<Country>? dbCountries = await _countryService.GetCountriesAsync();
+
+        if (dbCountries == null)
         {
-            Country? dbCountry = await _countryService.GetCountryAsync(id);
-
-            if (dbCountry == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {id}");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbCountry);
+            return StatusCode(StatusCodes.Status404NotFound, "No countries in database");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetCountriesAsync()
+        return StatusCode(StatusCodes.Status200OK, dbCountries);
+    }
+
+    [HttpPost("AddCountry")]
+    public async Task<ActionResult<Country>> AddCountryAsync(Country country)
+    {
+        Country? dbCountry = await _countryService.AddCountryAsync(country);
+
+        if (dbCountry == null)
         {
-            IEnumerable<Country>? dbCountries = await _countryService.GetCountriesAsync();
-
-            if (dbCountries == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, "No countries in database");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbCountries);
+            return StatusCode(StatusCodes.Status404NotFound, $"No match - could not add content.");
         }
 
-        [HttpPost("AddCountry")]
-        public async Task<ActionResult<Country>> AddCountryAsync(Country country)
+        return StatusCode(StatusCodes.Status201Created, dbCountry);
+    }
+
+    [HttpPost("UpdateCountry")]
+    public async Task<IActionResult> UpdateCountryAsync(Country country)
+    {
+        if (country == null)
         {
-            Country? dbCountry = await _countryService.AddCountryAsync(country);
-
-            if (dbCountry == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, $"No match - could not add content.");
-            }
-
-            return StatusCode(StatusCodes.Status201Created, dbCountry);
+            return BadRequest();
         }
 
-        [HttpPost("UpdateCountry")]
-        public async Task<IActionResult> UpdateCountryAsync(Country country)
+        Country? dbCountry = await _countryService.UpdateCountryAsync(country);
+
+        if (dbCountry == null)
         {
-            if (country == null)
-            {
-                return BadRequest();
-            }
-
-            Country? dbCountry = await _countryService.UpdateCountryAsync(country);
-
-            if (dbCountry == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {country.Id} - could not update.");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbCountry);
+            return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {country.Id} - could not update.");
         }
 
-        [HttpPost("DeleteCountry")]
-        public async Task<IActionResult> DeleteCountryAsync(int id)
+        return StatusCode(StatusCodes.Status200OK, dbCountry);
+    }
+
+    [HttpPost("DeleteCountry")]
+    public async Task<IActionResult> DeleteCountryAsync(int id)
+    {
+        bool? status = await _countryService.DeleteCountryAsync(id);
+
+        if (status == false)
         {
-            bool? status = await _countryService.DeleteCountryAsync(id);
-
-            if (status == false)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {id} - could not delete");
-            }
-
-            return StatusCode(StatusCodes.Status200OK);
+            return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {id} - could not delete");
         }
+
+        return StatusCode(StatusCodes.Status200OK);
     }
 }

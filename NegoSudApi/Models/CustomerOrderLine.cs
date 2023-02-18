@@ -10,6 +10,7 @@ namespace NegoSudApi.Models
         public string? UpdatedBy { get; set; }
         public int Id { get; set; }
         public decimal? Quantity { get; set; }
+        public StorageLocation StorageLocation { get; set; }
         public virtual Bottle? Bottle { get; set; }
         public virtual CustomerOrder? CustomerOrder { get; set; }
     }

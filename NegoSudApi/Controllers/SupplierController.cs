@@ -5,8 +5,6 @@ using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers;
 
-
-
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]

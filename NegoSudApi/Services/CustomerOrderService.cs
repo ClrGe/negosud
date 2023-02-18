@@ -83,21 +83,20 @@ public class CustomerOrderService : ICustomerOrderService
                 {
                     if (line.Bottle?.Id != null)
                     {
-                        Bottle? bottle = await _bottleService.GetBottleAsync(line.Bottle.Id, includeRelations: false);
-                        if (bottle != null)
+                        Bottle? dbBottle = await _bottleService.GetBottleAsync(line.Bottle.Id, includeRelations: true);
+                        if (dbBottle != null)
                         {
-                            line.Bottle = bottle;
+                            line.Bottle = dbBottle;
+                            line.StorageLocation = dbBottle.BottleStorageLocations
+                                .Where(bsl => bsl.BottleId == line.Bottle.Id && bsl.Quantity >= line.Quantity)
+                                .Select(bsl => bsl.StorageLocation).FirstOrDefault();
                         }
                     }
                 }
+                await _context.AddRangeAsync(customerOrder.Lines);
             }
 
             CustomerOrder newCustomerOrder = (await _context.CustomerOrders.AddAsync(customerOrder)).Entity;
-
-            if (customerOrder.Lines != null)
-            {
-                await _context.AddRangeAsync(customerOrder.Lines);
-            }
 
             await _context.SaveChangesAsync();
 
