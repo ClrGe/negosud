@@ -3,6 +3,10 @@ using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 using System.Drawing;
+using Aspose.Pdf;
+using Aspose.Pdf.Text;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace NegoSudApi.Services;
 
@@ -79,17 +83,15 @@ public class CustomerOrderService : ICustomerOrderService
 
             if(customerOrder.Lines != null)
             {
-                foreach (CustomerOrderLine line in customerOrder.Lines)
+                foreach (CustomerOrderLine orderLine in customerOrder.Lines)
                 {
-                    if (line.Bottle?.Id != null)
+                    if (orderLine.Bottle?.Id != null)
                     {
-                        Bottle? dbBottle = await _bottleService.GetBottleAsync(line.Bottle.Id, includeRelations: true);
+                        Bottle? dbBottle = await _bottleService.GetBottleAsync(orderLine.Bottle.Id, includeRelations: true);
                         if (dbBottle != null)
                         {
-                            line.Bottle = dbBottle;
-                            line.StorageLocation = dbBottle.BottleStorageLocations
-                                .Where(bsl => bsl.BottleId == line.Bottle.Id && bsl.Quantity >= line.Quantity)
-                                .Select(bsl => bsl.StorageLocation).FirstOrDefault();
+                            orderLine.Bottle = dbBottle;
+                            orderLine.StorageLocations = FindQuantityAndLocationInStorage(dbBottle, orderLine);
                         }
                     }
                 }
@@ -109,6 +111,44 @@ public class CustomerOrderService : ICustomerOrderService
 
         return null;
     }
+
+    /// <summary>
+    /// Find the location(s) where the bottle is
+    /// </summary>
+    /// <param name="dbBottle">The bottle in the Database</param>
+    /// <param name="orderLine">The line from the order for this bottle</param>
+    /// <returns>A Collection of location</returns>
+    /// <exception cref="ApplicationException"></exception>
+    private List<StorageLocation>? FindQuantityAndLocationInStorage(Bottle dbBottle, CustomerOrderLine orderLine)
+    {
+        var availableLocations = dbBottle.BottleStorageLocations!
+            .Where(bsl => bsl.BottleId == orderLine.Bottle.Id && bsl.Quantity > 0)
+            .OrderByDescending(bsl => bsl.Quantity)
+            .ToList();
+
+        
+        if (availableLocations.Count == 0)
+        {
+            throw new ApplicationException("Nous n'avons pas cette bouteille en stock");
+        }
+
+        var totalQuantity = 0;
+        List<StorageLocation>? locationWithBottle = null;
+        foreach (var location in availableLocations)
+        {
+            var quantityToAdd = Math.Min((int) (orderLine.Quantity - totalQuantity), (int) location.Quantity);
+            totalQuantity += quantityToAdd;
+            if (totalQuantity >= orderLine.Quantity)
+            {
+                locationWithBottle.Add(location.StorageLocation);
+                break;
+            }
+        }
+
+        return locationWithBottle;
+    }
+
+   
 
     //</inheritdoc>  
     public async Task<CustomerOrder?> UpdateCustomerOrderAsync(CustomerOrder customerOrder)
