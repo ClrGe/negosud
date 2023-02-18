@@ -155,7 +155,6 @@ public class CustomerOrderService : ICustomerOrderService
     {
         try
         {
-
             // get the current customerOrder from db
             CustomerOrder? dbCustomerOrder = await this.GetCustomerOrderAsync(customerOrder.Id);
 

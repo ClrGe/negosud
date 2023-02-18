@@ -1,7 +1,7 @@
-using Aspose.Pdf.Operators;
-
 namespace NegoSudApi.Services;
 
+using System.Globalization;
+using Aspose.Pdf.Operators;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,55 +11,56 @@ using NegoSudApi.Models;
 
 public class GeneratePdf : IDisposable
 {
-    #region Private memebers
-
-    private static readonly License Licence = new License();
-    private Color _textColor, _backColor;
+    private readonly CultureInfo _cultureInfo;
+    private readonly Color _textColor;
+    private readonly Color _backColor;
     private readonly Font _timeNewRomanFont;
-    private readonly TextBuilder _builder;
     private readonly Page _pdfPage;
     private readonly Document _pdfDocument;
     private readonly Rectangle _logoPlaceHolder;
-
-    #endregion
-
-    public string ForegroundColor
+    private readonly string _invoiceNumber;
+    private readonly LogoImage _logo;
+    private readonly List<string> _billFrom;
+    private readonly List<string> _billTo;
+    private readonly List<CustomerOrderLine> _orderLines; 
+    private readonly List<TotalRow> _totalsRow;
+    private readonly List<string> _details;
+    private readonly string _footer;
+    
+    /// <summary>
+    /// Class uses to generate an invoice PDF 
+    /// </summary>
+    /// <param name="invoiceNumber">The number of the invoice. Include the date and the Customer's id</param>
+    /// <param name="billTo">The Customer info</param>
+    /// <param name="orderLines">The details of the order</param>
+    public GeneratePdf(string invoiceNumber, List<string> billTo, List<CustomerOrderLine> orderLines)
     {
-        get { return _textColor.ToString(); }
-        set { _textColor = Color.Parse(value); }
-    }
-
-    public string BackgroundColor
-    {
-        get { return _backColor.ToString(); }
-        set { _backColor = Color.Parse(value); }
-    }
-
-    //Invoice details
-    public string Number;
-    public uint PaymentPeriod = 14;
-    public LogoImage Logo;
-    public List<string> BillFrom;
-    public List<string> BillTo;
-    public List<Bottle> Bottles;
-    public List<TotalRow> Totals;
-    public List<string> Details;
-    public string Footer;
-
-    public GeneratePdf()
-    {
+        _invoiceNumber = invoiceNumber;
+        _billFrom  = new List<string> { "NegoSud", "80 avenue Edmund Halley", "Saint-Étienne-du-Rouvray", "76800", "France" };
+        _billTo = billTo;
+        _orderLines = orderLines;
+        _totalsRow = new List<TotalRow>();
+        _details = new List<string> {
+            "Termes et conditions",
+            string.Empty,
+            "Si vous avez la moindre question concernant votre facture, n'hesitez pas nous contacter via le formulaire de contact : url formulaire.",
+            string.Empty,
+            "Merci pour votre achat chez NegoSud"
+        };
+        _footer = "site e-commerce link";
+        _logo = new LogoImage("logo.png", 160, 120);
+        _cultureInfo = new CultureInfo("fr-FR");
         _pdfDocument = new Document();
         _pdfDocument.PageInfo.Margin.Left = 36;
         _pdfDocument.PageInfo.Margin.Right = 36;
         _pdfPage = _pdfDocument.Pages.Add();
         _textColor = Color.Black;
-        _backColor = Color.Transparent;
+        _backColor = Color.Parse("#C85161");
         _logoPlaceHolder = new Rectangle(20, 700, 120, 800);
         _timeNewRomanFont = FontRepository.FindFont("Times New Roman");
-        _builder = new TextBuilder(_pdfPage);
     }
 
-    public void Save(Stream stream)
+    public byte[] Save()
     {
         HeaderSection();
         AddressSection();
@@ -67,22 +68,28 @@ public class GeneratePdf : IDisposable
         TermsSection();
         FooterSection();
 
+        using var stream = new MemoryStream();
         _pdfDocument.Save(stream);
+        return stream.ToArray();    
     }
 
     private void HeaderSection()
     {
         var lines = new TextFragment[3];
         // Create text fragment
-        lines[0] = new TextFragment($"INVOICE #{Number}");
-        lines[0].TextState.FontSize = 20;
-        lines[0].TextState.ForegroundColor = _textColor;
-        lines[0].HorizontalAlignment = HorizontalAlignment.Center;
+        lines[0] = new TextFragment($"INVOICE #{_invoiceNumber}")
+        {
+            TextState =
+            {
+                FontSize = 20,
+                ForegroundColor = _textColor
+            },
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
 
         _pdfPage.Paragraphs.Add(lines[0]);
 
         lines[1] = new TextFragment($"DATE: {DateTime.Today:MM/dd/yyyy}");
-        lines[2] = new TextFragment($"DUE DATE: {DateTime.Today.AddDays(PaymentPeriod):MM/dd/yyyy}");
         for (var i = 1; i < lines.Length; i++)
         {
             // Set text properties                
@@ -95,15 +102,14 @@ public class GeneratePdf : IDisposable
         }
 
         // Logo: set coordinates
-        _logoPlaceHolder.URX = _logoPlaceHolder.LLX + Logo.Width;
-        _logoPlaceHolder.URY = _logoPlaceHolder.LLY + Logo.Height;
+        _logoPlaceHolder.URX = _logoPlaceHolder.LLX + _logo.Width;
+        _logoPlaceHolder.URY = _logoPlaceHolder.LLY + _logo.Height;
 
         // Load image into stream
-        var imageStream = new FileStream(Logo.FileName, FileMode.Open);
+        var imageStream = new FileStream(_logo.FilePath, FileMode.Open);
         // Add image to Images collection of Page Resources
         _pdfPage.Resources.Images.Add(imageStream);
-        // Using GSave operator: this operator saves current graphics state
-        // _pdfPage.Contents.Add(new Operator.GSave());
+
         // Create Matrix object
         var matrix = new Matrix(new[]
         {
@@ -111,13 +117,13 @@ public class GeneratePdf : IDisposable
             _logoPlaceHolder.URY - _logoPlaceHolder.LLY,
             _logoPlaceHolder.LLX, _logoPlaceHolder.LLY
         });
+        
         // Using ConcatenateMatrix (concatenate matrix) operator: defines how image must be placed
         _pdfPage.Contents.Add(new ConcatenateMatrix(matrix));
-        var ximage = _pdfPage.Resources.Images[_pdfPage.Resources.Images.Count];
+        
+        var xImage = _pdfPage.Resources.Images[_pdfPage.Resources.Images.Count];
         // Using Do operator: this operator draws image
-        _pdfPage.Contents.Add(new Do(ximage.Name));
-        // Using GRestore operator: this operator restores graphics state
-        // _pdfPage.Contents.Add(new Operator.GRestore());
+        _pdfPage.Contents.Add(new Do(xImage.Name));
     }
 
     private void AddressSection()
@@ -136,28 +142,44 @@ public class GeneratePdf : IDisposable
         };
         TextFragment fragment;
 
-        BillFrom.Insert(0, "");
-        foreach (var str in BillFrom)
+        _billFrom.Insert(0, "");
+        foreach (var str in _billFrom)
         {
-            fragment = new TextFragment(str);
-            fragment.TextState.Font = _timeNewRomanFont;
-            fragment.TextState.FontSize = 12;
+            fragment = new TextFragment(str)
+            {
+                TextState =
+                {
+                    Font = _timeNewRomanFont,
+                    FontSize = 12
+                }
+            };
             // Add fragment to paragraph
             box.Paragraphs.Add(fragment);
         }
 
-        fragment = new TextFragment("Facturé à") {IsFirstParagraphInColumn = true};
-        fragment.TextState.Font = _timeNewRomanFont;
-        fragment.TextState.FontSize = 12;
-        fragment.TextState.HorizontalAlignment = HorizontalAlignment.Right;
+        fragment = new TextFragment("Facturé à")
+        {
+            IsFirstParagraphInColumn = true,
+            TextState =
+            {
+                Font = _timeNewRomanFont,
+                FontSize = 12,
+                HorizontalAlignment = HorizontalAlignment.Right
+            }
+        };
         box.Paragraphs.Add(fragment);
 
-        foreach (var str in BillTo)
+        foreach (var str in _billTo)
         {
-            fragment = new TextFragment(str);
-            fragment.TextState.Font = _timeNewRomanFont;
-            fragment.TextState.FontSize = 12;
-            fragment.TextState.HorizontalAlignment = HorizontalAlignment.Right;
+            fragment = new TextFragment(str)
+            {
+                TextState =
+                {
+                    Font = _timeNewRomanFont,
+                    FontSize = 12,
+                    HorizontalAlignment = HorizontalAlignment.Right
+                }
+            };
             // Add fragment to paragraph
             box.Paragraphs.Add(fragment);
         }
@@ -190,33 +212,39 @@ public class GeneratePdf : IDisposable
         headerRow.Cells.Add("Produits");
         headerRow.Cells.Add("Prix");
         headerRow.Cells.Add("Quantité");
-        headerRow.Cells.Add("Sous Total");
+        headerRow.Cells.Add("Total");
         foreach (Cell headerRowCell in headerRow.Cells)
         {
-            headerRowCell.BackgroundColor = _textColor;
-            headerRowCell.DefaultCellTextState.ForegroundColor = _backColor;
+            headerRowCell.BackgroundColor = _backColor;
+            headerRowCell.DefaultCellTextState.ForegroundColor = Color.White;
         }
 
-        foreach (var bottle in Bottles)
+        var lineTotal = new List<decimal>();
+        foreach (var orderLine in _orderLines)
         {
             var row = table.Rows.Add();
-            cell = row.Cells.Add(bottle.Id.ToString());
+            cell = row.Cells.Add(orderLine.Id.ToString());
             cell.Alignment = HorizontalAlignment.Center;
-            row.Cells.Add(bottle.FullName);
-            cell = row.Cells.Add(((decimal) bottle.CurrentPrice).ToString("C2"));
+            row.Cells.Add(orderLine.Bottle.FullName);
+            cell = row.Cells.Add(((decimal) orderLine.Bottle.CurrentPrice).ToString("C2", _cultureInfo));
             cell.Alignment = HorizontalAlignment.Right;
-            // cell = row.Cells.Add(bottle.Quantity.ToString());
-            // cell.Alignment = HorizontalAlignment.Right;
-            // cell = row.Cells.Add(bottle.Total.ToString("C2"));
-            // cell.Alignment = HorizontalAlignment.Right;
+            cell = row.Cells.Add(orderLine.Quantity.ToString());
+            cell.Alignment = HorizontalAlignment.Right;
+            cell = row.Cells.Add(((decimal)(orderLine.Bottle.CurrentPrice * orderLine.Quantity)).ToString("C2", _cultureInfo));
+            lineTotal.Add((decimal) (orderLine.Bottle.CurrentPrice * orderLine.Quantity));
+            cell.Alignment = HorizontalAlignment.Right;
         }
 
-        foreach (var totalRow in Totals)
+        var subTotal = lineTotal.Sum();
+        _totalsRow.Add(new TotalRow("Sous total", subTotal));
+        _totalsRow.Add(new TotalRow("TVA à 20%", subTotal*0.2M));
+        _totalsRow.Add(new TotalRow("Total", subTotal*1.2M));
+        foreach (var totalRow in _totalsRow)
         {
             var row = table.Rows.Add();
             var nameCell = row.Cells.Add(totalRow.Text);
             nameCell.ColSpan = 4;
-            var textCell = row.Cells.Add(totalRow.Value.ToString("C2"));
+            var textCell = row.Cells.Add(totalRow.Value.ToString("C2", _cultureInfo));
             textCell.Alignment = HorizontalAlignment.Right;
         }
 
@@ -225,21 +253,25 @@ public class GeneratePdf : IDisposable
 
     private void TermsSection()
     {
-        foreach (var detail in Details)
+        foreach (var fragment in _details.Select(detail => new TextFragment(detail)
+                 {
+                     TextState =
+                     {
+                         Font = _timeNewRomanFont,
+                         FontSize = 12
+                     }
+                 }))
         {
-            var fragment = new TextFragment(detail);
-            fragment.TextState.Font = _timeNewRomanFont;
-            fragment.TextState.FontSize = 12;
             _pdfPage.Paragraphs.Add(fragment);
         }
     }
 
     private void FooterSection()
     {
-        var fragment = new TextFragment(Footer);
+        var fragment = new TextFragment(_footer);
         var len = fragment.TextState.MeasureString(fragment.Text);
         fragment.Position = new Position(_pdfPage.PageInfo.Width / 2 - len / 2, 20);
-        fragment.Hyperlink = new WebHyperlink(Footer);
+        fragment.Hyperlink = new WebHyperlink(_footer);
         var builder = new TextBuilder(_pdfPage);
 
         builder.AppendText(fragment);
@@ -247,11 +279,11 @@ public class GeneratePdf : IDisposable
 
     #region IDisposable Support
 
-    private bool disposedValue = false; // To detect redundant calls
+    private bool _disposedValue = false; // To detect redundant calls
 
     protected virtual void Dispose(bool disposing)
     {
-        if (!disposedValue)
+        if (!_disposedValue)
         {
             if (disposing)
             {
@@ -259,7 +291,7 @@ public class GeneratePdf : IDisposable
                 _pdfDocument.Dispose();
             }
 
-            disposedValue = true;
+            _disposedValue = true;
         }
     }
 
@@ -273,8 +305,8 @@ public class GeneratePdf : IDisposable
 
 public class TotalRow
 {
-    public string Text;
-    public decimal Value;
+    public readonly string Text;
+    public readonly decimal Value;
 
     public TotalRow(string text, decimal value)
     {
@@ -285,13 +317,13 @@ public class TotalRow
 
 public class LogoImage
 {
-    public string FileName;
-    public int Width;
-    public int Height;
+    public readonly string FilePath;
+    public readonly int Width;
+    public readonly int Height;
 
-    public LogoImage(string filename, int width, int height)
+    public LogoImage(string filePath, int width, int height)
     {
-        FileName = filename;
+        FilePath = filePath;
         Width = width;
         Height = height;
     }

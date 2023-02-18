@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
+using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers;
@@ -44,7 +45,7 @@ public class CustomerOrderController : ControllerBase
     }
 
     [HttpPost("AddCustomerOrder")]
-    public async Task<ActionResult<CustomerOrder>> AddCustomerOrder(CustomerOrder customerOrder)
+    public async Task<ActionResult<CustomerOrder>> AddCustomerOrder(CustomerOrder customerOrder, Address addressToDeliver)
     {
         CustomerOrder? dbCustomerOrder = await _customerOrderService.AddCustomerOrderAsync(customerOrder);
 
@@ -52,6 +53,17 @@ public class CustomerOrderController : ControllerBase
         {
             return StatusCode(StatusCodes.Status404NotFound, $"{customerOrder.Reference} could not be added.");
         }
+
+        var customerDetails = new List<String>
+        {
+            addressToDeliver.Label!, addressToDeliver.FirstLine!, addressToDeliver.City!.Name!, addressToDeliver.City.ZipCode.ToString()!
+        };
+        
+        var pdfBytes = new GeneratePdf(customerOrder.Reference!, customerDetails, (customerOrder.Lines as List<CustomerOrderLine>)!).Save();
+        var stream = new MemoryStream(pdfBytes);
+        Response.Headers.Add("Content-Disposition", $"inline; filename=invoice_{customerOrder.Reference!}.pdf");
+        Response.ContentType = "application/pdf";
+        
 
         return StatusCode(StatusCodes.Status201Created, dbCustomerOrder);
     }
