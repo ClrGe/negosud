@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NegoSudApi.Migrations
 {
     [DbContext(typeof(NegoSudDbContext))]
-    [Migration("20230204140446_Test")]
-    partial class Test
+    [Migration("20230219175626_NewTest")]
+    partial class NewTest
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -305,6 +305,10 @@ namespace NegoSudApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("integer")
+                        .HasColumnName("country_id");
+
                     b.Property<DateTime?>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
@@ -336,6 +340,9 @@ namespace NegoSudApi.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_city");
+
+                    b.HasIndex("CountryId")
+                        .HasDatabaseName("ix_city_country_id");
 
                     b.ToTable("City", (string)null);
                 });
@@ -420,6 +427,10 @@ namespace NegoSudApi.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_order");
 
+                    b.Property<int?>("DeliveryAddressId")
+                        .HasColumnType("integer")
+                        .HasColumnName("delivery_address_id");
+
                     b.Property<string>("Description")
                         .HasColumnType("text")
                         .HasColumnName("description");
@@ -443,6 +454,9 @@ namespace NegoSudApi.Migrations
 
                     b.HasIndex("CustomerId")
                         .HasDatabaseName("ix_customer_order_customer_id");
+
+                    b.HasIndex("DeliveryAddressId")
+                        .HasDatabaseName("ix_customer_order_delivery_address_id");
 
                     b.ToTable("CustomerOrder", (string)null);
                 });
@@ -475,8 +489,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("customer_order_id");
 
-                    b.Property<decimal?>("Quantity")
-                        .HasColumnType("numeric")
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("integer")
                         .HasColumnName("quantity");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -534,10 +548,6 @@ namespace NegoSudApi.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
                         .HasColumnName("updated_by");
-
-                    b.Property<string>("WineType")
-                        .HasColumnType("text")
-                        .HasColumnName("wine_type");
 
                     b.HasKey("Id")
                         .HasName("pk_grape");
@@ -758,6 +768,10 @@ namespace NegoSudApi.Migrations
                         .HasColumnType("character varying(200)")
                         .HasColumnName("created_by");
 
+                    b.Property<int?>("CustomerOrderLineId")
+                        .HasColumnType("integer")
+                        .HasColumnName("customer_order_line_id");
+
                     b.Property<string>("Name")
                         .HasColumnType("text")
                         .HasColumnName("name");
@@ -774,6 +788,9 @@ namespace NegoSudApi.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_storage_location");
+
+                    b.HasIndex("CustomerOrderLineId")
+                        .HasDatabaseName("ix_storage_location_customer_order_line_id");
 
                     b.ToTable("StorageLocation", (string)null);
                 });
@@ -913,8 +930,8 @@ namespace NegoSudApi.Migrations
                         .HasColumnType("character varying(200)")
                         .HasColumnName("created_by");
 
-                    b.Property<decimal?>("Quantity")
-                        .HasColumnType("numeric")
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("integer")
                         .HasColumnName("quantity");
 
                     b.Property<int?>("SupplierOrderId")
@@ -1166,6 +1183,16 @@ namespace NegoSudApi.Migrations
                     b.Navigation("Supplier");
                 });
 
+            modelBuilder.Entity("NegoSudApi.Models.City", b =>
+                {
+                    b.HasOne("NegoSudApi.Models.Country", "Country")
+                        .WithMany("Cities")
+                        .HasForeignKey("CountryId")
+                        .HasConstraintName("fk_city_country_country_id");
+
+                    b.Navigation("Country");
+                });
+
             modelBuilder.Entity("NegoSudApi.Models.CustomerOrder", b =>
                 {
                     b.HasOne("NegoSudApi.Models.User", "Customer")
@@ -1173,7 +1200,14 @@ namespace NegoSudApi.Migrations
                         .HasForeignKey("CustomerId")
                         .HasConstraintName("fk_customer_order_users_customer_id");
 
+                    b.HasOne("NegoSudApi.Models.Address", "DeliveryAddress")
+                        .WithMany()
+                        .HasForeignKey("DeliveryAddressId")
+                        .HasConstraintName("fk_customer_order_address_delivery_address_id");
+
                     b.Navigation("Customer");
+
+                    b.Navigation("DeliveryAddress");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.CustomerOrderLine", b =>
@@ -1218,6 +1252,14 @@ namespace NegoSudApi.Migrations
                         .HasConstraintName("fk_region_country_country_id");
 
                     b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.StorageLocation", b =>
+                {
+                    b.HasOne("NegoSudApi.Models.CustomerOrderLine", null)
+                        .WithMany("StorageLocations")
+                        .HasForeignKey("CustomerOrderLineId")
+                        .HasConstraintName("fk_storage_location_customer_order_line_customer_order_line_id");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.Supplier", b =>
@@ -1307,12 +1349,19 @@ namespace NegoSudApi.Migrations
 
             modelBuilder.Entity("NegoSudApi.Models.Country", b =>
                 {
+                    b.Navigation("Cities");
+
                     b.Navigation("Regions");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.CustomerOrder", b =>
                 {
                     b.Navigation("Lines");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.CustomerOrderLine", b =>
+                {
+                    b.Navigation("StorageLocations");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.Grape", b =>

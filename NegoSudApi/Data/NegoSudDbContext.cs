@@ -1,5 +1,4 @@
-﻿using System.Transactions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Models;
 
 namespace NegoSudApi.Data;
@@ -83,6 +82,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(i => i.Id).UseIdentityColumn();
 
             entity.HasMany(k => k.Regions).WithOne(k => k.Country);
+            entity.HasMany(k => k.Cities).WithOne(k => k.Country);
         });
 
         modelBuilder.Entity<Grape>(entity =>

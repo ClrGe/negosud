@@ -6,7 +6,6 @@ public class Grape : IModelBase
 {
     public int Id { get; set; }
     public string? GrapeType { get; set; }
-    public string? WineType { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public string? CreatedBy { get; set; }

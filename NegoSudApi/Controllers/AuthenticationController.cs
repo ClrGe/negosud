@@ -47,7 +47,7 @@ public class AuthenticationController : ControllerBase
         var userToAdd = new User
         {
             Email = user.Email,
-            Password = user.Email
+            Password = user.Password
         };
         
         userToAdd.Password = _securePassword.Hash(userToAdd);

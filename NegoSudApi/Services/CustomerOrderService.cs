@@ -2,11 +2,7 @@
 using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
-using System.Drawing;
-using Aspose.Pdf;
-using Aspose.Pdf.Text;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+
 
 namespace NegoSudApi.Services;
 
@@ -16,16 +12,15 @@ public class CustomerOrderService : ICustomerOrderService
     private readonly ILogger<CustomerOrderService> _logger;
     private readonly IBottleService _bottleService;
     private readonly IUserService _userService;
+    private readonly IAddressService _addressService;
 
-    public CustomerOrderService(NegoSudDbContext context,
-                         ILogger<CustomerOrderService> logger,
-                         IBottleService bottleService,
-                         IUserService userService)
+    public CustomerOrderService(NegoSudDbContext context, ILogger<CustomerOrderService> logger, IBottleService bottleService, IUserService userService, IAddressService addressService)
     {
         _context = context;
         _logger = logger;
         _bottleService = bottleService;
         _userService = userService;
+        _addressService = addressService;
     }
 
     //</inheritdoc>  
@@ -80,6 +75,15 @@ public class CustomerOrderService : ICustomerOrderService
                     customerOrder.Customer = customer;
                 }
             }
+            
+            if (customerOrder.DeliveryAddress != null )
+            {
+                Address? dbAddress = await _addressService.GetAddressAsync(customerOrder.DeliveryAddress.Id);
+                if (dbAddress != null)
+                {
+                    customerOrder.DeliveryAddress = dbAddress;
+                }
+            }
 
             if(customerOrder.Lines != null)
             {
@@ -98,6 +102,7 @@ public class CustomerOrderService : ICustomerOrderService
                 await _context.AddRangeAsync(customerOrder.Lines);
             }
 
+           
             CustomerOrder newCustomerOrder = (await _context.CustomerOrders.AddAsync(customerOrder)).Entity;
 
             await _context.SaveChangesAsync();
@@ -133,7 +138,7 @@ public class CustomerOrderService : ICustomerOrderService
         }
 
         var totalQuantity = 0;
-        List<StorageLocation>? locationWithBottle = null;
+        List<StorageLocation> locationWithBottle = new List<StorageLocation>();
         foreach (var location in availableLocations)
         {
             var quantityToAdd = Math.Min((int) (orderLine.Quantity - totalQuantity), (int) location.Quantity);
@@ -141,6 +146,11 @@ public class CustomerOrderService : ICustomerOrderService
             if (totalQuantity >= orderLine.Quantity)
             {
                 locationWithBottle.Add(location.StorageLocation);
+                
+                // Update the quantity of the BottleStorageLocation entity in the database
+                location.Quantity -= quantityToAdd;
+                _bottleService.UpdateBottleAsync(dbBottle);
+                _context.SaveChangesAsync();
                 break;
             }
         }

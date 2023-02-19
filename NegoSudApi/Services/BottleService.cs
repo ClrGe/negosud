@@ -15,12 +15,7 @@ public class BottleService : IBottleService
     private readonly IWineLabelService _wineLabelService;
     private readonly ISupplierService _supplierService;
 
-    public BottleService(NegoSudDbContext context,
-                         ILogger<BottleService> logger,
-                         IProducerService producerService,
-                         IGrapeService grapeService,
-                         IStorageLocationService storageLocationService,
-                         IWineLabelService wineLabelService, ISupplierService supplierService)
+    public BottleService(NegoSudDbContext context, ILogger<BottleService> logger, IProducerService producerService, IGrapeService grapeService, IStorageLocationService storageLocationService, IWineLabelService wineLabelService, ISupplierService supplierService)
     {
         _context = context;
         _logger = logger;

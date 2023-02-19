@@ -48,7 +48,7 @@ public class GeneratePdf : IDisposable
             "Merci pour votre achat chez NegoSud"
         };
         _footer = "site e-commerce link";
-        _logo = new LogoImage("logo.png", 160, 120);
+        _logo = new LogoImage("C:\\temp\\logo.png", 160, 120);
         _cultureInfo = new CultureInfo("fr-FR");
         _pdfDocument = new Document();
         _pdfDocument.PageInfo.Margin.Left = 36;
@@ -75,9 +75,9 @@ public class GeneratePdf : IDisposable
 
     private void HeaderSection()
     {
-        var lines = new TextFragment[3];
+        var lines = new TextFragment[2];
         // Create text fragment
-        lines[0] = new TextFragment($"INVOICE #{_invoiceNumber}")
+        lines[0] = new TextFragment($"Facture #{_invoiceNumber}")
         {
             TextState =
             {
