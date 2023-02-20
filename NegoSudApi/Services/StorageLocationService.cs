@@ -115,8 +115,19 @@ public class StorageLocationService : IStorageLocationService
                     }
                     else
                     {
-                        // otherwise, add the new BottleStorageLocation to the current storageLocation
-                        dbStorageLocation.BottleStorageLocations.Add(BottleStorageLocation);
+
+                            if (BottleStorageLocation.Bottle?.Id != null)
+                            {
+                                Bottle? bottle = await _getBottleService.GetBottleAsync(BottleStorageLocation.Bottle.Id, includeRelations: false);
+                                if (bottle != null)
+                                {
+                                    BottleStorageLocation.StorageLocation = storageLocation;
+                                    BottleStorageLocation.Bottle = bottle;
+                                }
+                            }
+
+                            // otherwise, add the new BottleStorageLocation to the current storageLocation
+                            dbStorageLocation.BottleStorageLocations.Add(BottleStorageLocation);
                     }
 
                 }
