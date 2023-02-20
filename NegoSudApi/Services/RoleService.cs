@@ -17,10 +17,19 @@ public class RoleService : IRoleService
     }
 
     // </inheritdoc>
-    public async Task<Role?> GetRoleAsync(int id)
+    public async Task<Role?> GetRoleAsync(int id, bool includeRelations = true)
     {
         try
         {
+            if (includeRelations)
+            {
+                return await _context.Roles
+                    .Include(r => r.Users)
+                    .Include(r => r.Permissions)
+                    .ThenInclude(p => p.Access)
+                    .FirstOrDefaultAsync(r => r.Id == id);
+            }
+            
             return await _context.Roles.FindAsync(id);
         }
         catch (Exception ex)

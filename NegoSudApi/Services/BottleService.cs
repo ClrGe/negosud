@@ -218,7 +218,7 @@ public class BottleService : IBottleService
 
                 if (bottle.BottleSuppliers != null && dbBottle.BottleSuppliers != null)
                 {
-                    ICollection<BottleSupplier>? dbBottleSuppliers = dbBottle.BottleSuppliers.ToList();
+                    ICollection<BottleSupplier> dbBottleSuppliers = dbBottle.BottleSuppliers.ToList();
 
                     foreach (BottleSupplier bottleSupplier in bottle.BottleSuppliers)
                     {
