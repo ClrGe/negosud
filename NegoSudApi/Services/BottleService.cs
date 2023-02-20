@@ -11,17 +11,26 @@ public class BottleService : IBottleService
     private readonly ILogger<BottleService> _logger;
     private readonly IProducerService _producerService;
     private readonly IGrapeService _grapeService;
-    private readonly IStorageLocationService _storageLocationService;
+    private readonly IGetBottleService _getBottleService;
+    private readonly IGetStorageLocationService _getStorageLocationService;
     private readonly IWineLabelService _wineLabelService;
     private readonly ISupplierService _supplierService;
 
+    public BottleService(NegoSudDbContext context,
+                         ILogger<BottleService> logger,
+                         IProducerService producerService,
+                         IGrapeService grapeService,
+                         IGetBottleService getBottleService,
+                         IGetStorageLocationService getStorageLocationService,
+                         IWineLabelService wineLabelService)
     public BottleService(NegoSudDbContext context, ILogger<BottleService> logger, IProducerService producerService, IGrapeService grapeService, IStorageLocationService storageLocationService, IWineLabelService wineLabelService, ISupplierService supplierService)
     {
         _context = context;
         _logger = logger;
         _producerService = producerService;
         _grapeService = grapeService;
-        _storageLocationService = storageLocationService;
+        _getBottleService = getBottleService;
+        _getStorageLocationService = getStorageLocationService;
         _wineLabelService = wineLabelService;
         _supplierService = supplierService;
     }
@@ -29,6 +38,7 @@ public class BottleService : IBottleService
     //</inheritdoc>  
     public async Task<Bottle?> GetBottleAsync(int id, bool includeRelations = true)
     {
+        return await _getBottleService.GetBottleAsync(id, includeRelations);
         try
         {
             if (includeRelations)
@@ -75,11 +85,11 @@ public class BottleService : IBottleService
         {
             if(bottle.BottleStorageLocations != null)
             {
-                foreach (var bottleStorageLocation in bottle.BottleStorageLocations)
+                foreach (BottleStorageLocation bottleStorageLocation in bottle.BottleStorageLocations)
                 {
                     if (bottleStorageLocation.StorageLocation?.Id != null)
                     {
-                        StorageLocation? location = await _storageLocationService.GetStorageLocationAsync(bottleStorageLocation.StorageLocation.Id, includeRelations: false);
+                        StorageLocation? location = await _getStorageLocationService.GetStorageLocationAsync(bottleStorageLocation.StorageLocation.Id, includeRelations: false);
                         if (location != null)
                         {
                             bottleStorageLocation.StorageLocation = location;
@@ -91,7 +101,7 @@ public class BottleService : IBottleService
 
             if(bottle.BottleGrapes != null)
             {
-                foreach (var bottleGrape in bottle.BottleGrapes)
+                foreach (BottleGrape bottleGrape in bottle.BottleGrapes)
                 {
                     if (bottleGrape.Grape?.Id != null)
                     {
