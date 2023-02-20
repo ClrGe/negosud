@@ -11,47 +11,31 @@ public class BottleService : IBottleService
     private readonly ILogger<BottleService> _logger;
     private readonly IProducerService _producerService;
     private readonly IGrapeService _grapeService;
-    private readonly IStorageLocationService _storageLocationService;
+    private readonly IGetBottleService _getBottleService;
+    private readonly IGetStorageLocationService _getStorageLocationService;
     private readonly IWineLabelService _wineLabelService;
 
     public BottleService(NegoSudDbContext context,
                          ILogger<BottleService> logger,
                          IProducerService producerService,
                          IGrapeService grapeService,
-                         IStorageLocationService storageLocationService,
+                         IGetBottleService getBottleService,
+                         IGetStorageLocationService getStorageLocationService,
                          IWineLabelService wineLabelService)
     {
         _context = context;
         _logger = logger;
         _producerService = producerService;
         _grapeService = grapeService;
-        _storageLocationService = storageLocationService;
+        _getBottleService = getBottleService;
+        _getStorageLocationService = getStorageLocationService;
         _wineLabelService = wineLabelService;
     }
 
     //</inheritdoc>  
     public async Task<Bottle?> GetBottleAsync(int id, bool includeRelations = true)
     {
-        try
-        {
-            if (includeRelations)
-            {
-                return await _context.Bottles
-                    .Include(b => b.Producer)
-                    .Include(b => b.BottleStorageLocations)
-                    .ThenInclude(bl => bl.StorageLocation)
-                    .Include(b => b.BottleGrapes)
-                    .ThenInclude(bg => bg.Grape)
-                    .FirstOrDefaultAsync(b => b.Id == id);
-            }
-            return await _context.Bottles.FindAsync(id);
-        }
-        catch (Exception ex)
-        {
-            _logger.Log(LogLevel.Information, ex.ToString());
-        }
-
-        return null;
+        return await _getBottleService.GetBottleAsync(id, includeRelations);
     }
 
     //</inheritdoc>  
@@ -76,11 +60,11 @@ public class BottleService : IBottleService
         {
             if(bottle.BottleStorageLocations != null)
             {
-                foreach (var bottleStorageLocation in bottle.BottleStorageLocations)
+                foreach (BottleStorageLocation bottleStorageLocation in bottle.BottleStorageLocations)
                 {
                     if (bottleStorageLocation.StorageLocation?.Id != null)
                     {
-                        StorageLocation? location = await _storageLocationService.GetStorageLocationAsync(bottleStorageLocation.StorageLocation.Id, includeRelations: false);
+                        StorageLocation? location = await _getStorageLocationService.GetStorageLocationAsync(bottleStorageLocation.StorageLocation.Id, includeRelations: false);
                         if (location != null)
                         {
                             bottleStorageLocation.StorageLocation = location;
@@ -92,7 +76,7 @@ public class BottleService : IBottleService
 
             if(bottle.BottleGrapes != null)
             {
-                foreach (var bottleGrape in bottle.BottleGrapes)
+                foreach (BottleGrape bottleGrape in bottle.BottleGrapes)
                 {
                     if (bottleGrape.Grape?.Id != null)
                     {

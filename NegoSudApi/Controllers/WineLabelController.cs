@@ -37,8 +37,7 @@ public class WineLabelController : ControllerBase
 
         if (dbWineLabels == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, "No wineLabels" +
-                " in database");
+            return StatusCode(StatusCodes.Status204NoContent, "No wineLabels in database");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbWineLabels);
@@ -69,7 +68,7 @@ public class WineLabelController : ControllerBase
 
         if (dbWineLabel == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {wineLabel.Id} - could not update.");
+            return StatusCode(StatusCodes.Status204NoContent, $"No WineLabel found for id: {wineLabel.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbWineLabel);

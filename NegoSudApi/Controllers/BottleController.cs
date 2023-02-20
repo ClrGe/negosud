@@ -70,7 +70,7 @@ namespace NegoSudApi.Controllers
 
             if (dbBottle == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No city found for id: {bottle.Id} - could not update.");
+                return StatusCode(StatusCodes.Status204NoContent, $"No Bottle found for id: {bottle.Id} - could not update.");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbBottle);

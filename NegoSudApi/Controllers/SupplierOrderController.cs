@@ -68,7 +68,7 @@ namespace NegoSudApi.Controllers
 
             if (dbSupplierOrder == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match for query - could not update");
+                return StatusCode(StatusCodes.Status204NoContent, $"No SupplierOrder found for id: {supplierOrder.Id} - could not update.");
             }
 
             return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
