@@ -362,7 +362,6 @@ namespace NegoSudApi.Migrations
                 name: "ix_region_country_id",
                 table: "Region",
                 column: "country_id");
-
         }
 
         /// <inheritdoc />
