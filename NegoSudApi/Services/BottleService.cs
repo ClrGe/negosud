@@ -17,13 +17,13 @@ public class BottleService : IBottleService
     private readonly ISupplierService _supplierService;
 
     public BottleService(NegoSudDbContext context,
-                         ILogger<BottleService> logger,
-                         IProducerService producerService,
-                         IGrapeService grapeService,
-                         IGetBottleService getBottleService,
-                         IGetStorageLocationService getStorageLocationService,
-                         IWineLabelService wineLabelService)
-    public BottleService(NegoSudDbContext context, ILogger<BottleService> logger, IProducerService producerService, IGrapeService grapeService, IStorageLocationService storageLocationService, IWineLabelService wineLabelService, ISupplierService supplierService)
+        ILogger<BottleService> logger,
+        IProducerService producerService,
+        IGrapeService grapeService,
+        IWineLabelService wineLabelService,
+        ISupplierService supplierService, 
+        IGetBottleService getBottleService,
+        IGetStorageLocationService getStorageLocationService)
     {
         _context = context;
         _logger = logger;
@@ -39,28 +39,6 @@ public class BottleService : IBottleService
     public async Task<Bottle?> GetBottleAsync(int id, bool includeRelations = true)
     {
         return await _getBottleService.GetBottleAsync(id, includeRelations);
-        try
-        {
-            if (includeRelations)
-            {
-                return await _context.Bottles
-                    .Include(b => b.Producer)
-                    .Include(b => b.BottleStorageLocations)
-                    .ThenInclude(bl => bl.StorageLocation)
-                    .Include(b => b.BottleSuppliers)
-                    .ThenInclude(bs => bs.Supplier)
-                    .Include(b => b.BottleGrapes)
-                    .ThenInclude(bg => bg.Grape)
-                    .FirstOrDefaultAsync(b => b.Id == id);
-            }
-            return await _context.Bottles.FindAsync(id);
-        }
-        catch (Exception ex)
-        {
-            _logger.Log(LogLevel.Information, ex.ToString());
-        }
-
-        return null;
     }
 
     //</inheritdoc>  
@@ -83,13 +61,15 @@ public class BottleService : IBottleService
     {
         try
         {
-            if(bottle.BottleStorageLocations != null)
+            if (bottle.BottleStorageLocations != null)
             {
                 foreach (BottleStorageLocation bottleStorageLocation in bottle.BottleStorageLocations)
                 {
                     if (bottleStorageLocation.StorageLocation?.Id != null)
                     {
-                        StorageLocation? location = await _getStorageLocationService.GetStorageLocationAsync(bottleStorageLocation.StorageLocation.Id, includeRelations: false);
+                        StorageLocation? location =
+                            await _getStorageLocationService.GetStorageLocationAsync(
+                                bottleStorageLocation.StorageLocation.Id, includeRelations: false);
                         if (location != null)
                         {
                             bottleStorageLocation.StorageLocation = location;
@@ -97,9 +77,9 @@ public class BottleService : IBottleService
                         }
                     }
                 }
-            }            
+            }
 
-            if(bottle.BottleGrapes != null)
+            if (bottle.BottleGrapes != null)
             {
                 foreach (BottleGrape bottleGrape in bottle.BottleGrapes)
                 {
@@ -113,21 +93,23 @@ public class BottleService : IBottleService
                         }
                     }
                 }
-            }            
+            }
 
-            if(bottle.WineLabel?.Id != null)
+            if (bottle.WineLabel?.Id != null)
             {
-                WineLabel? wineLabel = await _wineLabelService.GetWineLabelAsync(bottle.WineLabel.Id, includeRelations: false);
-                if(wineLabel != null) 
+                WineLabel? wineLabel =
+                    await _wineLabelService.GetWineLabelAsync(bottle.WineLabel.Id, includeRelations: false);
+                if (wineLabel != null)
                 {
                     bottle.WineLabel = wineLabel;
                 }
             }
 
-            if(bottle.Producer?.Id != null)
+            if (bottle.Producer?.Id != null)
             {
-                Producer? producer = await _producerService.GetProducerAsync(bottle.Producer.Id, includeRelations: false);
-                if(producer != null)
+                Producer? producer =
+                    await _producerService.GetProducerAsync(bottle.Producer.Id, includeRelations: false);
+                if (producer != null)
                 {
                     bottle.Producer = producer;
                 }
@@ -162,13 +144,11 @@ public class BottleService : IBottleService
     {
         try
         {
-
             // get the current bottle from db
             Bottle? dbBottle = await this.GetBottleAsync(bottle.Id);
 
             if (dbBottle != null)
             {
-
                 dbBottle.FullName = bottle.FullName;
                 dbBottle.Description = bottle.Description;
                 dbBottle.WineLabel = bottle.WineLabel;
@@ -181,7 +161,8 @@ public class BottleService : IBottleService
 
                 if (bottle.Producer != null)
                 {
-                    Producer? producer = await _producerService.GetProducerAsync(bottle.Producer.Id, includeRelations: false);
+                    Producer? producer =
+                        await _producerService.GetProducerAsync(bottle.Producer.Id, includeRelations: false);
                     // If we found a producer in the database
                     if (producer != null)
                     {
@@ -192,13 +173,16 @@ public class BottleService : IBottleService
 
                 if (bottle.BottleStorageLocations != null && dbBottle.BottleStorageLocations != null)
                 {
-
-                    ICollection<BottleStorageLocation> dbBottleStorageLocations = dbBottle.BottleStorageLocations.ToList();
+                    ICollection<BottleStorageLocation> dbBottleStorageLocations =
+                        dbBottle.BottleStorageLocations.ToList();
 
                     foreach (BottleStorageLocation bottleStorageLocation in bottle.BottleStorageLocations)
                     {
                         //if the BottleStorageLocation already exists
-                        BottleStorageLocation? existingBottleStorageLocation = dbBottleStorageLocations.FirstOrDefault(bl => bl.BottleId == bottleStorageLocation.BottleId && bl.StorageLocationId == bottleStorageLocation.StorageLocationId);
+                        BottleStorageLocation? existingBottleStorageLocation =
+                            dbBottleStorageLocations.FirstOrDefault(bl =>
+                                bl.BottleId == bottleStorageLocation.BottleId &&
+                                bl.StorageLocationId == bottleStorageLocation.StorageLocationId);
 
                         if (existingBottleStorageLocation != null)
                         {
@@ -211,24 +195,25 @@ public class BottleService : IBottleService
                         {
                             if (bottleStorageLocation.StorageLocation?.Id != null)
                             {
-                                StorageLocation? location = await _storageLocationService.GetStorageLocationAsync(bottleStorageLocation.StorageLocation.Id, includeRelations: false);
+                                StorageLocation? location =
+                                    await _getStorageLocationService.GetStorageLocationAsync(
+                                        bottleStorageLocation.StorageLocation.Id, includeRelations: false);
                                 if (location != null)
                                 {
                                     bottleStorageLocation.StorageLocation = location;
                                     bottleStorageLocation.Bottle = bottle;
                                 }
                             }
+
                             // otherwise, add the new BottleStorageLocation to the current bottle
                             dbBottle.BottleStorageLocations.Add(bottleStorageLocation);
                         }
-
                     }
 
                     foreach (BottleStorageLocation bottleStorageLocationToDelete in dbBottleStorageLocations)
                     {
                         dbBottle.BottleStorageLocations.Remove(bottleStorageLocationToDelete);
                     }
-
                 }
 
                 if (bottle.BottleSuppliers != null && dbBottle.BottleSuppliers != null)
@@ -238,7 +223,8 @@ public class BottleService : IBottleService
                     foreach (BottleSupplier bottleSupplier in bottle.BottleSuppliers)
                     {
                         //if the BottleSupplier already exists
-                        BottleSupplier? existingSupplier = dbBottleSuppliers.FirstOrDefault(bs => bs.BottleId == bottleSupplier.BottleId && bs.SupplierId == bottleSupplier.SupplierId);
+                        BottleSupplier? existingSupplier = dbBottleSuppliers.FirstOrDefault(bs =>
+                            bs.BottleId == bottleSupplier.BottleId && bs.SupplierId == bottleSupplier.SupplierId);
 
                         if (existingSupplier != null)
                         {
@@ -251,17 +237,18 @@ public class BottleService : IBottleService
                         {
                             if (bottleSupplier.Supplier?.Id != null)
                             {
-                                Supplier? supplier = await _supplierService.GetSupplierAsync(bottleSupplier.Supplier.Id, includeRelations: false);
+                                Supplier? supplier = await _supplierService.GetSupplierAsync(bottleSupplier.Supplier.Id,
+                                    includeRelations: false);
                                 if (supplier != null)
                                 {
                                     bottleSupplier.Supplier = supplier;
                                     bottleSupplier.Bottle = bottle;
                                 }
                             }
+
                             // otherwise, add the new BottleStorageLocation to the current bottle
                             dbBottle.BottleSuppliers.Add(bottleSupplier);
                         }
-
                     }
 
                     foreach (BottleSupplier bottleSupplierToDelete in dbBottleSuppliers)
@@ -272,13 +259,13 @@ public class BottleService : IBottleService
 
                 if (bottle.BottleGrapes != null && dbBottle.BottleGrapes != null)
                 {
-
                     ICollection<BottleGrape>? dbBottleGrapes = dbBottle.BottleGrapes.ToList();
 
                     foreach (BottleGrape bottleGrape in bottle.BottleGrapes)
                     {
                         //if the BottleGrape already exists
-                        BottleGrape? existingBottleGrape = dbBottleGrapes.FirstOrDefault(bl => bl.BottleId == bottleGrape.BottleId && bl.GrapeId == bottleGrape.GrapeId);
+                        BottleGrape? existingBottleGrape = dbBottleGrapes.FirstOrDefault(bl =>
+                            bl.BottleId == bottleGrape.BottleId && bl.GrapeId == bottleGrape.GrapeId);
 
                         if (existingBottleGrape != null)
                         {
@@ -291,17 +278,18 @@ public class BottleService : IBottleService
                         {
                             if (bottleGrape.Grape?.Id != null)
                             {
-                                Grape? grape = await _grapeService.GetGrapeAsync(bottleGrape.Grape.Id, includeRelations: false);
+                                Grape? grape =
+                                    await _grapeService.GetGrapeAsync(bottleGrape.Grape.Id, includeRelations: false);
                                 if (grape != null)
                                 {
                                     bottleGrape.Grape = grape;
                                     bottleGrape.Bottle = bottle;
                                 }
                             }
+
                             // otherwise, add the new BottleGrape to the current bottle
                             dbBottle.BottleGrapes.Add(bottleGrape);
                         }
-
                     }
 
                     foreach (BottleGrape bottleGrapeToDelete in dbBottleGrapes)
@@ -309,7 +297,6 @@ public class BottleService : IBottleService
                         //currentBottle.BottleGrapes.Remove(bottleGrapeToDelete);
                         dbBottle.BottleGrapes.Remove(bottleGrapeToDelete);
                     }
-
                 }
 
 

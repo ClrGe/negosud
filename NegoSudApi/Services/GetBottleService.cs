@@ -27,6 +27,8 @@ public class GetBottleService : IGetBottleService
                     .Include(b => b.Producer)
                     .Include(b => b.BottleStorageLocations)
                     .ThenInclude(bl => bl.StorageLocation)
+                    .Include(b => b.BottleSuppliers)
+                    .ThenInclude(bs => bs.Supplier)
                     .Include(b => b.BottleGrapes)
                     .ThenInclude(bg => bg.Grape)
                     .FirstOrDefaultAsync(b => b.Id == id);
