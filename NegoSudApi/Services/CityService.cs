@@ -75,10 +75,44 @@ public class CityService : ICityService
     {
         try
         {
-            _context.Entry(city).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            City? dbCity = await this.GetCityAsync(city.Id);
+            if (dbCity != null)
+            {
+                dbCity.Country = city.Country;
+                dbCity.Name = city.Name;
+                dbCity.ZipCode = city.ZipCode;
 
-            return city;
+                if (city.Addresses != null && dbCity.Addresses != null)
+                {
+                    ICollection<Address> dbAddresses = dbCity.Addresses.ToList();
+
+                    foreach (Address address in city.Addresses)
+                    {
+                        Address? existingAddress = dbAddresses.FirstOrDefault(a => a.Id == address.Id);
+
+                        if (existingAddress != null)
+                        {
+                            existingAddress = address;
+                            _context.Entry(existingAddress).State = EntityState.Modified;
+                            dbAddresses.Remove(existingAddress);
+                        }
+                        else
+                        {
+                            dbCity.Addresses.Add(address);
+                        }
+                    }
+
+                    foreach (var addressToDelete in dbAddresses)
+                    {
+                        dbCity.Addresses.Remove(addressToDelete);
+                    }
+                } 
+                
+                _context.Entry(dbCity).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return dbCity;
+            }
         }
         catch (Exception ex)
         {

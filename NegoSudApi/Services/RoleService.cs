@@ -68,9 +68,39 @@ public class RoleService : IRoleService
     {
         try
         {
-            _context.Entry(role).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return role;
+            Role? dbRole = await this.GetRoleAsync(role.Id);
+            if (dbRole != null)
+            {
+                dbRole.Name = role.Name;
+
+                if (role.Permissions != null && dbRole.Permissions != null)
+                {
+                    ICollection<Permission> dbPermissions = dbRole.Permissions.ToList();
+                    foreach (var permission in role.Permissions)
+                    {
+                        Permission? existingPermission = dbPermissions.FirstOrDefault(p => p.Id == permission.Id);
+                        if (existingPermission != null)
+                        {
+                            existingPermission = permission;
+                            _context.Entry(existingPermission).State = EntityState.Modified;
+                            dbPermissions.Remove(existingPermission);
+                        }
+                        else
+                        {
+                            dbRole.Permissions.Add(permission);
+                        }
+                    }
+
+                    foreach (var permissionToDelete in dbPermissions)
+                    {
+                        dbRole.Permissions.Remove(permissionToDelete);
+                    }
+                }
+                _context.Entry(role).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return role;
+            }
+           
         }
         catch (Exception ex)
         {

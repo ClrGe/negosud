@@ -13,7 +13,7 @@ public class Bottle : IModelBase
     public decimal? AlcoholPercentage { get; set; }
     public decimal? CurrentPrice { get; set; }
     public string? WineType { get; set; }
-
+    public int? ThresholdToOrder { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public string? CreatedBy { get; set; }

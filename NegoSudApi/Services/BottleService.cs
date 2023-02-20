@@ -183,7 +183,7 @@ public class BottleService : IBottleService
                 if (bottle.BottleStorageLocations != null && dbBottle.BottleStorageLocations != null)
                 {
 
-                    ICollection<BottleStorageLocation>? dbBottleStorageLocations = dbBottle.BottleStorageLocations.ToList();
+                    ICollection<BottleStorageLocation> dbBottleStorageLocations = dbBottle.BottleStorageLocations.ToList();
 
                     foreach (BottleStorageLocation bottleStorageLocation in bottle.BottleStorageLocations)
                     {
