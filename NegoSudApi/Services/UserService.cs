@@ -83,6 +83,10 @@ public class UserService : IUserService
                 if (user.Role != null)
                 {
                     Role? dbRole = await _roleService.GetRoleAsync(user.Role.Id);
+                    if (dbRole != null)
+                    {
+                        dbUser.Role = dbRole;
+                    }
                 }
 
                 _context.Entry(user).State = EntityState.Modified;

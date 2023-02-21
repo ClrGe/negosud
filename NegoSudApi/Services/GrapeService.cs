@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.Elfie.Serialization;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
@@ -10,13 +9,13 @@ public class GrapeService : IGrapeService
 {
     private readonly NegoSudDbContext _context;
     private readonly ILogger<GrapeService> _logger;
-    private readonly IBottleService _bottleService;
+    private readonly IGetBottleService _getBottleService;
 
-    public GrapeService(NegoSudDbContext context, ILogger<GrapeService> logger, IBottleService bottleService)
+    public GrapeService(NegoSudDbContext context, ILogger<GrapeService> logger, IGetBottleService getBottleService)
     {
         _context = context;
         _logger = logger;
-        _bottleService = bottleService;
+        _getBottleService = getBottleService;
     }
 
     //</inheritdoc>
@@ -103,7 +102,7 @@ public class GrapeService : IGrapeService
                         {
                             if (bottleGrape.Bottle?.Id != null)
                             {
-                                Bottle? bottle = await _bottleService.GetBottleAsync(bottleGrape.Bottle.Id, includeRelations: false);
+                                Bottle? bottle = await _getBottleService.GetBottleAsync(bottleGrape.Bottle.Id, includeRelations: false);
                                 if (bottle != null)
                                 {
                                     bottleGrape.Grape = grape;
