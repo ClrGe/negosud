@@ -1,5 +1,4 @@
 ﻿using NegoSudApi.Models.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NegoSudApi.Models;
 

@@ -2,8 +2,6 @@
 using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
-using NuGet.Packaging;
-using NuGet.Protocol;
 
 
 namespace NegoSudApi.Services;

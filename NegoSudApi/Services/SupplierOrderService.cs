@@ -2,7 +2,6 @@
 using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
-using System.Drawing;
 
 namespace NegoSudApi.Services;
 

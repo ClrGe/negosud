@@ -1,12 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Cors;
-using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
