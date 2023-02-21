@@ -44,9 +44,9 @@ public class CityController : ControllerBase
     }
 
     [HttpPost("AddCity")]
-    public async Task<ActionResult<City>> AddCityAsync(City City)
+    public async Task<ActionResult<City>> AddCityAsync(City city)
     {
-        City? dbCity = await _cityService.AddCityAsync(City);
+        City? dbCity = await _cityService.AddCityAsync(city);
 
         if (dbCity == null)
         {
@@ -73,15 +73,15 @@ public class CityController : ControllerBase
 
         return StatusCode(StatusCodes.Status200OK, dbCity);
     }
-
+    
     [HttpPost("DeleteCity")]
-    public async Task<IActionResult> DeleteCityAsync(int id)
+    public async Task<IActionResult> DeleteCityAsync(City city)
     {
-        bool? status = await _cityService.DeleteCityAsync(id);
+        bool? status = await _cityService.DeleteCityAsync(city.Id);
 
         if (status == false)
         {
-            return StatusCode(StatusCodes.Status404NotFound, $"No city found for id: {id} - could not delete");
+            return StatusCode(StatusCodes.Status404NotFound, $"No city found for id: {city.Id} - could not delete");
         }
 
         return StatusCode(StatusCodes.Status200OK);

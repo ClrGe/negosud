@@ -10,6 +10,7 @@ public class RoleService : IRoleService
     private readonly NegoSudDbContext _context;
     private readonly ILogger<RoleService> _logger;
 
+
     public RoleService(NegoSudDbContext context, ILogger<RoleService> logger)
     {
         _context = context;
@@ -25,7 +26,8 @@ public class RoleService : IRoleService
             {
                 return await _context.Roles
                     .Include(r => r.Users)
-                    .Include(r => r.Permissions)
+                    .Include(r => r.PermissionRoles)
+                    .ThenInclude(pr => pr.Permission)
                     .ThenInclude(p => p.Access)
                     .FirstOrDefaultAsync(r => r.Id == id);
             }
@@ -82,27 +84,38 @@ public class RoleService : IRoleService
             {
                 dbRole.Name = role.Name;
 
-                if (role.Permissions != null && dbRole.Permissions != null)
+                if (role.PermissionRoles != null && dbRole.PermissionRoles != null)
                 {
-                    ICollection<Permission> dbPermissions = dbRole.Permissions.ToList();
-                    foreach (var permission in role.Permissions)
+                    ICollection<PermissionRole> dbPermissionRoles = dbRole.PermissionRoles.ToList();
+                    foreach (var permissionRole in role.PermissionRoles)
                     {
-                        Permission? existingPermission = dbPermissions.FirstOrDefault(p => p.Id == permission.Id);
-                        if (existingPermission != null)
+                        PermissionRole? existingPermissionRole = dbPermissionRoles.FirstOrDefault(p => p.PermissionId == permissionRole.PermissionId && p.RoleId == permissionRole.RoleId);
+                        if (existingPermissionRole != null)
                         {
-                            existingPermission = permission;
-                            _context.Entry(existingPermission).State = EntityState.Modified;
-                            dbPermissions.Remove(existingPermission);
+                            existingPermissionRole.Permission = permissionRole.Permission;
+                            _context.Entry(existingPermissionRole).State = EntityState.Modified;
+                            dbPermissionRoles.Remove(existingPermissionRole);
                         }
                         else
                         {
-                            dbRole.Permissions.Add(permission);
+                            if (permissionRole.Permission?.Id != null)
+                            {
+                                Permission? dbPermission =
+                                    await _context.Permissions.FindAsync(permissionRole.Permission?.Id);
+                                if (dbPermission != null)
+                                {
+                                    permissionRole.Permission = dbPermission;
+                                    permissionRole.Role = dbRole;
+                                }
+                            }
+                            
+                            dbRole.PermissionRoles.Add(permissionRole);
                         }
                     }
 
-                    foreach (var permissionToDelete in dbPermissions)
+                    foreach (var permissionRoleToDelete in dbPermissionRoles)
                     {
-                        dbRole.Permissions.Remove(permissionToDelete);
+                        dbRole.PermissionRoles.Remove(permissionRoleToDelete);
                     }
                 }
                 _context.Entry(role).State = EntityState.Modified;

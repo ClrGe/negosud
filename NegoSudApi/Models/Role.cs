@@ -10,6 +10,6 @@ public class Role : IModelBase
     public DateTime? UpdatedAt { get; set; }
     public string? CreatedBy { get; set; }
     public string? UpdatedBy { get; set; }
-    public virtual ICollection<Permission>? Permissions { get; set; }
+    public virtual ICollection<PermissionRole>? PermissionRoles { get; set; }
     public virtual ICollection<User>? Users { get; set; }
 }

@@ -12,5 +12,6 @@ namespace NegoSudApi.Models
         public int? Quantity { get; set; }
         public virtual Bottle? Bottle { get; set; }
         public virtual SupplierOrder? SupplierOrder { get; set; }
+        public virtual ICollection<SupplierOrderLineStorageLocation> SupplierOrderLineStorageLocations { get; set; }
     }
 }

@@ -218,6 +218,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(l => l.Id).UseIdentityColumn();
             entity.HasOne(l => l.CustomerOrder).WithMany(k => k.Lines);
             entity.HasOne(l => l.Bottle);
+            entity.HasMany(l => l.CustomerOrderLineStorageLocations).WithOne(sl => sl.CustomerOrderLine);
         });
 
         modelBuilder.Entity<SupplierOrder>(entity =>
@@ -244,6 +245,8 @@ public class NegoSudDbContext : DbContext
             entity.Property(l => l.Id).UseIdentityColumn();
             entity.HasOne(l => l.SupplierOrder).WithMany(k => k.Lines);
             entity.HasOne(l => l.Bottle);
+            entity.HasMany(l => l.SupplierOrderLineStorageLocations).WithOne(sl => sl.SupplierOrderLine);
+
         });
 
 
@@ -281,7 +284,6 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
-            entity.HasMany(p => p.Roles).WithMany(r => r.Permissions);
         });
         
         modelBuilder.Entity<Supplier>(entity =>
@@ -294,6 +296,54 @@ public class NegoSudDbContext : DbContext
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
             entity.HasOne(s => s.Address);
+        });
+
+        modelBuilder.Entity<PermissionRole>(entity =>
+        {
+            entity.ToTable(nameof(PermissionRole));
+            entity.HasKey(k => new {k.PermissionId, k.RoleId});
+
+            entity.HasOne(k => k.Permission)
+                .WithMany(k => k.PermissionRoles)
+                .HasForeignKey(k => k.PermissionId)
+                .HasPrincipalKey(k => k.Id);
+
+            entity.HasOne(k => k.Role)
+                .WithMany(k => k.PermissionRoles)
+                .HasForeignKey(k => k.RoleId)
+                .HasPrincipalKey(k => k.Id);
+        });
+        
+        modelBuilder.Entity<CustomerOrderLineStorageLocation>(entity =>
+        {
+            entity.ToTable(nameof(CustomerOrderLineStorageLocation));
+            entity.HasKey(k => new {k.CustomerOrderLineId, k.StorageLocationId});
+
+            entity.HasOne(k => k.StorageLocation)
+                .WithMany(k => k.CustomerOrderLineStorageLocations)
+                .HasForeignKey(k => k.StorageLocationId)
+                .HasPrincipalKey(k => k.Id);
+
+            entity.HasOne(k => k.CustomerOrderLine)
+                .WithMany(k => k.CustomerOrderLineStorageLocations)
+                .HasForeignKey(k => k.CustomerOrderLineId)
+                .HasPrincipalKey(k => k.Id);
+        });
+        
+        modelBuilder.Entity<SupplierOrderLineStorageLocation>(entity =>
+        {
+            entity.ToTable(nameof(CustomerOrderLineStorageLocation));
+            entity.HasKey(k => new {k.SupplierOrderLineId, k.StorageLocationId});
+
+            entity.HasOne(k => k.StorageLocation)
+                .WithMany(k => k.SupplierOrderLineStorageLocations)
+                .HasForeignKey(k => k.StorageLocationId)
+                .HasPrincipalKey(k => k.Id);
+
+            entity.HasOne(k => k.SupplierOrderLine)
+                .WithMany(k => k.SupplierOrderLineStorageLocations)
+                .HasForeignKey(k => k.SupplierOrderLineId)
+                .HasPrincipalKey(k => k.Id);
         });
     }
 }

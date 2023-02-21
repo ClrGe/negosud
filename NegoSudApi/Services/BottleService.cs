@@ -223,15 +223,15 @@ public class BottleService : IBottleService
                     foreach (BottleSupplier bottleSupplier in bottle.BottleSuppliers)
                     {
                         //if the BottleSupplier already exists
-                        BottleSupplier? existingSupplier = dbBottleSuppliers.FirstOrDefault(bs =>
+                        BottleSupplier? existingBottleSupplier = dbBottleSuppliers.FirstOrDefault(bs =>
                             bs.BottleId == bottleSupplier.BottleId && bs.SupplierId == bottleSupplier.SupplierId);
 
-                        if (existingSupplier != null)
+                        if (existingBottleSupplier != null)
                         {
                             //update the existing BottleStorageLocation
-                            existingSupplier.Supplier = bottleSupplier.Supplier;
-                            _context.Entry(existingSupplier).State = EntityState.Modified;
-                            dbBottleSuppliers.Remove(existingSupplier);
+                            existingBottleSupplier.Supplier = bottleSupplier.Supplier;
+                            _context.Entry(existingBottleSupplier).State = EntityState.Modified;
+                            dbBottleSuppliers.Remove(existingBottleSupplier);
                         }
                         else
                         {
@@ -259,7 +259,7 @@ public class BottleService : IBottleService
 
                 if (bottle.BottleGrapes != null && dbBottle.BottleGrapes != null)
                 {
-                    ICollection<BottleGrape>? dbBottleGrapes = dbBottle.BottleGrapes.ToList();
+                    ICollection<BottleGrape> dbBottleGrapes = dbBottle.BottleGrapes.ToList();
 
                     foreach (BottleGrape bottleGrape in bottle.BottleGrapes)
                     {
