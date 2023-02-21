@@ -1,8 +1,6 @@
 using System.Net;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using NegoSudApi.DTO;
 using NegoSudApi.Models;
 using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
@@ -28,17 +26,17 @@ public class AuthenticationController : ControllerBase
     
     [HttpPost]
     [Route("Login")]
-    public Task<ActionResult<AuthResponse>> Login(Register register)
+    public Task<ActionResult<User>> Login(User model)
     {
-        User? dbUser = _jwtAuthenticationService.Authenticate(register.Email, register.Password);
+        User? dbUser = _jwtAuthenticationService.Authenticate(model.Email, model.Password);
         if (dbUser != null)
         {
             List<Claim> claims = new List<Claim>
             {
-                new(ClaimTypes.Email, register.Email)
+                new(ClaimTypes.Email, model.Email)
             };
             string? token = _jwtAuthenticationService.GenerateToken(_configuration["Jwt:Key"]!, claims);
-            AuthResponse response = new AuthResponse()
+            User user = new User()
             {
                 Id = dbUser.Id,
                 FirstName = dbUser.FirstName,
@@ -57,21 +55,21 @@ public class AuthenticationController : ControllerBase
                 SameSite = SameSiteMode.Lax,
             }
             );
-           return Task.FromResult<ActionResult<AuthResponse>>(Ok(response));
+           return Task.FromResult<ActionResult<User>>(Ok(user));
         }
-        return Task.FromResult<ActionResult<AuthResponse>>(Unauthorized());
+        return Task.FromResult<ActionResult<User>>(Unauthorized());
     }
 
     [HttpPost]
     [Route("Register")]
-    public async Task<ActionResult<AuthResponse>> Register(Register register)
+    public async Task<ActionResult<User>> Register(User model)
     {
         var userToAdd = new User
         {
-            Email = register.Email,
-            Password = register.Password,
-            FirstName = register.FirstName,
-            LastName = register.LastName,
+            Email = model.Email,
+            Password = model.Password,
+            FirstName = model.FirstName,
+            LastName = model.LastName,
         };
         
         userToAdd.Password = _securePassword.Hash(userToAdd);
@@ -86,7 +84,7 @@ public class AuthenticationController : ControllerBase
 
         string? token = _jwtAuthenticationService.GenerateToken(_configuration["Jwt:Key"]!, claims);
 
-        AuthResponse response = new AuthResponse()
+        User response = new User()
         {
             Id = dbUser.Id,
             FirstName = dbUser.FirstName,
