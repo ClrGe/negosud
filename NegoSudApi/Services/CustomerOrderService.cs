@@ -2,6 +2,7 @@
 using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
+using NuGet.Packaging;
 
 
 namespace NegoSudApi.Services;
@@ -93,8 +94,8 @@ public class CustomerOrderService : ICustomerOrderService
                     if (dbBottle != null)
                     {
                        orderLine.Bottle = dbBottle;
-                       // var toto = GetAvailableLocationsAndQuantities(dbBottle, orderLine);
-                       // orderLine.CustomerOrderLineStorageLocations.AddRange(orderLine, toto.Result.Keys);
+                       var availableLocationsAndQuantities = GetAvailableLocationsAndQuantities(dbBottle, orderLine);
+                       orderLine.CustomerOrderLineStorageLocations.AddRange(availableLocationsAndQuantities.Result?.Keys);
                     }
                     
                 }
@@ -123,14 +124,14 @@ public class CustomerOrderService : ICustomerOrderService
     /// <param name="orderLine">The line from the order for this bottle</param>
     /// <returns>A Collection of location</returns>
     /// <exception cref="ApplicationException"></exception>
-    private async Task<Dictionary<StorageLocation, int>?> GetAvailableLocationsAndQuantities(Bottle bottle, CustomerOrderLine orderLine)
+    private async Task<Dictionary<CustomerOrderLineStorageLocation, int>?> GetAvailableLocationsAndQuantities(Bottle bottle, CustomerOrderLine orderLine)
     {
         var availableLocations = bottle.BottleStorageLocations!
             .Where(bsl => bsl.BottleId == orderLine.Bottle.Id && bsl.Quantity > 0)
             .OrderByDescending(bsl => bsl.Quantity)
             .ToList();
 
-        var quantityByLocation = new Dictionary<StorageLocation, int>();
+        var quantityByLocation = new Dictionary<CustomerOrderLineStorageLocation, int>();
 
         if (availableLocations.Count == 0)
         {
@@ -142,7 +143,12 @@ public class CustomerOrderService : ICustomerOrderService
         foreach (var location in availableLocations)
         {
             var quantityToAdd = Math.Min((int) (orderLine.Quantity - totalQuantity), (int) location.Quantity);
-            quantityByLocation.Add(location.StorageLocation, quantityToAdd);
+            CustomerOrderLineStorageLocation customerOrderLineStorageLocation = new CustomerOrderLineStorageLocation
+            {
+                StorageLocation = location.StorageLocation,
+                CustomerOrderLine = orderLine
+            };
+            quantityByLocation.Add(customerOrderLineStorageLocation, quantityToAdd);
             totalQuantity += quantityToAdd;
             if (totalQuantity >= orderLine.Quantity)
             {
