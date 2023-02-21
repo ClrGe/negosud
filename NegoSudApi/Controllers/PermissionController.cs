@@ -37,8 +37,7 @@ public class PermissionController : ControllerBase
 
         if (dbPermissions == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, "No Permissions" +
-                " in database");
+            return StatusCode(StatusCodes.Status204NoContent, "No Permissions in database");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbPermissions);
@@ -69,7 +68,7 @@ public class PermissionController : ControllerBase
 
         if (dbPermission == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {permission.Id} - could not update.");
+            return StatusCode(StatusCodes.Status204NoContent, $"No Permission found for id: {permission.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbPermission);

@@ -32,7 +32,7 @@ public class RoleController :ControllerBase
     {
         IEnumerable<Role>? dbCountries = await _roleService.GetRolesAsync();
 
-        if (dbCountries == null) return StatusCode(StatusCodes.Status204NoContent, "No countries in database");
+        if (dbCountries == null) return StatusCode(StatusCodes.Status204NoContent, "No roles in database");
 
         return StatusCode(StatusCodes.Status200OK, dbCountries);
     }
@@ -42,7 +42,7 @@ public class RoleController :ControllerBase
     {
         Role? dbRole = await _roleService.AddRoleAsync(role);
 
-        if (dbRole == null) return StatusCode(StatusCodes.Status204NoContent, $"No match - could not add content.");
+        if (dbRole == null) return StatusCode(StatusCodes.Status204NoContent, $"{role.Name} could not be added.");
 
         return StatusCode(StatusCodes.Status201Created, dbRole);
     }
@@ -54,7 +54,7 @@ public class RoleController :ControllerBase
         Role? dbRole = await _roleService.UpdateRoleAsync(role);
 
         if (dbRole == null)
-            return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {role.Id} - could not update.");
+            return StatusCode(StatusCodes.Status204NoContent, $"No Role found for id: {role.Id} - could not update.");
 
         return StatusCode(StatusCodes.Status200OK, dbRole);
     }
