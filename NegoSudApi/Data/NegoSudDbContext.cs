@@ -21,6 +21,7 @@ public class NegoSudDbContext : DbContext
     public virtual DbSet<Address> Addresses { get; set; }
     public virtual DbSet<Role> Roles { get; set; }
     public virtual DbSet<Permission> Permissions { get; set; }
+    public virtual DbSet<PermissionRole> PermissionRoles { get; set; }
     public virtual DbSet<Supplier> Suppliers { get; set; }
 
     public virtual DbSet<CustomerOrder> CustomerOrders { get; set; }
@@ -268,8 +269,28 @@ public class NegoSudDbContext : DbContext
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
             entity.HasMany(a => a.Users).WithOne(r => r.Role);
         });
-        
-       
+
+        modelBuilder.Entity<PermissionRole>(entity =>
+        {
+            entity.ToTable(nameof(PermissionRole));
+            entity.Property(p => p.CreatedBy).HasMaxLength(200);
+            entity.Property(p => p.UpdatedBy).HasMaxLength(200);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.HasKey(k => new { k.RoleId, k.PermissionId });
+
+            entity.HasOne(k => k.Role)
+                .WithMany(k => k.PermissionRoles)
+                .HasForeignKey(k => k.RoleId)
+                .HasPrincipalKey(k => k.Id);
+
+            entity.HasOne(k => k.Permission)
+                .WithMany(k => k.PermissionRoles)
+                .HasForeignKey(k => k.PermissionId)
+                .HasPrincipalKey(k => k.Id);
+        });
+
+
         modelBuilder.Entity<Permission>(entity =>
         {
             entity.ToTable(nameof(Permission));
@@ -279,9 +300,8 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
-            entity.HasMany(p => p.Roles).WithMany(r => r.Permissions);
         });
-        
+
         modelBuilder.Entity<Supplier>(entity =>
         {
             entity.ToTable(nameof(Supplier));

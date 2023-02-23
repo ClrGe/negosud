@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -38,6 +39,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbGrapes.ToList());
         }
 
+        [Authorize(Policy = RolePermissions.CanAddGrape)]
         [HttpPost("AddGrape")]
         public async Task<IActionResult> AddGrapeAsync(Grape grape)
         {
@@ -49,6 +51,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbGrape);
         }
 
+        [Authorize(Policy = RolePermissions.CanEditGrape)]
         [HttpPost("UpdateGrape")]
         public async Task<IActionResult> UpdateGrapeAsync(Grape grape)
         {
@@ -65,6 +68,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbGrape);
         }
 
+        [Authorize(Policy = RolePermissions.CanDeleteGrape)]
         [HttpPost("DeleteGrape")]
         public async Task<IActionResult> DeleteGrapeAsync(int id)
         {

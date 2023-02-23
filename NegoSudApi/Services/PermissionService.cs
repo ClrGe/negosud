@@ -31,6 +31,21 @@ public class PermissionService : IPermissionService
         return null;
     }
 
+    // </inheritdoc
+    public async Task<Permission?> GetPermissionAsync(string name)
+    {
+        try
+        {
+            return await _context.Permissions.FirstOrDefaultAsync(p => p.Name == name);
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
+        }
+
+        return null;
+    }
+
     // </inheritdoc>
     public async Task<IEnumerable<Permission>?> GetPermissionsAsync()
     {

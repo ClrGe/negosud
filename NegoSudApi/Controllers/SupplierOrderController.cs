@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -17,6 +18,7 @@ namespace NegoSudApi.Controllers
             _supplierOrderService = supplierOrderService;
         }
 
+        [Authorize(Policy = RolePermissions.CanGetSupplierOrder)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSupplierOrderAsync(int id)
         {
@@ -30,6 +32,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
         }
 
+        [Authorize(Policy = RolePermissions.CanGetSupplierOrder)]
         [HttpGet]
         public async Task<IActionResult> GetSupplierOrdersAsync()
         {
@@ -43,6 +46,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbSupplierOrders);
         }
 
+        [Authorize(Policy = RolePermissions.CanAddSupplierOrder)]
         [HttpPost("AddSupplierOrder")]
         public async Task<ActionResult<SupplierOrder>> AddSupplierOrder(SupplierOrder supplierOrder)
         {
@@ -56,6 +60,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbSupplierOrder);
         }
 
+        [Authorize(Policy = RolePermissions.CanEditSupplierOrder)]
         [HttpPost("UpdateSupplierOrder")]
         public async Task<IActionResult> UpdateSupplierOrderAsync(SupplierOrder supplierOrder)
         {
@@ -74,6 +79,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
         }
 
+        [Authorize(Policy = RolePermissions.CanDeleteSupplierOrder)]
         [HttpPost("DeleteSupplierOrder")]
         public async Task<IActionResult> DeleteSupplierOrderAsync(int id)
         {

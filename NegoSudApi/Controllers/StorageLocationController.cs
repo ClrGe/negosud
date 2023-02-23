@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -17,6 +18,7 @@ public class StorageLocationController : ControllerBase
         _storageLocationService = storageLocationService;
     }
 
+    [Authorize(Policy = RolePermissions.CanGetStorageLocation)]
     [HttpGet("{id}")]
     public async Task<ActionResult<StorageLocation>> GetStorageLocationAsync(int id)
     {
@@ -29,6 +31,7 @@ public class StorageLocationController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbStorageLocation);
     }
 
+    [Authorize(Policy = RolePermissions.CanGetStorageLocation)]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<StorageLocation>>> GetStorageLocationsAsync()
     {
@@ -41,6 +44,7 @@ public class StorageLocationController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbStorageLocations.ToList());
     }
 
+    [Authorize(Policy = RolePermissions.CanAddStorageLocation)]
     [HttpPost("AddStorageLocation")]
     public async Task<ActionResult<StorageLocation>> AddStorageLocationAsync(StorageLocation storageLocation)
     {
@@ -53,6 +57,7 @@ public class StorageLocationController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbStorageLocation);
     }
 
+    [Authorize(Policy = RolePermissions.CanEditStorageLocation)]
     [HttpPost("UpdateStorageLocation")]
     public async Task<IActionResult> UpdateStorageLocationAsync(StorageLocation storageLocation)
     {
@@ -70,6 +75,7 @@ public class StorageLocationController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbStorageLocation);
     }
 
+    [Authorize(Policy = RolePermissions.CanDeleteStorageLocation)]
     [HttpPost("DeleteStorageLocation")]
     public async Task<IActionResult> DeleteStorageLocationAsync(int id)
     {

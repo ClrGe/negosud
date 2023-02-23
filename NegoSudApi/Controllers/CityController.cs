@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -43,6 +44,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCities);
         }
 
+        [Authorize(Policy = RolePermissions.CanAddCity)]
         [HttpPost("AddCity")]
         public async Task<ActionResult<City>> AddCityAsync(City City)
         {
@@ -56,6 +58,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbCity);
         }
 
+        [Authorize(Policy = RolePermissions.CanEditCity)]
         [HttpPost("UpdateCity")]
         public async Task<IActionResult> UpdateCityAsync(City city)
         {
@@ -74,6 +77,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCity);
         }
 
+        [Authorize(Policy = RolePermissions.CanDeleteCity)]
         [HttpPost("DeleteCity")]
         public async Task<IActionResult> DeleteCityAsync(int id)
         {

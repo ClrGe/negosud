@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -57,6 +58,7 @@ public class RegionController : ControllerBase
     /// </summary>
     /// <param name="region"></param>
     /// <returns></returns>
+    [Authorize(Policy = RolePermissions.CanAddRegion)]
     [HttpPost("AddRegion")]
     public async Task<ActionResult<Region>> AddRegionAsync(Region region)
     {
@@ -76,6 +78,7 @@ public class RegionController : ControllerBase
     /// <param name="id"></param>
     /// <param name="region"></param>
     /// <returns></returns>
+    [Authorize(Policy = RolePermissions.CanEditRegion)]
     [HttpPost("UpdateRegion")]
     public async Task<IActionResult> UpdateRegionAsync(Region region)
     {
@@ -93,12 +96,13 @@ public class RegionController : ControllerBase
 
         return StatusCode(StatusCodes.Status200OK, dbRegion);
     }
-    
+
     /// <summary>
     /// Delete individual region matching query 
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
+    [Authorize(Policy = RolePermissions.CanDeleteRegion)]
     [HttpPost("DeleteRegion")]
     public async Task<IActionResult> DeleteRegionAsync(int id)
     {

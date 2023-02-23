@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -43,6 +44,7 @@ public class WineLabelController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbWineLabels);
     }
 
+    [Authorize(Policy = RolePermissions.CanAddWineLabel)]
     [HttpPost("WineLabel")]
     public async Task<ActionResult<WineLabel>> AddWineLabelAsync(WineLabel wineLabel)
     {
@@ -56,6 +58,7 @@ public class WineLabelController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbWineLabel);
     }
 
+    [Authorize(Policy = RolePermissions.CanEditWineLabel)]
     [HttpPost("UpdateWineLabel")]
     public async Task<IActionResult> UpdateWineLabelAsync(WineLabel wineLabel)
     {
@@ -74,6 +77,7 @@ public class WineLabelController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbWineLabel);
     }
 
+    [Authorize(Policy = RolePermissions.CanDeleteWineLabel)]
     [HttpPost("DeleteWineLabel")]
     public async Task<IActionResult> DeleteWineLabelAsync(int id)
     {

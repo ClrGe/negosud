@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -43,6 +44,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCountries);
         }
 
+        [Authorize(Policy = RolePermissions.CanAddCountry)]
         [HttpPost("AddCountry")]
         public async Task<ActionResult<Country>> AddCountryAsync(Country country)
         {
@@ -56,6 +58,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbCountry);
         }
 
+        [Authorize(Policy = RolePermissions.CanEditCountry)]
         [HttpPost("UpdateCountry")]
         public async Task<IActionResult> UpdateCountryAsync(Country country)
         {
@@ -74,6 +77,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCountry);
         }
 
+        [Authorize(Policy = RolePermissions.CanDeleteCountry)]
         [HttpPost("DeleteCountry")]
         public async Task<IActionResult> DeleteCountryAsync(int id)
         {

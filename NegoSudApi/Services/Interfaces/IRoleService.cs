@@ -8,8 +8,17 @@ public interface IRoleService
     /// Get a Role entity from the database by its id, including or not subobjects and collections
     /// </summary>
     /// <param name="id">The Role's id</param>
+    /// <param name="includeRelations">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
     /// <returns>An Role with the desired id, or null if it doesn't exist</returns>
-    Task<Role?> GetRoleAsync(int id);
+    Task<Role?> GetRoleAsync(int id, bool includeRelations = true);
+
+    /// <summary>
+    /// Get a Role entity from the database by its name, including or not subobjects and collections
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="includeRelations">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
+    /// <returns>An Role with the desired name, or null if it doesn't exist</returns>
+    Task<Role?> GetRoleAsync(string name, bool includeRelations = true);
 
     /// <summary>
     /// Get an IEnumerable of Roles from the database

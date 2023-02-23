@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using HeimGuard;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -12,10 +14,12 @@ namespace NegoSudApi.Controllers
     public class BottleController : ControllerBase
     {
         private readonly IBottleService _bottleService;
+        private readonly IHeimGuardClient _heimGuard;
 
-        public BottleController(IBottleService bottleService)
+        public BottleController(IBottleService bottleService, IHeimGuardClient heimGuardClient)
         {
             _bottleService = bottleService;
+            _heimGuard = heimGuardClient;
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBottleAsync(int id)
@@ -45,6 +49,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbBottles);
         }
 
+        [Authorize(Policy = RolePermissions.CanAddBottle)]
         [HttpPost("AddBottle")]
         public async Task<ActionResult<Bottle>> AddBottle(Bottle bottle)
         {
@@ -58,6 +63,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbBottle);
         }
 
+        [Authorize(Policy = RolePermissions.CanEditBottle)]
         [HttpPost("UpdateBottle")]
         public async Task<IActionResult> UpdateBottleAsync(Bottle bottle)
         {
@@ -76,6 +82,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbBottle);
         }
 
+        [Authorize(Policy = RolePermissions.CanDeleteBottle)]
         [HttpPost("DeleteBottle")]
         public async Task<IActionResult> DeleteBottleAsync(int id)
         {

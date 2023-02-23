@@ -26,15 +26,23 @@ public class AuthenticationController : ControllerBase
     
     [HttpPost]
     [Route("Login")]
-    public Task<ActionResult<User>> Login(User model)
+    public async Task<ActionResult<User>> Login(User model)
     {
         User? dbUser = _jwtAuthenticationService.Authenticate(model.Email, model.Password);
         if (dbUser != null)
         {
             List<Claim> claims = new List<Claim>
             {
-                new(ClaimTypes.Email, model.Email)
+                new(ClaimTypes.Email, model.Email),                
             };
+
+            Role? userRole = (await _userService.GetUserAsync(dbUser.Id, includeRelations: true)).Role;
+
+            if(userRole != null)
+            {
+                claims.Add(new(ClaimTypes.Role, userRole?.Name));
+            }
+
             string? token = _jwtAuthenticationService.GenerateToken(_configuration["Jwt:Key"]!, claims);
             User user = new User()
             {
@@ -55,9 +63,9 @@ public class AuthenticationController : ControllerBase
                 SameSite = SameSiteMode.Lax,
             }
             );
-           return Task.FromResult<ActionResult<User>>(Ok(user));
+            return StatusCode(StatusCodes.Status200OK, user);
         }
-        return Task.FromResult<ActionResult<User>>(Unauthorized());
+        return StatusCode(StatusCodes.Status401Unauthorized);
     }
 
     [HttpPost]

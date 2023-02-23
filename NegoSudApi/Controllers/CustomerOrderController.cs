@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -17,6 +18,7 @@ namespace NegoSudApi.Controllers
             _customerOrderService = customerOrderService;
         }
 
+        [Authorize(Policy = RolePermissions.CanGetCustomerOrder)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCustomerOrderAsync(int id)
         {
@@ -30,6 +32,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
         }
 
+        [Authorize(Policy = RolePermissions.CanGetCustomerOrder)]
         [HttpGet]
         public async Task<IActionResult> GetCustomerOrdersAsync()
         {
@@ -43,6 +46,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCustomerOrders);
         }
 
+        [Authorize(Policy = RolePermissions.CanAddCustomerOrder)]
         [HttpPost("AddCustomerOrder")]
         public async Task<ActionResult<CustomerOrder>> AddCustomerOrder(CustomerOrder customerOrder)
         {
@@ -56,6 +60,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status201Created, dbCustomerOrder);
         }
 
+        [Authorize(Policy = RolePermissions.CanEditCustomerOrder)]
         [HttpPost("UpdateCustomerOrder")]
         public async Task<IActionResult> UpdateCustomerOrderAsync(CustomerOrder customerOrder)
         {
@@ -74,6 +79,7 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
         }
 
+        [Authorize(Policy = RolePermissions.CanDeleteCustomerOrder)]
         [HttpPost("DeleteCustomerOrder")]
         public async Task<IActionResult> DeleteCustomerOrderAsync(int id)
         {
