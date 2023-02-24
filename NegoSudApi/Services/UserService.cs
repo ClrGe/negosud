@@ -9,11 +9,13 @@ public class UserService : IUserService
 {
     private readonly NegoSudDbContext _context;
     private readonly ILogger<UserService> _logger;
+    private readonly IRoleService _roleService;
 
-    public UserService(NegoSudDbContext context, ILogger<UserService> logger)
+    public UserService(NegoSudDbContext context, ILogger<UserService> logger, IRoleService roleService)
     {
         _context = context;
         _logger = logger;
+        _roleService = roleService;
     }
 
     // </inheritdoc>
@@ -68,9 +70,29 @@ public class UserService : IUserService
     {
         try
         {
-            _context.Entry(user).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return user;
+            User? dbUser = await this.GetUserAsync(user.Id);
+            if (dbUser != null)
+            {
+                dbUser.Email = user.Email;
+                dbUser.Password = user.Password;
+                dbUser.FirstName = user.FirstName;
+                dbUser.LastName = user.LastName;
+                dbUser.RefreshToken = user.RefreshToken;
+                dbUser.RefreshTokenExpiryTime = user.RefreshTokenExpiryTime;
+
+                if (user.Role != null)
+                {
+                    Role? dbRole = await _roleService.GetRoleAsync(user.Role.Id);
+                    if (dbRole != null)
+                    {
+                        dbUser.Role = dbRole;
+                    }
+                }
+
+                _context.Entry(user).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return user;
+            }
         }
         catch (Exception ex)
         {

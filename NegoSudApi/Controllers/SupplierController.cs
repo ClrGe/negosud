@@ -5,8 +5,6 @@ using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers;
 
-
-
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
@@ -32,7 +30,7 @@ public class SupplierController : ControllerBase
 
         if (dbSupplier == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No supplier found for id: {id}");
+            return StatusCode(StatusCodes.Status404NotFound, $"No suppplier found for id: {id}");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbSupplier);
@@ -49,7 +47,7 @@ public class SupplierController : ControllerBase
 
         if (dbSuppliers == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, "No suppliers in database");
+            return StatusCode(StatusCodes.Status404NotFound, $"No supplier found in database");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbSuppliers);
@@ -68,7 +66,7 @@ public class SupplierController : ControllerBase
 
         if (dbSupplier == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"{supplier.Name} could not be added.");
+            return StatusCode(StatusCodes.Status404NotFound, $"{supplier.Name} could not be added.");
         }
 
         return StatusCode(StatusCodes.Status201Created, dbSupplier);
@@ -93,7 +91,7 @@ public class SupplierController : ControllerBase
 
         if (dbSupplier == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No Supplier found for id: {supplier.Id} - could not update.");
+            return StatusCode(StatusCodes.Status404NotFound, $"No supplier found for id: {supplier.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbSupplier);
@@ -112,7 +110,7 @@ public class SupplierController : ControllerBase
 
         if (dbSupplier == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No Supplier found for id: {id} - could not be deleted");
+            return StatusCode(StatusCodes.Status404NotFound, $"No supplier found for id: {id} - could not be deleted");
         }
 
         await _supplierService.DeleteSupplierAsync(id);

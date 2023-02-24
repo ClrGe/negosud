@@ -1,92 +1,90 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Controllers
+namespace NegoSudApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class BottleController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class BottleController : ControllerBase
+    private readonly IBottleService _bottleService;
+
+    public BottleController(IBottleService bottleService)
     {
-        private readonly IBottleService _bottleService;
+        _bottleService = bottleService;
+    }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetBottleAsync(int id)
+    {
+        Bottle? dbBottle = await _bottleService.GetBottleAsync(id);
 
-        public BottleController(IBottleService bottleService)
+        if (dbBottle == null)
         {
-            _bottleService = bottleService;
+            return StatusCode(StatusCodes.Status404NotFound, $"No Bottle found for id: {id}");
         }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetBottleAsync(int id)
-        {
-            Bottle? dbBottle = await _bottleService.GetBottleAsync(id);
+        Response.Headers.Add( "Access-Control-Allow-Origin", "*");
 
-            if (dbBottle == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Bottle found for id: {id}");
-            }
-            Response.Headers.Add( "Access-Control-Allow-Origin", "*");
-
-            return StatusCode(StatusCodes.Status200OK, dbBottle);
-        }
+        return StatusCode(StatusCodes.Status200OK, dbBottle);
+    }
         
-        [HttpGet]
-        public async Task<IActionResult> GetBottlesAsync()
+    [HttpGet]
+    public async Task<IActionResult> GetBottlesAsync()
+    {
+        var dbBottles = await _bottleService.GetBottlesAsync();
+
+        if (dbBottles == null)
         {
-            var dbBottles = await _bottleService.GetBottlesAsync();
+            return StatusCode(StatusCodes.Status404NotFound, "No bottles in database");
+        }
+        Response.Headers.Add( "Access-Control-Allow-Origin", "*");
 
-            if (dbBottles == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, "No bottles in database");
-            }
-            Response.Headers.Add( "Access-Control-Allow-Origin", "*");
+        return StatusCode(StatusCodes.Status200OK, dbBottles);
+    }
 
-            return StatusCode(StatusCodes.Status200OK, dbBottles);
+    [HttpPost("AddBottle")]
+    public async Task<ActionResult<Bottle>> AddBottle(Bottle bottle)
+    {
+        Bottle? dbBottle = await _bottleService.AddBottleAsync(bottle);
+
+        if (dbBottle == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"{bottle.FullName} could not be added.");
         }
 
-        [HttpPost("AddBottle")]
-        public async Task<ActionResult<Bottle>> AddBottle(Bottle bottle)
+        return StatusCode(StatusCodes.Status201Created, dbBottle);
+    }
+
+    [HttpPost("UpdateBottle")]
+    public async Task<IActionResult> UpdateBottleAsync(Bottle bottle)
+    {
+        if (bottle == null)
         {
-            Bottle? dbBottle = await _bottleService.AddBottleAsync(bottle);
-
-            if (dbBottle == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"{bottle.FullName} could not be added.");
-            }
-
-            return StatusCode(StatusCodes.Status201Created, dbBottle);
+            return BadRequest();
         }
 
-        [HttpPost("UpdateBottle")]
-        public async Task<IActionResult> UpdateBottleAsync(Bottle bottle)
+        Bottle? dbBottle = await _bottleService.UpdateBottleAsync(bottle);
+
+        if (dbBottle == null)
         {
-            if (bottle == null)
-            {
-                return BadRequest();
-            }
-
-            Bottle? dbBottle = await _bottleService.UpdateBottleAsync(bottle);
-
-            if (dbBottle == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Bottle found for id: {bottle.Id} - could not update.");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbBottle);
+            return StatusCode(StatusCodes.Status404NotFound, $"No bottle found for id: {bottle.Id} - could not update.");
         }
 
-        [HttpPost("DeleteBottle")]
-        public async Task<IActionResult> DeleteBottleAsync(int id)
+        return StatusCode(StatusCodes.Status200OK, dbBottle);
+    }
+
+    [HttpPost("DeleteBottle")]
+    public async Task<IActionResult> DeleteBottleAsync(int id)
+    {
+        bool? status = await _bottleService.DeleteBottleAsync(id);
+
+        if (status == false)
         {
-            bool? status = await _bottleService.DeleteBottleAsync(id);
-
-            if (status == false)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Bottle found for id: {id} - could not be deleted");
-            }
-
-            return StatusCode(StatusCodes.Status200OK);
+            return StatusCode(StatusCodes.Status404NotFound, $"No bottle found for id: {id} - could not be deleted");
         }
+
+        return StatusCode(StatusCodes.Status200OK);
     }
 }

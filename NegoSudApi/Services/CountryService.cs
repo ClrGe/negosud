@@ -75,10 +75,69 @@ public class CountryService : ICountryService
     {
         try
         {
-            _context.Entry(country).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            Country? dbCountry = await this.GetCountryAsync(country.Id);
 
-            return country;
+            if (dbCountry != null)
+            {
+                dbCountry.Name = country.Name;
+
+                if (country.Cities != null && dbCountry.Cities != null)
+                {
+                    ICollection<City> dbCities = dbCountry.Cities.ToList();
+
+                    foreach (City city in country.Cities)
+                    {
+                        City? existingCity = dbCities.FirstOrDefault(c => c.Id == city.Id);
+
+                        if (existingCity != null)
+                        {
+                            existingCity = city;
+                            _context.Entry(existingCity).State = EntityState.Modified;
+                            dbCities.Remove(existingCity);
+                        }
+                        else
+                        {
+                            dbCountry.Cities.Add(city);
+                        }
+                    }
+                    
+                    foreach (var cityToDelete in dbCities)
+                    {
+                        dbCountry.Cities.Remove(cityToDelete);
+                    }
+                }
+
+                if (country.Regions != null && dbCountry.Regions != null)
+                {
+                    ICollection<Region> dbRegions = dbCountry.Regions.ToList();
+
+                    foreach (Region region in country.Regions)
+                    {
+                        Region? existingRegion = dbRegions.FirstOrDefault(r => r.Id == region.Id);
+
+                        if (existingRegion != null)
+                        {
+                            existingRegion = region;
+                            _context.Entry(existingRegion).State = EntityState.Modified;
+                            dbRegions.Remove(existingRegion);
+                        }
+                        else
+                        {
+                            dbCountry.Regions.Add(region);
+                        }
+                    }
+
+                    foreach (var regionToDelete in dbRegions)
+                    {
+                        dbCountry.Regions.Remove(regionToDelete);
+                    }
+                }
+
+                _context.Entry(country).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return country;
+            }
         }
         catch (Exception ex)
         {

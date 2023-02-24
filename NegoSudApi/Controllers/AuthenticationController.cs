@@ -25,14 +25,14 @@ public class AuthenticationController : ControllerBase
     
     [HttpPost]
     [Route("Login")]
-    public Task<ActionResult<string>> Login(Register register)
+    public Task<ActionResult<string>> Login(User user)
     {
-        var dbUser = _jwtAuthenticationService.Authenticate(register.Email, register.Password);
+        var dbUser = _jwtAuthenticationService.Authenticate(user.Email, user.Password);
         if (dbUser != null)
         {
             var claims = new List<Claim>
             {
-                new(ClaimTypes.Email, register.Email)
+                new(ClaimTypes.Email, user.Email)
             };
             var token = _jwtAuthenticationService.GenerateToken(_configuration["Jwt:Key"]!, claims);
             return Task.FromResult<ActionResult<string>>(Ok(token));
@@ -42,18 +42,18 @@ public class AuthenticationController : ControllerBase
     
     [HttpPost]
     [Route("Register")]
-    public async Task<ActionResult<string>> Register(Register register)
+    public async Task<ActionResult<string>> Register(User user)
     {
         var userToAdd = new User
         {
-            Email = register.Email,
-            Password = register.Email
+            Email = user.Email,
+            Password = user.Password
         };
         
         userToAdd.Password = _securePassword.Hash(userToAdd);
         User? dbUser = await _userService.AddUserAsync(userToAdd);
 
-        if (dbUser == null) return StatusCode(StatusCodes.Status204NoContent, $"No match - could not add content.");
+        if (dbUser == null) return StatusCode(StatusCodes.Status404NotFound, $"No match - could not add content.");
 
         return StatusCode(StatusCodes.Status201Created, dbUser.Email);
     }

@@ -51,7 +51,7 @@ public class JwtAuthenticationService : IJwtAuthenticationService
             if (_securePassword.VerifyHash(dbUser, password))
                 return dbUser;
 
-        return dbUser;
+        return null;
     }
 
     public string GenerateRefreshToken()

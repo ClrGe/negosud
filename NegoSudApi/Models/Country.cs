@@ -11,6 +11,6 @@ public class Country : IModelBase
     public DateTime? UpdatedAt { get; set; }
     public string? CreatedBy { get; set; }
     public string? UpdatedBy { get; set; }
-    
+    public ICollection<City>? Cities { get; set; }
     public virtual ICollection<Region>? Regions { get; set; }
 }
