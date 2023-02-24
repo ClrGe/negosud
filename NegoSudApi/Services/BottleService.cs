@@ -15,6 +15,7 @@ public class BottleService : IBottleService
     private readonly IGetStorageLocationService _getStorageLocationService;
     private readonly IWineLabelService _wineLabelService;
     private readonly ISupplierService _supplierService;
+    private readonly IVatService _vatService;
 
     public BottleService(NegoSudDbContext context,
         ILogger<BottleService> logger,
@@ -23,7 +24,7 @@ public class BottleService : IBottleService
         IWineLabelService wineLabelService,
         ISupplierService supplierService, 
         IGetBottleService getBottleService,
-        IGetStorageLocationService getStorageLocationService)
+        IGetStorageLocationService getStorageLocationService, IVatService vatService)
     {
         _context = context;
         _logger = logger;
@@ -31,6 +32,7 @@ public class BottleService : IBottleService
         _grapeService = grapeService;
         _getBottleService = getBottleService;
         _getStorageLocationService = getStorageLocationService;
+        _vatService = vatService;
         _wineLabelService = wineLabelService;
         _supplierService = supplierService;
     }
@@ -113,6 +115,16 @@ public class BottleService : IBottleService
                 {
                     bottle.Producer = producer;
                 }
+            } 
+            
+            if (bottle.Vat?.Id != null)
+            {
+                VAT? dbVat =
+                    await _vatService.GetVatAsync(bottle.Vat.Id);
+                if (dbVat != null)
+                {
+                    bottle.Vat = dbVat;
+                }
             }
 
             Bottle newBottle = (await _context.Bottles.AddAsync(bottle)).Entity;
@@ -157,7 +169,7 @@ public class BottleService : IBottleService
                 dbBottle.YearProduced = bottle.YearProduced;
                 dbBottle.AlcoholPercentage = bottle.AlcoholPercentage;
                 dbBottle.SupplierPrice = bottle.SupplierPrice;
-                dbBottle.CustomerPrice = dbBottle.CustomerPrice;
+                dbBottle.CustomerPrice = bottle.CustomerPrice;
 
 
                 if (bottle.Producer != null)
@@ -171,7 +183,12 @@ public class BottleService : IBottleService
                     }
                 }
 
+                if (bottle.Vat != null)
+                {
+                    dbBottle.Vat = await _vatService.GetVatAsync(bottle.Vat.Id) ?? dbBottle.Vat;
 
+                }
+                
                 if (bottle.BottleStorageLocations != null && dbBottle.BottleStorageLocations != null)
                 {
                     ICollection<BottleStorageLocation> dbBottleStorageLocations =

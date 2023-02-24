@@ -31,6 +31,7 @@ public class GetBottleService : IGetBottleService
                     .ThenInclude(bs => bs.Supplier)
                     .Include(b => b.BottleGrapes)
                     .ThenInclude(bg => bg.Grape)
+                    .Include(b =>b.Vat)
                     .FirstOrDefaultAsync(b => b.Id == id);
             }
             return await _context.Bottles.FindAsync(id);

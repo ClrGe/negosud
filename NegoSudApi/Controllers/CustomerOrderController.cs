@@ -12,10 +12,12 @@ namespace NegoSudApi.Controllers;
 public class CustomerOrderController : ControllerBase
 {
     private readonly ICustomerOrderService _customerOrderService;
+    private readonly IVatService _vatService;
 
-    public CustomerOrderController(ICustomerOrderService customerOrderService)
+    public CustomerOrderController(ICustomerOrderService customerOrderService, IVatService vatService)
     {
         _customerOrderService = customerOrderService;
+        _vatService = vatService;
     }
 
     [HttpGet("{id}")]
@@ -60,7 +62,7 @@ public class CustomerOrderController : ControllerBase
         };
         
         // Create a pfd invoice for the customer
-        var pdfBytes = new GeneratePdf(customerOrder.Reference!, customerDetails, (dbCustomerOrder.Lines as List<CustomerOrderLine>)!).Save();
+        var pdfBytes = new GeneratePdf(customerOrder.Reference!, customerDetails, (dbCustomerOrder.Lines as List<CustomerOrderLine>)!, _vatService).Save();
         var stream = new MemoryStream(pdfBytes);
         Response.Headers.Add("Content-Disposition", $"inline; filename=invoice_{customerOrder.Reference!}.pdf");
         Response.ContentType = "application/pdf";

@@ -55,6 +55,7 @@ public class Startup
         services.AddScoped<IPermissionService, PermissionService>();
         services.AddScoped<ICustomerOrderService, CustomerOrderService>();
         services.AddScoped<ISupplierOrderService, SupplierOrderService>();
+        services.AddScoped<IVatService, VatService>();
         services.AddScoped<SecurePassword>();
         services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
 
