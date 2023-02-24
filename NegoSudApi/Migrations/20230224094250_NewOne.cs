@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NegoSudApi.Migrations
 {
     /// <inheritdoc />
-    public partial class newtest : Migration
+    public partial class NewOne : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -524,8 +524,7 @@ namespace NegoSudApi.Migrations
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     quantity = table.Column<int>(type: "integer", nullable: true),
                     bottleid = table.Column<int>(name: "bottle_id", type: "integer", nullable: true),
-                    supplierorderid = table.Column<int>(name: "supplier_order_id", type: "integer", nullable: true),
-                    storagelocationid = table.Column<int>(name: "storage_location_id", type: "integer", nullable: true)
+                    supplierorderid = table.Column<int>(name: "supplier_order_id", type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -536,11 +535,6 @@ namespace NegoSudApi.Migrations
                         principalTable: "Bottle",
                         principalColumn: "id");
                     table.ForeignKey(
-                        name: "fk_supplier_order_line_storage_location_storage_location_id",
-                        column: x => x.storagelocationid,
-                        principalTable: "StorageLocation",
-                        principalColumn: "id");
-                    table.ForeignKey(
                         name: "fk_supplier_order_line_supplier_order_supplier_order_id",
                         column: x => x.supplierorderid,
                         principalTable: "SupplierOrder",
@@ -548,25 +542,49 @@ namespace NegoSudApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "customer_order_line_storage_location",
+                name: "CustomerOrderLineStorageLocation",
                 columns: table => new
                 {
-                    customerorderlinesid = table.Column<int>(name: "customer_order_lines_id", type: "integer", nullable: false),
-                    storagelocationsid = table.Column<int>(name: "storage_locations_id", type: "integer", nullable: false)
+                    customerorderlineid = table.Column<int>(name: "customer_order_line_id", type: "integer", nullable: false),
+                    storagelocationid = table.Column<int>(name: "storage_location_id", type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_customer_order_line_storage_location", x => new { x.customerorderlinesid, x.storagelocationsid });
+                    table.PrimaryKey("pk_customer_order_line_storage_location", x => new { x.customerorderlineid, x.storagelocationid });
                     table.ForeignKey(
-                        name: "fk_customer_order_line_storage_location_customer_order_line_cu",
-                        column: x => x.customerorderlinesid,
+                        name: "fk_customer_order_line_storage_location_customer_order_line_customer",
+                        column: x => x.customerorderlineid,
                         principalTable: "CustomerOrderLine",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_customer_order_line_storage_location_storage_locations_stor",
-                        column: x => x.storagelocationsid,
+                        name: "fk_customer_order_line_storage_location_storage_location_storage_lo",
+                        column: x => x.storagelocationid,
                         principalTable: "StorageLocation",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SupplierOrderLineStorageLocation",
+                columns: table => new
+                {
+                    supplierorderlineid = table.Column<int>(name: "supplier_order_line_id", type: "integer", nullable: false),
+                    storagelocationid = table.Column<int>(name: "storage_location_id", type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_supplier_order_line_storage_location", x => new { x.supplierorderlineid, x.storagelocationid });
+                    table.ForeignKey(
+                        name: "fk_supplier_order_line_storage_location_storage_location_storage_lo",
+                        column: x => x.storagelocationid,
+                        principalTable: "StorageLocation",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_supplier_order_line_storage_location_supplier_order_line_supplier",
+                        column: x => x.supplierorderlineid,
+                        principalTable: "SupplierOrderLine",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -617,11 +635,6 @@ namespace NegoSudApi.Migrations
                 column: "country_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_customer_order_line_storage_location_storage_locations_id",
-                table: "customer_order_line_storage_location",
-                column: "storage_locations_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_customer_order_customer_id",
                 table: "CustomerOrder",
                 column: "customer_id");
@@ -640,6 +653,11 @@ namespace NegoSudApi.Migrations
                 name: "ix_customer_order_line_customer_order_id",
                 table: "CustomerOrderLine",
                 column: "customer_order_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_customer_order_line_storage_location_storage_location_id",
+                table: "CustomerOrderLineStorageLocation",
+                column: "storage_location_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_permission_role_role_id",
@@ -672,14 +690,14 @@ namespace NegoSudApi.Migrations
                 column: "bottle_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_supplier_order_line_storage_location_id",
-                table: "SupplierOrderLine",
-                column: "storage_location_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_supplier_order_line_supplier_order_id",
                 table: "SupplierOrderLine",
                 column: "supplier_order_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_supplier_order_line_storage_location_storage_location_id",
+                table: "SupplierOrderLineStorageLocation",
+                column: "storage_location_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_user_role_id",
@@ -700,13 +718,13 @@ namespace NegoSudApi.Migrations
                 name: "BottleSupplier");
 
             migrationBuilder.DropTable(
-                name: "customer_order_line_storage_location");
+                name: "CustomerOrderLineStorageLocation");
 
             migrationBuilder.DropTable(
                 name: "PermissionRole");
 
             migrationBuilder.DropTable(
-                name: "SupplierOrderLine");
+                name: "SupplierOrderLineStorageLocation");
 
             migrationBuilder.DropTable(
                 name: "Grape");
@@ -721,16 +739,16 @@ namespace NegoSudApi.Migrations
                 name: "StorageLocation");
 
             migrationBuilder.DropTable(
-                name: "SupplierOrder");
-
-            migrationBuilder.DropTable(
-                name: "Bottle");
+                name: "SupplierOrderLine");
 
             migrationBuilder.DropTable(
                 name: "CustomerOrder");
 
             migrationBuilder.DropTable(
-                name: "Supplier");
+                name: "Bottle");
+
+            migrationBuilder.DropTable(
+                name: "SupplierOrder");
 
             migrationBuilder.DropTable(
                 name: "Producer");
@@ -739,10 +757,13 @@ namespace NegoSudApi.Migrations
                 name: "WineLabel");
 
             migrationBuilder.DropTable(
-                name: "Address");
+                name: "Supplier");
 
             migrationBuilder.DropTable(
                 name: "Region");
+
+            migrationBuilder.DropTable(
+                name: "Address");
 
             migrationBuilder.DropTable(
                 name: "City");

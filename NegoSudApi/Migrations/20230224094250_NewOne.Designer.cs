@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NegoSudApi.Migrations
 {
     [DbContext(typeof(NegoSudDbContext))]
-    [Migration("20230221213829_newtest")]
-    partial class newtest
+    [Migration("20230224094250_NewOne")]
+    partial class NewOne
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,25 +24,6 @@ namespace NegoSudApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("CustomerOrderLineStorageLocation", b =>
-                {
-                    b.Property<int>("CustomerOrderLinesId")
-                        .HasColumnType("integer")
-                        .HasColumnName("customer_order_lines_id");
-
-                    b.Property<int>("StorageLocationsId")
-                        .HasColumnType("integer")
-                        .HasColumnName("storage_locations_id");
-
-                    b.HasKey("CustomerOrderLinesId", "StorageLocationsId")
-                        .HasName("pk_customer_order_line_storage_location");
-
-                    b.HasIndex("StorageLocationsId")
-                        .HasDatabaseName("ix_customer_order_line_storage_location_storage_locations_id");
-
-                    b.ToTable("customer_order_line_storage_location", (string)null);
-                });
 
             modelBuilder.Entity("NegoSudApi.Models.Address", b =>
                 {
@@ -555,6 +536,25 @@ namespace NegoSudApi.Migrations
                     b.ToTable("CustomerOrderLine", (string)null);
                 });
 
+            modelBuilder.Entity("NegoSudApi.Models.CustomerOrderLineStorageLocation", b =>
+                {
+                    b.Property<int>("CustomerOrderLineId")
+                        .HasColumnType("integer")
+                        .HasColumnName("customer_order_line_id");
+
+                    b.Property<int>("StorageLocationId")
+                        .HasColumnType("integer")
+                        .HasColumnName("storage_location_id");
+
+                    b.HasKey("CustomerOrderLineId", "StorageLocationId")
+                        .HasName("pk_customer_order_line_storage_location");
+
+                    b.HasIndex("StorageLocationId")
+                        .HasDatabaseName("ix_customer_order_line_storage_location_storage_location_id");
+
+                    b.ToTable("CustomerOrderLineStorageLocation", (string)null);
+                });
+
             modelBuilder.Entity("NegoSudApi.Models.Grape", b =>
                 {
                     b.Property<int>("Id")
@@ -999,10 +999,6 @@ namespace NegoSudApi.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("quantity");
 
-                    b.Property<int?>("StorageLocationId")
-                        .HasColumnType("integer")
-                        .HasColumnName("storage_location_id");
-
                     b.Property<int?>("SupplierOrderId")
                         .HasColumnType("integer")
                         .HasColumnName("supplier_order_id");
@@ -1024,13 +1020,29 @@ namespace NegoSudApi.Migrations
                     b.HasIndex("BottleId")
                         .HasDatabaseName("ix_supplier_order_line_bottle_id");
 
-                    b.HasIndex("StorageLocationId")
-                        .HasDatabaseName("ix_supplier_order_line_storage_location_id");
-
                     b.HasIndex("SupplierOrderId")
                         .HasDatabaseName("ix_supplier_order_line_supplier_order_id");
 
                     b.ToTable("SupplierOrderLine", (string)null);
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.SupplierOrderLineStorageLocation", b =>
+                {
+                    b.Property<int>("SupplierOrderLineId")
+                        .HasColumnType("integer")
+                        .HasColumnName("supplier_order_line_id");
+
+                    b.Property<int>("StorageLocationId")
+                        .HasColumnType("integer")
+                        .HasColumnName("storage_location_id");
+
+                    b.HasKey("SupplierOrderLineId", "StorageLocationId")
+                        .HasName("pk_supplier_order_line_storage_location");
+
+                    b.HasIndex("StorageLocationId")
+                        .HasDatabaseName("ix_supplier_order_line_storage_location_storage_location_id");
+
+                    b.ToTable("SupplierOrderLineStorageLocation", (string)null);
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.User", b =>
@@ -1142,23 +1154,6 @@ namespace NegoSudApi.Migrations
                         .HasName("pk_wine_label");
 
                     b.ToTable("WineLabel", (string)null);
-                });
-
-            modelBuilder.Entity("CustomerOrderLineStorageLocation", b =>
-                {
-                    b.HasOne("NegoSudApi.Models.CustomerOrderLine", null)
-                        .WithMany()
-                        .HasForeignKey("CustomerOrderLinesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_customer_order_line_storage_location_customer_order_line_cu");
-
-                    b.HasOne("NegoSudApi.Models.StorageLocation", null)
-                        .WithMany()
-                        .HasForeignKey("StorageLocationsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_customer_order_line_storage_location_storage_locations_stor");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.Address", b =>
@@ -1302,6 +1297,27 @@ namespace NegoSudApi.Migrations
                     b.Navigation("CustomerOrder");
                 });
 
+            modelBuilder.Entity("NegoSudApi.Models.CustomerOrderLineStorageLocation", b =>
+                {
+                    b.HasOne("NegoSudApi.Models.CustomerOrderLine", "CustomerOrderLine")
+                        .WithMany("CustomerOrderLineStorageLocations")
+                        .HasForeignKey("CustomerOrderLineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_customer_order_line_storage_location_customer_order_line_customer");
+
+                    b.HasOne("NegoSudApi.Models.StorageLocation", "StorageLocation")
+                        .WithMany("CustomerOrderLineStorageLocations")
+                        .HasForeignKey("StorageLocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_customer_order_line_storage_location_storage_location_storage_lo");
+
+                    b.Navigation("CustomerOrderLine");
+
+                    b.Navigation("StorageLocation");
+                });
+
             modelBuilder.Entity("NegoSudApi.Models.PermissionRole", b =>
                 {
                     b.HasOne("NegoSudApi.Models.Permission", "Permission")
@@ -1379,11 +1395,6 @@ namespace NegoSudApi.Migrations
                         .HasForeignKey("BottleId")
                         .HasConstraintName("fk_supplier_order_line_bottle_bottle_id");
 
-                    b.HasOne("NegoSudApi.Models.StorageLocation", null)
-                        .WithMany("SupplierOrderLines")
-                        .HasForeignKey("StorageLocationId")
-                        .HasConstraintName("fk_supplier_order_line_storage_location_storage_location_id");
-
                     b.HasOne("NegoSudApi.Models.SupplierOrder", "SupplierOrder")
                         .WithMany("Lines")
                         .HasForeignKey("SupplierOrderId")
@@ -1392,6 +1403,27 @@ namespace NegoSudApi.Migrations
                     b.Navigation("Bottle");
 
                     b.Navigation("SupplierOrder");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.SupplierOrderLineStorageLocation", b =>
+                {
+                    b.HasOne("NegoSudApi.Models.StorageLocation", "StorageLocation")
+                        .WithMany("SupplierOrderLineStorageLocations")
+                        .HasForeignKey("StorageLocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_supplier_order_line_storage_location_storage_location_storage_lo");
+
+                    b.HasOne("NegoSudApi.Models.SupplierOrderLine", "SupplierOrderLine")
+                        .WithMany("SupplierOrderLineStorageLocations")
+                        .HasForeignKey("SupplierOrderLineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_supplier_order_line_storage_location_supplier_order_line_supplier");
+
+                    b.Navigation("StorageLocation");
+
+                    b.Navigation("SupplierOrderLine");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.User", b =>
@@ -1435,6 +1467,11 @@ namespace NegoSudApi.Migrations
                     b.Navigation("Lines");
                 });
 
+            modelBuilder.Entity("NegoSudApi.Models.CustomerOrderLine", b =>
+                {
+                    b.Navigation("CustomerOrderLineStorageLocations");
+                });
+
             modelBuilder.Entity("NegoSudApi.Models.Grape", b =>
                 {
                     b.Navigation("BottleGrapes");
@@ -1466,7 +1503,9 @@ namespace NegoSudApi.Migrations
                 {
                     b.Navigation("BottleStorageLocations");
 
-                    b.Navigation("SupplierOrderLines");
+                    b.Navigation("CustomerOrderLineStorageLocations");
+
+                    b.Navigation("SupplierOrderLineStorageLocations");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.Supplier", b =>
@@ -1477,6 +1516,11 @@ namespace NegoSudApi.Migrations
             modelBuilder.Entity("NegoSudApi.Models.SupplierOrder", b =>
                 {
                     b.Navigation("Lines");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.SupplierOrderLine", b =>
+                {
+                    b.Navigation("SupplierOrderLineStorageLocations");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.User", b =>

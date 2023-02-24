@@ -59,13 +59,12 @@ public class CustomerOrderController : ControllerBase
             customerOrder.DeliveryAddress.Label!, customerOrder.DeliveryAddress.FirstLine!, customerOrder.DeliveryAddress.City!.Name!, customerOrder.DeliveryAddress.City.ZipCode.ToString()!
         };
         
-        var pdfBytes = new GeneratePdf(customerOrder.Reference!, customerDetails, (customerOrder.Lines as List<CustomerOrderLine>)!).Save();
+        // Create a pfd invoice for the customer
+        var pdfBytes = new GeneratePdf(customerOrder.Reference!, customerDetails, (dbCustomerOrder.Lines as List<CustomerOrderLine>)!).Save();
         var stream = new MemoryStream(pdfBytes);
         Response.Headers.Add("Content-Disposition", $"inline; filename=invoice_{customerOrder.Reference!}.pdf");
         Response.ContentType = "application/pdf";
-        
         Response.ContentLength = stream.Length;
-
         await stream.CopyToAsync(Response.Body);
 
         return StatusCode(StatusCodes.Status201Created, dbCustomerOrder);

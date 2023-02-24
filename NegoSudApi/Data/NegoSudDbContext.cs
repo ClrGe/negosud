@@ -332,7 +332,7 @@ public class NegoSudDbContext : DbContext
         
         modelBuilder.Entity<SupplierOrderLineStorageLocation>(entity =>
         {
-            entity.ToTable(nameof(CustomerOrderLineStorageLocation));
+            entity.ToTable(nameof(SupplierOrderLineStorageLocation));
             entity.HasKey(k => new {k.SupplierOrderLineId, k.StorageLocationId});
 
             entity.HasOne(k => k.StorageLocation)

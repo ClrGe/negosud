@@ -101,10 +101,10 @@ public class CustomerOrderService : ICustomerOrderService
                 }
                 await _context.AddRangeAsync(customerOrder.Lines);
             }
-
-           
+            
             CustomerOrder newCustomerOrder = (await _context.CustomerOrders.AddAsync(customerOrder)).Entity;
 
+            
             await _context.SaveChangesAsync();
 
             return newCustomerOrder;
