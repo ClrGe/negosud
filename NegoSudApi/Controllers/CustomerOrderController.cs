@@ -56,7 +56,7 @@ public class CustomerOrderController : ControllerBase
         
         var customerDetails = new List<String>
         {
-            customerOrder.DeliveryAddress.Label!, customerOrder.DeliveryAddress.FirstLine!, customerOrder.DeliveryAddress.City!.Name!, customerOrder.DeliveryAddress.City.ZipCode.ToString()!
+            customerOrder.Customer.FirstName, customerOrder.Customer.LastName, customerOrder.DeliveryAddress.Label!, customerOrder.DeliveryAddress.FirstLine!, customerOrder.DeliveryAddress.City!.Name!, customerOrder.DeliveryAddress.City.ZipCode.ToString()!
         };
         
         // Create a pfd invoice for the customer

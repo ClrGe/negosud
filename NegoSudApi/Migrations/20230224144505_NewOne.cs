@@ -99,6 +99,19 @@ namespace NegoSudApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "VAT",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    value = table.Column<decimal>(type: "numeric", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_vat", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "WineLabel",
                 columns: table => new
                 {
@@ -344,13 +357,15 @@ namespace NegoSudApi.Migrations
                     picture = table.Column<string>(type: "text", nullable: true),
                     yearproduced = table.Column<int>(name: "year_produced", type: "integer", nullable: true),
                     alcoholpercentage = table.Column<decimal>(name: "alcohol_percentage", type: "numeric", nullable: true),
-                    currentprice = table.Column<decimal>(name: "current_price", type: "numeric", nullable: true),
+                    supplierprice = table.Column<decimal>(name: "supplier_price", type: "numeric", nullable: true),
+                    customerprice = table.Column<decimal>(name: "customer_price", type: "numeric", nullable: true),
                     winetype = table.Column<string>(name: "wine_type", type: "text", nullable: true),
                     thresholdtoorder = table.Column<int>(name: "threshold_to_order", type: "integer", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
+                    vatid = table.Column<int>(name: "vat_id", type: "integer", nullable: true),
                     producerid = table.Column<int>(name: "producer_id", type: "integer", nullable: true),
                     winelabelid = table.Column<int>(name: "wine_label_id", type: "integer", nullable: true)
                 },
@@ -361,6 +376,11 @@ namespace NegoSudApi.Migrations
                         name: "fk_bottle_producers_producer_id",
                         column: x => x.producerid,
                         principalTable: "Producer",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "fk_bottle_vat_vat_id",
+                        column: x => x.vatid,
+                        principalTable: "VAT",
                         principalColumn: "id");
                     table.ForeignKey(
                         name: "fk_bottle_wine_labels_wine_label_id",
@@ -489,12 +509,12 @@ namespace NegoSudApi.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    quantity = table.Column<int>(type: "integer", nullable: true),
+                    bottleid = table.Column<int>(name: "bottle_id", type: "integer", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
-                    quantity = table.Column<int>(type: "integer", nullable: true),
-                    bottleid = table.Column<int>(name: "bottle_id", type: "integer", nullable: true),
                     customerorderid = table.Column<int>(name: "customer_order_id", type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -518,12 +538,12 @@ namespace NegoSudApi.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    quantity = table.Column<int>(type: "integer", nullable: true),
+                    bottleid = table.Column<int>(name: "bottle_id", type: "integer", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
-                    quantity = table.Column<int>(type: "integer", nullable: true),
-                    bottleid = table.Column<int>(name: "bottle_id", type: "integer", nullable: true),
                     supplierorderid = table.Column<int>(name: "supplier_order_id", type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -603,6 +623,11 @@ namespace NegoSudApi.Migrations
                 name: "ix_bottle_producer_id",
                 table: "Bottle",
                 column: "producer_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_bottle_vat_id",
+                table: "Bottle",
+                column: "vat_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_bottle_wine_label_id",
@@ -752,6 +777,9 @@ namespace NegoSudApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Producer");
+
+            migrationBuilder.DropTable(
+                name: "VAT");
 
             migrationBuilder.DropTable(
                 name: "WineLabel");

@@ -189,66 +189,75 @@ public class GeneratePdf : IDisposable
 
     private void GridSection()
     {
-        // Initializes a new instance of the Table
-        var table = new Table
-        {
-            ColumnWidths = "26 257 78 78 78",
-            Border = new BorderInfo(BorderSide.Box, 1f, _textColor),
-            DefaultCellBorder = new BorderInfo(BorderSide.Box, 0.5f, _textColor),
-            DefaultCellPadding = new MarginInfo(4.5, 4.5, 4.5, 4.5),
-            Margin =
-            {
-                Bottom = 10
-            },
-            DefaultCellTextState =
-            {
-                Font = _timeNewRomanFont
-            }
-        };
-
-        var headerRow = table.Rows.Add();
-        var cell = headerRow.Cells.Add("#");
-        cell.Alignment = HorizontalAlignment.Center;
-        headerRow.Cells.Add("Produits");
-        headerRow.Cells.Add("Prix");
-        headerRow.Cells.Add("Quantité");
-        headerRow.Cells.Add("Total");
-        foreach (Cell headerRowCell in headerRow.Cells)
-        {
-            headerRowCell.BackgroundColor = _backColor;
-            headerRowCell.DefaultCellTextState.ForegroundColor = Color.White;
-        }
-
-        var lineTotal = new List<decimal>();
         foreach (var orderLine in _orderLines)
         {
-            var row = table.Rows.Add();
-            cell = row.Cells.Add(orderLine.Id.ToString());
-            cell.Alignment = HorizontalAlignment.Center;
-            row.Cells.Add(orderLine.Bottle.FullName);
-            cell = row.Cells.Add(((decimal) orderLine.Bottle.CurrentPrice).ToString("C2", _cultureInfo));
-            cell.Alignment = HorizontalAlignment.Right;
-            cell = row.Cells.Add(orderLine.Quantity.ToString());
-            cell.Alignment = HorizontalAlignment.Right;
-            cell = row.Cells.Add(((decimal)(orderLine.Bottle.CurrentPrice * orderLine.Quantity)).ToString("C2", _cultureInfo));
-            lineTotal.Add((decimal) (orderLine.Bottle.CurrentPrice * orderLine.Quantity));
-            cell.Alignment = HorizontalAlignment.Right;
-        }
+            decimal vatRAte = 0;
+            if (orderLine.Bottle.Vat.Value != vatRAte)
+            {
+                vatRAte = (decimal) orderLine.Bottle.Vat.Value;
 
-        var subTotal = lineTotal.Sum();
-        _totalsRow.Add(new TotalRow("Sous total", subTotal));
-        _totalsRow.Add(new TotalRow("TVA à 20%", subTotal*0.2M));
-        _totalsRow.Add(new TotalRow("Total", subTotal*1.2M));
-        foreach (var totalRow in _totalsRow)
-        {
-            var row = table.Rows.Add();
-            var nameCell = row.Cells.Add(totalRow.Text);
-            nameCell.ColSpan = 4;
-            var textCell = row.Cells.Add(totalRow.Value.ToString("C2", _cultureInfo));
-            textCell.Alignment = HorizontalAlignment.Right;
-        }
+                // Initializes a new instance of the Table
+                var table = new Table
+                {
+                    ColumnWidths = "26 257 78 78 78",
+                    Border = new BorderInfo(BorderSide.Box, 1f, _textColor),
+                    DefaultCellBorder = new BorderInfo(BorderSide.Box, 0.5f, _textColor),
+                    DefaultCellPadding = new MarginInfo(4.5, 4.5, 4.5, 4.5),
+                    Margin =
+                    {
+                        Bottom = 10
+                    },
+                    DefaultCellTextState =
+                    {
+                        Font = _timeNewRomanFont
+                    }
+                };
 
-        _pdfPage.Paragraphs.Add(table);
+                var headerRow = table.Rows.Add();
+                var cell = headerRow.Cells.Add("#");
+                cell.Alignment = HorizontalAlignment.Center;
+                headerRow.Cells.Add("Produits");
+                headerRow.Cells.Add("Prix");
+                headerRow.Cells.Add("Quantité");
+                headerRow.Cells.Add("Total");
+                foreach (Cell headerRowCell in headerRow.Cells)
+                {
+                    headerRowCell.BackgroundColor = _backColor;
+                    headerRowCell.DefaultCellTextState.ForegroundColor = Color.White;
+                }
+
+                var lineTotal = new List<decimal>();
+
+                var row = table.Rows.Add();
+                cell = row.Cells.Add(orderLine.Id.ToString());
+                cell.Alignment = HorizontalAlignment.Center;
+                row.Cells.Add(orderLine.Bottle.FullName);
+                cell = row.Cells.Add(((decimal) orderLine.Bottle.CustomerPrice).ToString("C2", _cultureInfo));
+                cell.Alignment = HorizontalAlignment.Right;
+                cell = row.Cells.Add(orderLine.Quantity.ToString());
+                cell.Alignment = HorizontalAlignment.Right;
+                cell = row.Cells.Add(
+                    ((decimal) (orderLine.Bottle.CustomerPrice * orderLine.Quantity)).ToString("C2", _cultureInfo));
+                lineTotal.Add((decimal) (orderLine.Bottle.CustomerPrice * orderLine.Quantity));
+                cell.Alignment = HorizontalAlignment.Right;
+
+
+                var subTotal = lineTotal.Sum();
+                _totalsRow.Add(new TotalRow("Sous total", subTotal));
+                _totalsRow.Add(new TotalRow($"TVA à {vatRAte:P0}", subTotal * vatRAte));
+                _totalsRow.Add(new TotalRow("Total", subTotal * (1 + vatRAte)));
+                foreach (var totalRow in _totalsRow)
+                {
+                    row = table.Rows.Add();
+                    var nameCell = row.Cells.Add(totalRow.Text);
+                    nameCell.ColSpan = 4;
+                    var textCell = row.Cells.Add(totalRow.Value.ToString("C2", _cultureInfo));
+                    textCell.Alignment = HorizontalAlignment.Right;
+                }
+
+                _pdfPage.Paragraphs.Add(table);
+            }
+        }
     }
 
     private void TermsSection()

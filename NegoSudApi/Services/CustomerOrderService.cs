@@ -35,6 +35,8 @@ public class CustomerOrderService : ICustomerOrderService
                     .Include(cO => cO.Customer)
                     .Include(cO => cO.Lines)
                     .ThenInclude(l => l.Bottle)
+                    .Include(co => co.Lines)
+                    .ThenInclude(cl => cl.CustomerOrderLineStorageLocations)
                     .FirstOrDefaultAsync(cO => cO.Id == id);
             }
             return await _context.CustomerOrders.FindAsync(id);

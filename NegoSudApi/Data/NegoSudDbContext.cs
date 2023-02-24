@@ -22,9 +22,10 @@ public class NegoSudDbContext : DbContext
     public virtual DbSet<Role> Roles { get; set; }
     public virtual DbSet<Permission> Permissions { get; set; }
     public virtual DbSet<Supplier> Suppliers { get; set; }
-
     public virtual DbSet<CustomerOrder> CustomerOrders { get; set; }
     public virtual DbSet<SupplierOrder> SupplierOrders { get; set; }
+    public virtual DbSet<VAT> Vat { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Bottle>(entity =>
@@ -344,6 +345,14 @@ public class NegoSudDbContext : DbContext
                 .WithMany(k => k.SupplierOrderLineStorageLocations)
                 .HasForeignKey(k => k.SupplierOrderLineId)
                 .HasPrincipalKey(k => k.Id);
+        });
+        
+        modelBuilder.Entity<VAT>(entity =>
+        {
+            entity.ToTable(nameof(VAT));
+            entity.HasKey(k => k.Id);
+            entity.Property(i => i.Id).UseIdentityColumn();
+            entity.HasMany(s => s.Bottles).WithOne(b => b.Vat);
         });
     }
 }

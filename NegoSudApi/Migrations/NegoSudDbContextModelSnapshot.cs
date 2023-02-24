@@ -107,9 +107,9 @@ namespace NegoSudApi.Migrations
                         .HasColumnType("character varying(200)")
                         .HasColumnName("created_by");
 
-                    b.Property<decimal?>("CurrentPrice")
+                    b.Property<decimal?>("CustomerPrice")
                         .HasColumnType("numeric")
-                        .HasColumnName("current_price");
+                        .HasColumnName("customer_price");
 
                     b.Property<string>("Description")
                         .HasColumnType("text")
@@ -127,6 +127,10 @@ namespace NegoSudApi.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("producer_id");
 
+                    b.Property<decimal?>("SupplierPrice")
+                        .HasColumnType("numeric")
+                        .HasColumnName("supplier_price");
+
                     b.Property<int?>("ThresholdToOrder")
                         .HasColumnType("integer")
                         .HasColumnName("threshold_to_order");
@@ -141,6 +145,10 @@ namespace NegoSudApi.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
                         .HasColumnName("updated_by");
+
+                    b.Property<int?>("VatId")
+                        .HasColumnType("integer")
+                        .HasColumnName("vat_id");
 
                     b.Property<decimal?>("Volume")
                         .HasColumnType("numeric")
@@ -163,6 +171,9 @@ namespace NegoSudApi.Migrations
 
                     b.HasIndex("ProducerId")
                         .HasDatabaseName("ix_bottle_producer_id");
+
+                    b.HasIndex("VatId")
+                        .HasDatabaseName("ix_bottle_vat_id");
 
                     b.HasIndex("WineLabelId")
                         .HasDatabaseName("ix_bottle_wine_label_id");
@@ -1111,6 +1122,25 @@ namespace NegoSudApi.Migrations
                     b.ToTable("User", (string)null);
                 });
 
+            modelBuilder.Entity("NegoSudApi.Models.VAT", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal?>("Value")
+                        .HasColumnType("numeric")
+                        .HasColumnName("value");
+
+                    b.HasKey("Id")
+                        .HasName("pk_vat");
+
+                    b.ToTable("VAT", (string)null);
+                });
+
             modelBuilder.Entity("NegoSudApi.Models.WineLabel", b =>
                 {
                     b.Property<int>("Id")
@@ -1177,12 +1207,19 @@ namespace NegoSudApi.Migrations
                         .HasForeignKey("ProducerId")
                         .HasConstraintName("fk_bottle_producers_producer_id");
 
+                    b.HasOne("NegoSudApi.Models.VAT", "Vat")
+                        .WithMany("Bottles")
+                        .HasForeignKey("VatId")
+                        .HasConstraintName("fk_bottle_vat_vat_id");
+
                     b.HasOne("NegoSudApi.Models.WineLabel", "WineLabel")
                         .WithMany("Bottles")
                         .HasForeignKey("WineLabelId")
                         .HasConstraintName("fk_bottle_wine_labels_wine_label_id");
 
                     b.Navigation("Producer");
+
+                    b.Navigation("Vat");
 
                     b.Navigation("WineLabel");
                 });
@@ -1523,6 +1560,11 @@ namespace NegoSudApi.Migrations
             modelBuilder.Entity("NegoSudApi.Models.User", b =>
                 {
                     b.Navigation("Addresses");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.VAT", b =>
+                {
+                    b.Navigation("Bottles");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.WineLabel", b =>

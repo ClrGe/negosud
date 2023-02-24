@@ -156,7 +156,8 @@ public class BottleService : IBottleService
                 dbBottle.Picture = bottle.Picture;
                 dbBottle.YearProduced = bottle.YearProduced;
                 dbBottle.AlcoholPercentage = bottle.AlcoholPercentage;
-                dbBottle.CurrentPrice = bottle.CurrentPrice;
+                dbBottle.SupplierPrice = bottle.SupplierPrice;
+                dbBottle.CustomerPrice = dbBottle.CustomerPrice;
 
 
                 if (bottle.Producer != null)
