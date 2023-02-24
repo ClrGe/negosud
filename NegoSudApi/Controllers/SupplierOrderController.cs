@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Net;
+using System.Net.Mail;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
+using NegoSudApi.Models.Interfaces;
+using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers;
@@ -11,10 +15,17 @@ namespace NegoSudApi.Controllers;
 public class SupplierOrderController : ControllerBase
 {
     private readonly ISupplierOrderService _supplierOrderService;
+    private readonly IVatService _vatService;
+    private readonly ILogger<SupplierOrderController> _logger;
+    private readonly IConfiguration _configuration;
 
-    public SupplierOrderController(ISupplierOrderService supplierOrderService)
+
+    public SupplierOrderController(ISupplierOrderService supplierOrderService, IVatService vatService, ILogger<SupplierOrderController> logger, IConfiguration configuration)
     {
         _supplierOrderService = supplierOrderService;
+        _vatService = vatService;
+        _logger = logger;
+        _configuration = configuration;
     }
 
     [HttpGet("{id}")]
@@ -53,7 +64,13 @@ public class SupplierOrderController : ControllerBase
             return StatusCode(StatusCodes.Status404NotFound, $"{supplierOrder.Reference} could not be added.");
         }
 
-        return StatusCode(StatusCodes.Status201Created, dbSupplierOrder);
+        List<IOrderLine> customerOrderLines = new List<IOrderLine>((dbSupplierOrder.Lines as List<SupplierOrderLine>)!);
+
+        var negoSudDetails = new List<string> {"NegoSud", "80 avenue Edmund Halley", "Saint-Étienne-du-Rouvray", "76800", "France"};
+        var pdfPath = new GeneratePdf(supplierOrder.Reference, negoSudDetails,customerOrderLines, _vatService).SaveLocally();
+        var sendEmail = this.SendEmailWithAttachment("negosud", supplierOrder.Supplier.Email, $"Bon de commande", pdfPath, _configuration);
+        
+        return sendEmail ? StatusCode(StatusCodes.Status201Created, dbSupplierOrder + "Commande envoyée au fournisseur") : StatusCode(StatusCodes.Status201Created, dbSupplierOrder + "Commande NON envoyée au fournisseur ");
     }
 
     [HttpPost("UpdateSupplierOrder")]
@@ -85,5 +102,47 @@ public class SupplierOrderController : ControllerBase
         }
 
         return StatusCode(StatusCodes.Status200OK);
+    }
+    
+    private bool SendEmailWithAttachment(string from, string to, string subject, string filePath, IConfiguration configuration)
+    {
+        string htmlBody = "<html><body><p>Bonjour,</p>" +
+                          "<p>Nous souhaiterions vous commande les références ci jointes,</p>" +
+                          "<p>Bien à vous,</p></body></html>";
+
+        var message = new MailMessage(from, to)
+        {
+            Subject = subject,
+            Body = htmlBody,
+            IsBodyHtml = true 
+        };
+    
+        // Add the PDF file as an attachment
+        var attachment = new Attachment(filePath);
+        message.Attachments.Add(attachment);
+        
+
+        var emailSettings = configuration.GetSection("EmailSettings");
+        var emailUsername = emailSettings.GetValue<string>("Username");
+        var emailPassword = emailSettings.GetValue<string>("Password");
+
+    
+        var client = new SmtpClient("smtp.gmail.com", 587) 
+        {
+            Credentials = new NetworkCredential(emailUsername, emailPassword),
+            EnableSsl = true
+        };
+    
+        try
+        {
+            client.Send(message);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.Log( LogLevel.Warning, "Error sending email: {ExceptionMessage}", ex.Message);
+            return false;
+        }
+      
     }
 }

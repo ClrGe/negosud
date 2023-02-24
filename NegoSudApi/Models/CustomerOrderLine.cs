@@ -2,7 +2,7 @@
 
 namespace NegoSudApi.Models;
 
-public class CustomerOrderLine : IModelBase
+public class CustomerOrderLine : IModelBase, IOrderLine
 {
     public int Id { get; set; }
     public int? Quantity { get; set; }

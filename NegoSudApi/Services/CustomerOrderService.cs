@@ -71,10 +71,10 @@ public class CustomerOrderService : ICustomerOrderService
         {
             if(customerOrder.Customer?.Id != null)
             {
-                User? customer = await _userService.GetUserAsync(customerOrder.Customer.Id);
-                if (customer != null)
+                User? dbCustomer = await _userService.GetUserAsync(customerOrder.Customer.Id);
+                if (dbCustomer != null)
                 {
-                    customerOrder.Customer = customer;
+                    customerOrder.Customer = dbCustomer;
                 }
             }
             
@@ -103,10 +103,11 @@ public class CustomerOrderService : ICustomerOrderService
                 }
                 await _context.AddRangeAsync(customerOrder.Lines);
             }
+
+            customerOrder.DeliveryStatus = DeliveryStatus.New.GetHashCode();
             
             CustomerOrder newCustomerOrder = (await _context.CustomerOrders.AddAsync(customerOrder)).Entity;
 
-            
             await _context.SaveChangesAsync();
 
             return newCustomerOrder;

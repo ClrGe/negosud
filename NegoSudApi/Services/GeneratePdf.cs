@@ -1,3 +1,4 @@
+using NegoSudApi.Models.Interfaces;
 using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services;
@@ -9,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using Aspose.Pdf;
 using Aspose.Pdf.Text;
-using NegoSudApi.Models;
 
 public class GeneratePdf : IDisposable
 {
@@ -24,7 +24,7 @@ public class GeneratePdf : IDisposable
     private readonly LogoImage _logo;
     private readonly List<string> _billFrom;
     private readonly List<string> _billTo;
-    private readonly List<CustomerOrderLine> _orderLines;
+    private readonly List<IOrderLine> _orderLines;
     private readonly List<TotalRow> _totalsRow;
     private readonly List<string> _details;
     private readonly string _footer;
@@ -36,7 +36,8 @@ public class GeneratePdf : IDisposable
     /// <param name="invoiceNumber">The number of the invoice. Include the date and the Customer's id</param>
     /// <param name="billTo">The Customer info</param>
     /// <param name="orderLines">The details of the order</param>
-    public GeneratePdf(string invoiceNumber, List<string> billTo, List<CustomerOrderLine> orderLines,
+    /// <param name="vatService">The value added Tax for the bottle(s)</param>
+    public GeneratePdf(string invoiceNumber, List<string> billTo, List<IOrderLine> orderLines,
         IVatService vatService)
     {
         _invoiceNumber = invoiceNumber;
@@ -78,6 +79,20 @@ public class GeneratePdf : IDisposable
         using var stream = new MemoryStream();
         _pdfDocument.Save(stream);
         return stream.ToArray();
+    }
+    
+    public string SaveLocally()
+    {
+        HeaderSection();
+        AddressSection();
+        GridSection();
+        TermsSection();
+        FooterSection();
+
+        string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "temp.pdf");
+        using var stream = new FileStream(filePath, FileMode.Create);
+        _pdfDocument.Save(stream);
+        return filePath;
     }
 
     private void HeaderSection()

@@ -11,7 +11,9 @@ public class Address : IModelBase
     public DateTime? UpdatedAt { get; set; }
     public string? CreatedBy { get; set; }
     public string? UpdatedBy { get; set; }
-
+    public int? SupplierId { get; set; }
+    public int? CityId { get; set; }
+    public int? UserId { get; set; }
     public virtual City? City { get; set; }
     public virtual User? User { get; set; }
     

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
+using NegoSudApi.Models.Interfaces;
 using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
 
@@ -61,8 +62,9 @@ public class CustomerOrderController : ControllerBase
             customerOrder.Customer.FirstName, customerOrder.Customer.LastName, customerOrder.DeliveryAddress.Label!, customerOrder.DeliveryAddress.FirstLine!, customerOrder.DeliveryAddress.City!.Name!, customerOrder.DeliveryAddress.City.ZipCode.ToString()!
         };
         
+        List<IOrderLine> customerOrderLines = new List<IOrderLine>((dbCustomerOrder.Lines as List<CustomerOrderLine>)!);
         // Create a pfd invoice for the customer
-        var pdfBytes = new GeneratePdf(customerOrder.Reference!, customerDetails, (dbCustomerOrder.Lines as List<CustomerOrderLine>)!, _vatService).Save();
+        var pdfBytes = new GeneratePdf(customerOrder.Reference!, customerDetails, customerOrderLines, _vatService).Save();
         var stream = new MemoryStream(pdfBytes);
         Response.Headers.Add("Content-Disposition", $"inline; filename=invoice_{customerOrder.Reference!}.pdf");
         Response.ContentType = "application/pdf";

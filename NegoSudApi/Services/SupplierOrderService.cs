@@ -68,38 +68,35 @@ public class SupplierOrderService : ISupplierOrderService
     {
         try
         {
-            if (supplierOrder.Supplier?.Id != null)
+            if(supplierOrder.Supplier?.Id != null)
             {
-                Supplier? supplier =
-                    await _supplierService.GetSupplierAsync(supplierOrder.Supplier.Id, includeRelations: false);
-                if (supplier != null)
+                Supplier? dbSupplier = await _supplierService.GetSupplierAsync(supplierOrder.Supplier.Id);
+                if (dbSupplier != null)
                 {
-                    supplierOrder.Supplier = supplier;
+                    supplierOrder.Supplier = dbSupplier;
                 }
             }
-
-            if (supplierOrder.Lines != null)
+            
+          
+            if(supplierOrder.Lines != null)
             {
-                foreach (SupplierOrderLine line in supplierOrder.Lines)
+                foreach (SupplierOrderLine orderLine in supplierOrder.Lines)
                 {
-                    if (line.Bottle?.Id != null)
+                    if (orderLine.Bottle?.Id == null) continue;
+                    Bottle? dbBottle = await _bottleService.GetBottleAsync(orderLine.Bottle.Id, true);
+                    if (dbBottle != null)
                     {
-                        Bottle? bottle = await _bottleService.GetBottleAsync(line.Bottle.Id, includeRelations: false);
-                        if (bottle != null)
-                        {
-                            line.Bottle = bottle;
-                        }
+                        orderLine.Bottle = dbBottle;
                     }
                 }
-            }
-
-            SupplierOrder newSupplierOrder = (await _context.SupplierOrders.AddAsync(supplierOrder)).Entity;
-
-            if (supplierOrder.Lines != null)
-            {
+                
                 await _context.AddRangeAsync(supplierOrder.Lines);
             }
 
+            supplierOrder.DeliveryStatus = DeliveryStatus.Pending.GetHashCode();
+           
+            SupplierOrder newSupplierOrder = (await _context.SupplierOrders.AddAsync(supplierOrder)).Entity;
+            
             await _context.SaveChangesAsync();
 
             return newSupplierOrder;
