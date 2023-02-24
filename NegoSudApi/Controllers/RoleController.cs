@@ -60,7 +60,7 @@ public class RoleController :ControllerBase
     }
 
     [HttpPost("DeleteRole")]
-    public async Task<IActionResult> DeleteRoleAsync(int id)
+    public async Task<IActionResult> DeleteRoleAsync([FromBody]int id)
     {
         bool? status = await _roleService.DeleteRoleAsync(id);
 

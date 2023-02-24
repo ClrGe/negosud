@@ -66,7 +66,7 @@ public class GrapeController : ControllerBase
     }
 
     [HttpPost("DeleteGrape")]
-    public async Task<IActionResult> DeleteGrapeAsync(int id)
+    public async Task<IActionResult> DeleteGrapeAsync([FromBody]int id)
     {
         Grape? dbGrape = await _grapeService.GetGrapeAsync(id);
         if (dbGrape == null)

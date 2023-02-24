@@ -75,7 +75,7 @@ public class AddressController : ControllerBase
     }
 
     [HttpPost("DeleteAddress")]
-    public async Task<IActionResult> DeleteAddressAsync(int id)
+    public async Task<IActionResult> DeleteAddressAsync([FromBody]int id)
     {
         bool? status = await _addressService.DeleteAddressAsync(id);
 

@@ -76,7 +76,7 @@ public class BottleController : ControllerBase
     }
 
     [HttpPost("DeleteBottle")]
-    public async Task<IActionResult> DeleteBottleAsync(int id)
+    public async Task<IActionResult> DeleteBottleAsync([FromBody]int id)
     {
         bool? status = await _bottleService.DeleteBottleAsync(id);
 

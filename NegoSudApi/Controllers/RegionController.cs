@@ -100,7 +100,7 @@ public class RegionController : ControllerBase
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpPost("DeleteRegion")]
-    public async Task<IActionResult> DeleteRegionAsync(int id)
+    public async Task<IActionResult> DeleteRegionAsync([FromBody]int id)
     {
         Region? dbRegion = await _regionService.GetRegionAsync(id);
 

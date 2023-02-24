@@ -11,12 +11,12 @@ public class SupplierOrderService : ISupplierOrderService
     private readonly ILogger<SupplierOrderService> _logger;
     private readonly ISupplierService _supplierService;
     private readonly IBottleService _bottleService;
-    
+
 
     public SupplierOrderService(NegoSudDbContext context,
-                         ILogger<SupplierOrderService> logger,
-                         ISupplierService supplierService,
-                         IBottleService bottleService)
+        ILogger<SupplierOrderService> logger,
+        ISupplierService supplierService,
+        IBottleService bottleService)
     {
         _context = context;
         _logger = logger;
@@ -37,6 +37,7 @@ public class SupplierOrderService : ISupplierOrderService
                     .ThenInclude(l => l.Bottle)
                     .FirstOrDefaultAsync(cO => cO.Id == id);
             }
+
             return await _context.SupplierOrders.FindAsync(id);
         }
         catch (Exception ex)
@@ -67,11 +68,11 @@ public class SupplierOrderService : ISupplierOrderService
     {
         try
         {
-      
-            if(supplierOrder.Supplier?.Id != null)
+            if (supplierOrder.Supplier?.Id != null)
             {
-                Supplier? supplier = await _supplierService.GetSupplierAsync(supplierOrder.Supplier.Id, includeRelations: false);
-                if(supplier != null)
+                Supplier? supplier =
+                    await _supplierService.GetSupplierAsync(supplierOrder.Supplier.Id, includeRelations: false);
+                if (supplier != null)
                 {
                     supplierOrder.Supplier = supplier;
                 }
@@ -116,13 +117,11 @@ public class SupplierOrderService : ISupplierOrderService
     {
         try
         {
-
             // get the current supplierOrder from db
             SupplierOrder? dbSupplierOrder = await this.GetSupplierOrderAsync(supplierOrder.Id);
 
             if (dbSupplierOrder != null)
             {
-
                 dbSupplierOrder.Reference = supplierOrder.Reference;
                 dbSupplierOrder.Description = supplierOrder.Description;
                 dbSupplierOrder.DateOrder = supplierOrder.DateOrder;
@@ -131,7 +130,8 @@ public class SupplierOrderService : ISupplierOrderService
 
                 if (supplierOrder.Supplier != null)
                 {
-                    Supplier? supplier = await _supplierService.GetSupplierAsync(supplierOrder.Supplier.Id, includeRelations: false);
+                    Supplier? supplier =
+                        await _supplierService.GetSupplierAsync(supplierOrder.Supplier.Id, includeRelations: false);
                     // If we found a supplier in the database
                     if (supplier != null)
                     {
@@ -142,15 +142,14 @@ public class SupplierOrderService : ISupplierOrderService
 
                 if (supplierOrder.Lines != null && dbSupplierOrder.Lines != null)
                 {
-
                     ICollection<SupplierOrderLine>? dbLines = dbSupplierOrder.Lines.ToList();
 
                     foreach (SupplierOrderLine Line in supplierOrder.Lines)
                     {
-
                         if (Line.Bottle?.Id != null)
                         {
-                            Bottle? bottle = await _bottleService.GetBottleAsync(Line.Bottle.Id, includeRelations: false);
+                            Bottle? bottle =
+                                await _bottleService.GetBottleAsync(Line.Bottle.Id, includeRelations: false);
                             if (bottle != null)
                             {
                                 Line.Bottle = bottle;
@@ -173,14 +172,12 @@ public class SupplierOrderService : ISupplierOrderService
                             // otherwise, add the new Line to the current supplierOrder
                             dbSupplierOrder.Lines.Add(Line);
                         }
-
                     }
 
                     foreach (SupplierOrderLine LineToDelete in dbLines)
                     {
                         dbSupplierOrder.Lines.Remove(LineToDelete);
                     }
-
                 }
 
                 _context.Entry(dbSupplierOrder).State = EntityState.Modified;

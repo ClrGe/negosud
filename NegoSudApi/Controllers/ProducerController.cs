@@ -104,7 +104,7 @@ public class ProducerController : ControllerBase
     /// <param name="id">The producer's id to delete</param>
     /// <returns>Status code</returns>
     [HttpPost("DeleteProducer")]
-    public async Task<IActionResult> DeleteProducerAsync(int id)
+    public async Task<IActionResult> DeleteProducerAsync([FromBody]int id)
     {
         Producer? producer = await _producerService.GetProducerAsync(id);
 

@@ -37,6 +37,7 @@ public class AuthenticationController : ControllerBase
             var token = _jwtAuthenticationService.GenerateToken(_configuration["Jwt:Key"]!, claims);
             return Task.FromResult<ActionResult<string>>(Ok(token));
         }
+        
         return Task.FromResult<ActionResult<string>>(Unauthorized());
     }
     

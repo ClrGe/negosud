@@ -75,7 +75,7 @@ public class PermissionController : ControllerBase
     }
 
     [HttpPost("DeletePermission/{id}")]
-    public async Task<IActionResult> DeletePermissionAsync(int id)
+    public async Task<IActionResult> DeletePermissionAsync([FromBody]int id)
     {
         bool? status = await _permissionService.DeletePermissionAsync(id);
 

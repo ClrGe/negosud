@@ -75,7 +75,7 @@ public class SupplierOrderController : ControllerBase
     }
 
     [HttpPost("DeleteSupplierOrder")]
-    public async Task<IActionResult> DeleteSupplierOrderAsync(int id)
+    public async Task<IActionResult> DeleteSupplierOrderAsync([FromBody]int id)
     {
         bool? status = await _supplierOrderService.DeleteSupplierOrderAsync(id);
 

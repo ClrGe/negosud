@@ -104,7 +104,7 @@ public class SupplierController : ControllerBase
     /// <param name="id">The Supplier's id to delete</param>
     /// <returns>Status code</returns>
     [HttpPost("DeleteSupplier")]
-    public async Task<IActionResult> DeleteSupplierAsync(int id)
+    public async Task<IActionResult> DeleteSupplierAsync([FromBody]int id)
     {
         Supplier? dbSupplier = await _supplierService.GetSupplierAsync(id);
 

@@ -71,7 +71,7 @@ public class StorageLocationController : ControllerBase
     }
 
     [HttpPost("DeleteStorageLocation")]
-    public async Task<IActionResult> DeleteStorageLocationAsync(int id)
+    public async Task<IActionResult> DeleteStorageLocationAsync([FromBody]int id)
     {
         StorageLocation? dbStorageLocation = await _storageLocationService.GetStorageLocationAsync(id);
         if (dbStorageLocation == null)
