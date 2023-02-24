@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NegoSudApi.Migrations
 {
     [DbContext(typeof(NegoSudDbContext))]
-    [Migration("20230130095422_AddRolePermissionSupplierTable")]
-    partial class AddRolePermissionSupplierTable
+    [Migration("20230224144505_NewOne")]
+    partial class NewOne
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,8 +42,8 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(8453))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
@@ -59,10 +59,9 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("label");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(8691))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -103,17 +102,17 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 784, DateTimeKind.Utc).AddTicks(8609))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
                         .HasColumnName("created_by");
 
-                    b.Property<decimal?>("CurrentPrice")
+                    b.Property<decimal?>("CustomerPrice")
                         .HasColumnType("numeric")
-                        .HasColumnName("current_price");
+                        .HasColumnName("customer_price");
 
                     b.Property<string>("Description")
                         .HasColumnType("text")
@@ -131,17 +130,28 @@ namespace NegoSudApi.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("producer_id");
 
+                    b.Property<decimal?>("SupplierPrice")
+                        .HasColumnType("numeric")
+                        .HasColumnName("supplier_price");
+
+                    b.Property<int?>("ThresholdToOrder")
+                        .HasColumnType("integer")
+                        .HasColumnName("threshold_to_order");
+
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 784, DateTimeKind.Utc).AddTicks(8855))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
                         .HasColumnName("updated_by");
+
+                    b.Property<int?>("VatId")
+                        .HasColumnType("integer")
+                        .HasColumnName("vat_id");
 
                     b.Property<decimal?>("Volume")
                         .HasColumnType("numeric")
@@ -164,6 +174,9 @@ namespace NegoSudApi.Migrations
 
                     b.HasIndex("ProducerId")
                         .HasDatabaseName("ix_bottle_producer_id");
+
+                    b.HasIndex("VatId")
+                        .HasDatabaseName("ix_bottle_vat_id");
 
                     b.HasIndex("WineLabelId")
                         .HasDatabaseName("ix_bottle_wine_label_id");
@@ -188,8 +201,8 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(1948))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
@@ -201,10 +214,9 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("grape_percentage");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(2167))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -235,8 +247,8 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 788, DateTimeKind.Utc).AddTicks(876))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
@@ -248,10 +260,9 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("quantity");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 788, DateTimeKind.Utc).AddTicks(1065))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -282,8 +293,8 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(3748))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
@@ -291,10 +302,9 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("created_by");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(3968))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -320,12 +330,16 @@ namespace NegoSudApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("integer")
+                        .HasColumnName("country_id");
+
                     b.Property<DateTime?>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(5010))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
@@ -337,10 +351,9 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(5205))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -354,6 +367,9 @@ namespace NegoSudApi.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_city");
+
+                    b.HasIndex("CountryId")
+                        .HasDatabaseName("ix_city_country_id");
 
                     b.ToTable("City", (string)null);
                 });
@@ -371,8 +387,8 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(6167))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
@@ -384,10 +400,78 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(6401))
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_country");
+
+                    b.ToTable("Country", (string)null);
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.CustomerOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("cancelled_at");
+
+                    b.Property<string>("CancelledBy")
+                        .HasColumnType("text")
+                        .HasColumnName("cancelled_by");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(0)
+                        .HasColumnType("timestamp(0) with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("created_by");
+
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("integer")
+                        .HasColumnName("customer_id");
+
+                    b.Property<DateTime?>("Date_Delivery")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date_delivery");
+
+                    b.Property<DateTime?>("Date_Order")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date_order");
+
+                    b.Property<int?>("DeliveryAddressId")
+                        .HasColumnType("integer")
+                        .HasColumnName("delivery_address_id");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Reference")
+                        .HasColumnType("text")
+                        .HasColumnName("reference");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasPrecision(0)
+                        .HasColumnType("timestamp(0) with time zone")
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -396,9 +480,90 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("updated_by");
 
                     b.HasKey("Id")
-                        .HasName("pk_country");
+                        .HasName("pk_customer_order");
 
-                    b.ToTable("Country", (string)null);
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_customer_order_customer_id");
+
+                    b.HasIndex("DeliveryAddressId")
+                        .HasDatabaseName("ix_customer_order_delivery_address_id");
+
+                    b.ToTable("CustomerOrder", (string)null);
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.CustomerOrderLine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BottleId")
+                        .HasColumnType("integer")
+                        .HasColumnName("bottle_id");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(0)
+                        .HasColumnType("timestamp(0) with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("created_by");
+
+                    b.Property<int?>("CustomerOrderId")
+                        .HasColumnType("integer")
+                        .HasColumnName("customer_order_id");
+
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasPrecision(0)
+                        .HasColumnType("timestamp(0) with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_customer_order_line");
+
+                    b.HasIndex("BottleId")
+                        .HasDatabaseName("ix_customer_order_line_bottle_id");
+
+                    b.HasIndex("CustomerOrderId")
+                        .HasDatabaseName("ix_customer_order_line_customer_order_id");
+
+                    b.ToTable("CustomerOrderLine", (string)null);
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.CustomerOrderLineStorageLocation", b =>
+                {
+                    b.Property<int>("CustomerOrderLineId")
+                        .HasColumnType("integer")
+                        .HasColumnName("customer_order_line_id");
+
+                    b.Property<int>("StorageLocationId")
+                        .HasColumnType("integer")
+                        .HasColumnName("storage_location_id");
+
+                    b.HasKey("CustomerOrderLineId", "StorageLocationId")
+                        .HasName("pk_customer_order_line_storage_location");
+
+                    b.HasIndex("StorageLocationId")
+                        .HasDatabaseName("ix_customer_order_line_storage_location_storage_location_id");
+
+                    b.ToTable("CustomerOrderLineStorageLocation", (string)null);
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.Grape", b =>
@@ -414,8 +579,8 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(9319))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
@@ -427,20 +592,15 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("grape_type");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(9515))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
                         .HasColumnName("updated_by");
-
-                    b.Property<string>("WineType")
-                        .HasColumnType("text")
-                        .HasColumnName("wine_type");
 
                     b.HasKey("Id")
                         .HasName("pk_grape");
@@ -465,8 +625,8 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 789, DateTimeKind.Utc).AddTicks(3096))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
@@ -478,10 +638,9 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 789, DateTimeKind.Utc).AddTicks(3283))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -493,6 +652,25 @@ namespace NegoSudApi.Migrations
                         .HasName("pk_permission");
 
                     b.ToTable("Permission", (string)null);
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.PermissionRole", b =>
+                {
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("permission_id");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer")
+                        .HasColumnName("role_id");
+
+                    b.HasKey("PermissionId", "RoleId")
+                        .HasName("pk_permission_role");
+
+                    b.HasIndex("RoleId")
+                        .HasDatabaseName("ix_permission_role_role_id");
+
+                    b.ToTable("PermissionRole", (string)null);
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.Producer", b =>
@@ -512,8 +690,8 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(8044))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
@@ -533,10 +711,9 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("region_id");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(8280))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -573,8 +750,8 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(1702))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
@@ -586,10 +763,9 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 787, DateTimeKind.Utc).AddTicks(1963))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -619,8 +795,8 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 788, DateTimeKind.Utc).AddTicks(9830))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
@@ -631,15 +807,10 @@ namespace NegoSudApi.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
-                    b.Property<int?>("PermissionId")
-                        .HasColumnType("integer")
-                        .HasColumnName("permission_id");
-
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 789, DateTimeKind.Utc).AddTicks(13))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -666,8 +837,8 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(1524))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
@@ -679,10 +850,9 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 786, DateTimeKind.Utc).AddTicks(1700))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -705,16 +875,12 @@ namespace NegoSudApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AddressId")
-                        .HasColumnType("integer")
-                        .HasColumnName("address_id");
-
                     b.Property<DateTime?>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 789, DateTimeKind.Utc).AddTicks(4114))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
@@ -730,10 +896,9 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 789, DateTimeKind.Utc).AddTicks(4328))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -744,10 +909,151 @@ namespace NegoSudApi.Migrations
                     b.HasKey("Id")
                         .HasName("pk_supplier");
 
-                    b.HasIndex("AddressId")
-                        .HasDatabaseName("ix_supplier_address_id");
-
                     b.ToTable("Supplier", (string)null);
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.SupplierOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("cancelled_at");
+
+                    b.Property<string>("CancelledBy")
+                        .HasColumnType("text")
+                        .HasColumnName("cancelled_by");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(0)
+                        .HasColumnType("timestamp(0) with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime?>("DateDelivery")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date_delivery");
+
+                    b.Property<DateTime?>("DateOrder")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date_order");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Reference")
+                        .HasColumnType("text")
+                        .HasColumnName("reference");
+
+                    b.Property<int?>("SupplierId")
+                        .HasColumnType("integer")
+                        .HasColumnName("supplier_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasPrecision(0)
+                        .HasColumnType("timestamp(0) with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_supplier_order");
+
+                    b.HasIndex("SupplierId")
+                        .HasDatabaseName("ix_supplier_order_supplier_id");
+
+                    b.ToTable("SupplierOrder", (string)null);
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.SupplierOrderLine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BottleId")
+                        .HasColumnType("integer")
+                        .HasColumnName("bottle_id");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(0)
+                        .HasColumnType("timestamp(0) with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("created_by");
+
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
+
+                    b.Property<int?>("SupplierOrderId")
+                        .HasColumnType("integer")
+                        .HasColumnName("supplier_order_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasPrecision(0)
+                        .HasColumnType("timestamp(0) with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id")
+                        .HasName("pk_supplier_order_line");
+
+                    b.HasIndex("BottleId")
+                        .HasDatabaseName("ix_supplier_order_line_bottle_id");
+
+                    b.HasIndex("SupplierOrderId")
+                        .HasDatabaseName("ix_supplier_order_line_supplier_order_id");
+
+                    b.ToTable("SupplierOrderLine", (string)null);
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.SupplierOrderLineStorageLocation", b =>
+                {
+                    b.Property<int>("SupplierOrderLineId")
+                        .HasColumnType("integer")
+                        .HasColumnName("supplier_order_line_id");
+
+                    b.Property<int>("StorageLocationId")
+                        .HasColumnType("integer")
+                        .HasColumnName("storage_location_id");
+
+                    b.HasKey("SupplierOrderLineId", "StorageLocationId")
+                        .HasName("pk_supplier_order_line_storage_location");
+
+                    b.HasIndex("StorageLocationId")
+                        .HasDatabaseName("ix_supplier_order_line_storage_location_storage_location_id");
+
+                    b.ToTable("SupplierOrderLineStorageLocation", (string)null);
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.User", b =>
@@ -763,8 +1069,8 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 788, DateTimeKind.Utc).AddTicks(6559))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
@@ -800,10 +1106,9 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("role_id");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 788, DateTimeKind.Utc).AddTicks(6805))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -820,6 +1125,25 @@ namespace NegoSudApi.Migrations
                     b.ToTable("User", (string)null);
                 });
 
+            modelBuilder.Entity("NegoSudApi.Models.VAT", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal?>("Value")
+                        .HasColumnType("numeric")
+                        .HasColumnName("value");
+
+                    b.HasKey("Id")
+                        .HasName("pk_vat");
+
+                    b.ToTable("VAT", (string)null);
+                });
+
             modelBuilder.Entity("NegoSudApi.Models.WineLabel", b =>
                 {
                     b.Property<int>("Id")
@@ -833,8 +1157,8 @@ namespace NegoSudApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(1222))
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
@@ -846,10 +1170,9 @@ namespace NegoSudApi.Migrations
                         .HasColumnName("label");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .ValueGeneratedOnUpdate()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(0)
                         .HasColumnType("timestamp(0) with time zone")
-                        .HasDefaultValue(new DateTime(2023, 1, 30, 9, 54, 21, 785, DateTimeKind.Utc).AddTicks(1396))
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UpdatedBy")
@@ -863,25 +1186,6 @@ namespace NegoSudApi.Migrations
                     b.ToTable("WineLabel", (string)null);
                 });
 
-            modelBuilder.Entity("PermissionRole", b =>
-                {
-                    b.Property<int>("PermissionsId")
-                        .HasColumnType("integer")
-                        .HasColumnName("permissions_id");
-
-                    b.Property<int>("RolesId")
-                        .HasColumnType("integer")
-                        .HasColumnName("roles_id");
-
-                    b.HasKey("PermissionsId", "RolesId")
-                        .HasName("pk_permission_role");
-
-                    b.HasIndex("RolesId")
-                        .HasDatabaseName("ix_permission_role_roles_id");
-
-                    b.ToTable("PermissionRole", (string)null);
-                });
-            
             modelBuilder.Entity("NegoSudApi.Models.Address", b =>
                 {
                     b.HasOne("NegoSudApi.Models.City", "City")
@@ -906,12 +1210,19 @@ namespace NegoSudApi.Migrations
                         .HasForeignKey("ProducerId")
                         .HasConstraintName("fk_bottle_producers_producer_id");
 
+                    b.HasOne("NegoSudApi.Models.VAT", "Vat")
+                        .WithMany("Bottles")
+                        .HasForeignKey("VatId")
+                        .HasConstraintName("fk_bottle_vat_vat_id");
+
                     b.HasOne("NegoSudApi.Models.WineLabel", "WineLabel")
                         .WithMany("Bottles")
                         .HasForeignKey("WineLabelId")
                         .HasConstraintName("fk_bottle_wine_labels_wine_label_id");
 
                     b.Navigation("Producer");
+
+                    b.Navigation("Vat");
 
                     b.Navigation("WineLabel");
                 });
@@ -979,6 +1290,92 @@ namespace NegoSudApi.Migrations
                     b.Navigation("Supplier");
                 });
 
+            modelBuilder.Entity("NegoSudApi.Models.City", b =>
+                {
+                    b.HasOne("NegoSudApi.Models.Country", "Country")
+                        .WithMany("Cities")
+                        .HasForeignKey("CountryId")
+                        .HasConstraintName("fk_city_country_country_id");
+
+                    b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.CustomerOrder", b =>
+                {
+                    b.HasOne("NegoSudApi.Models.User", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .HasConstraintName("fk_customer_order_users_customer_id");
+
+                    b.HasOne("NegoSudApi.Models.Address", "DeliveryAddress")
+                        .WithMany()
+                        .HasForeignKey("DeliveryAddressId")
+                        .HasConstraintName("fk_customer_order_address_delivery_address_id");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("DeliveryAddress");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.CustomerOrderLine", b =>
+                {
+                    b.HasOne("NegoSudApi.Models.Bottle", "Bottle")
+                        .WithMany()
+                        .HasForeignKey("BottleId")
+                        .HasConstraintName("fk_customer_order_line_bottle_bottle_id");
+
+                    b.HasOne("NegoSudApi.Models.CustomerOrder", "CustomerOrder")
+                        .WithMany("Lines")
+                        .HasForeignKey("CustomerOrderId")
+                        .HasConstraintName("fk_customer_order_line_customer_order_customer_order_id");
+
+                    b.Navigation("Bottle");
+
+                    b.Navigation("CustomerOrder");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.CustomerOrderLineStorageLocation", b =>
+                {
+                    b.HasOne("NegoSudApi.Models.CustomerOrderLine", "CustomerOrderLine")
+                        .WithMany("CustomerOrderLineStorageLocations")
+                        .HasForeignKey("CustomerOrderLineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_customer_order_line_storage_location_customer_order_line_customer");
+
+                    b.HasOne("NegoSudApi.Models.StorageLocation", "StorageLocation")
+                        .WithMany("CustomerOrderLineStorageLocations")
+                        .HasForeignKey("StorageLocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_customer_order_line_storage_location_storage_location_storage_lo");
+
+                    b.Navigation("CustomerOrderLine");
+
+                    b.Navigation("StorageLocation");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.PermissionRole", b =>
+                {
+                    b.HasOne("NegoSudApi.Models.Permission", "Permission")
+                        .WithMany("PermissionRoles")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_permission_role_permission_permission_id");
+
+                    b.HasOne("NegoSudApi.Models.Role", "Role")
+                        .WithMany("PermissionRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_permission_role_role_role_id");
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("NegoSudApi.Models.Producer", b =>
                 {
                     b.HasOne("NegoSudApi.Models.Address", "Address")
@@ -1009,11 +1406,61 @@ namespace NegoSudApi.Migrations
             modelBuilder.Entity("NegoSudApi.Models.Supplier", b =>
                 {
                     b.HasOne("NegoSudApi.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .HasConstraintName("fk_supplier_address_address_id");
+                        .WithOne("Supplier")
+                        .HasForeignKey("NegoSudApi.Models.Supplier", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_supplier_address_id");
 
                     b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.SupplierOrder", b =>
+                {
+                    b.HasOne("NegoSudApi.Models.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .HasConstraintName("fk_supplier_order_suppliers_supplier_id");
+
+                    b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.SupplierOrderLine", b =>
+                {
+                    b.HasOne("NegoSudApi.Models.Bottle", "Bottle")
+                        .WithMany()
+                        .HasForeignKey("BottleId")
+                        .HasConstraintName("fk_supplier_order_line_bottle_bottle_id");
+
+                    b.HasOne("NegoSudApi.Models.SupplierOrder", "SupplierOrder")
+                        .WithMany("Lines")
+                        .HasForeignKey("SupplierOrderId")
+                        .HasConstraintName("fk_supplier_order_line_supplier_order_supplier_order_id");
+
+                    b.Navigation("Bottle");
+
+                    b.Navigation("SupplierOrder");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.SupplierOrderLineStorageLocation", b =>
+                {
+                    b.HasOne("NegoSudApi.Models.StorageLocation", "StorageLocation")
+                        .WithMany("SupplierOrderLineStorageLocations")
+                        .HasForeignKey("StorageLocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_supplier_order_line_storage_location_storage_location_storage_lo");
+
+                    b.HasOne("NegoSudApi.Models.SupplierOrderLine", "SupplierOrderLine")
+                        .WithMany("SupplierOrderLineStorageLocations")
+                        .HasForeignKey("SupplierOrderLineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_supplier_order_line_storage_location_supplier_order_line_supplier");
+
+                    b.Navigation("StorageLocation");
+
+                    b.Navigation("SupplierOrderLine");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.User", b =>
@@ -1026,21 +1473,9 @@ namespace NegoSudApi.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("PermissionRole", b =>
+            modelBuilder.Entity("NegoSudApi.Models.Address", b =>
                 {
-                    b.HasOne("NegoSudApi.Models.Permission", null)
-                        .WithMany()
-                        .HasForeignKey("PermissionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_permission_role_permissions_permissions_id");
-
-                    b.HasOne("NegoSudApi.Models.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_permission_role_roles_roles_id");
+                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.Bottle", b =>
@@ -1059,12 +1494,29 @@ namespace NegoSudApi.Migrations
 
             modelBuilder.Entity("NegoSudApi.Models.Country", b =>
                 {
+                    b.Navigation("Cities");
+
                     b.Navigation("Regions");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.CustomerOrder", b =>
+                {
+                    b.Navigation("Lines");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.CustomerOrderLine", b =>
+                {
+                    b.Navigation("CustomerOrderLineStorageLocations");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.Grape", b =>
                 {
                     b.Navigation("BottleGrapes");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.Permission", b =>
+                {
+                    b.Navigation("PermissionRoles");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.Producer", b =>
@@ -1079,12 +1531,18 @@ namespace NegoSudApi.Migrations
 
             modelBuilder.Entity("NegoSudApi.Models.Role", b =>
                 {
+                    b.Navigation("PermissionRoles");
+
                     b.Navigation("Users");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.StorageLocation", b =>
                 {
                     b.Navigation("BottleStorageLocations");
+
+                    b.Navigation("CustomerOrderLineStorageLocations");
+
+                    b.Navigation("SupplierOrderLineStorageLocations");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.Supplier", b =>
@@ -1092,9 +1550,24 @@ namespace NegoSudApi.Migrations
                     b.Navigation("BottleSuppliers");
                 });
 
+            modelBuilder.Entity("NegoSudApi.Models.SupplierOrder", b =>
+                {
+                    b.Navigation("Lines");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.SupplierOrderLine", b =>
+                {
+                    b.Navigation("SupplierOrderLineStorageLocations");
+                });
+
             modelBuilder.Entity("NegoSudApi.Models.User", b =>
                 {
                     b.Navigation("Addresses");
+                });
+
+            modelBuilder.Entity("NegoSudApi.Models.VAT", b =>
+                {
+                    b.Navigation("Bottles");
                 });
 
             modelBuilder.Entity("NegoSudApi.Models.WineLabel", b =>

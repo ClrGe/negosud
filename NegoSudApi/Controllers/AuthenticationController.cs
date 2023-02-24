@@ -26,9 +26,9 @@ public class AuthenticationController : ControllerBase
     
     [HttpPost]
     [Route("Login")]
-    public async Task<ActionResult<User>> Login(User model)
+    public Task<ActionResult<string>> Login(User user)
     {
-        User? dbUser = _jwtAuthenticationService.Authenticate(model.Email, model.Password);
+        var dbUser = _jwtAuthenticationService.Authenticate(user.Email, user.Password);
         if (dbUser != null)
         {
             List<Claim> claims = new List<Claim>
@@ -70,20 +70,20 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost]
     [Route("Register")]
-    public async Task<ActionResult<User>> Register(User model)
+    public async Task<ActionResult<string>> Register(User user)
     {
         var userToAdd = new User
         {
-            Email = model.Email,
-            Password = model.Password,
-            FirstName = model.FirstName,
-            LastName = model.LastName,
+            Email = user.Email,
+            Password = user.Password,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
         };
         
         userToAdd.Password = _securePassword.Hash(userToAdd);
         User? dbUser = await _userService.AddUserAsync(userToAdd);
 
-        if (dbUser == null) return StatusCode(StatusCodes.Status204NoContent, $"No match - could not add content.");
+        if (dbUser == null) return StatusCode(StatusCodes.Status404NotFound, $"No match - could not add content.");
 
         List<Claim> claims = new List<Claim>
         {

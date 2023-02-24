@@ -10,8 +10,7 @@ public class GetStorageLocationService : IGetStorageLocationService
     private readonly NegoSudDbContext _context;
     private readonly ILogger<StorageLocationService> _logger;
 
-    public GetStorageLocationService(NegoSudDbContext context,
-                                        ILogger<StorageLocationService> logger)
+    public GetStorageLocationService(NegoSudDbContext context, ILogger<StorageLocationService> logger)
     {
         _context = context;
         _logger = logger;

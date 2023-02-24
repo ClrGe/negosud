@@ -4,40 +4,40 @@ using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Controllers
+namespace NegoSudApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class GrapeController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class GrapeController : ControllerBase
+    private readonly IGrapeService _grapeService;
+    public GrapeController(IGrapeService grapeService)
     {
-        private readonly IGrapeService _grapeService;
-        public GrapeController(IGrapeService grapeService)
-        {
-            _grapeService = grapeService;
-        }
+        _grapeService = grapeService;
+    }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetGrapeAsync(int id)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetGrapeAsync(int id)
+    {
+        Grape? dbGrape = await _grapeService.GetGrapeAsync(id);
+        if (dbGrape == null)
         {
-            Grape? dbGrape = await _grapeService.GetGrapeAsync(id);
-            if (dbGrape == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Grape found for id: {id}");
-            }
-            return StatusCode(StatusCodes.Status200OK, dbGrape);
+            return StatusCode(StatusCodes.Status404NotFound, $"No match for query");
         }
+        return StatusCode(StatusCodes.Status200OK, dbGrape);
+    }
 
-        [HttpGet]
-        public async Task<IActionResult> GetGrapesAsync()
+    [HttpGet]
+    public async Task<IActionResult> GetGrapesAsync()
+    {
+        IEnumerable<Grape>? dbGrapes = await _grapeService.GetGrapesAsync();
+        if (dbGrapes == null)
         {
-            IEnumerable<Grape>? dbGrapes = await _grapeService.GetGrapesAsync();
-            if (dbGrapes == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, "No grapes in database");
-            }
-            return StatusCode(StatusCodes.Status200OK, dbGrapes.ToList());
+            return StatusCode(StatusCodes.Status404NotFound, $"No match for query");
         }
+        return StatusCode(StatusCodes.Status200OK, dbGrapes.ToList());
+    }
 
         [Authorize(Policy = RolePermissions.CanAddGrape)]
         [HttpPost("AddGrape")]
@@ -60,13 +60,13 @@ namespace NegoSudApi.Controllers
                 return BadRequest();
             }
 
-            Grape? dbGrape = await _grapeService.UpdateGrapeAsync(grape);
-            if (dbGrape == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Grape found for id: {grape.Id} - could not update.");
-            }
-            return StatusCode(StatusCodes.Status200OK, dbGrape);
+        Grape? dbGrape = await _grapeService.UpdateGrapeAsync(grape);
+        if (dbGrape == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {grape.Id} - could not update.");
         }
+        return StatusCode(StatusCodes.Status200OK, dbGrape);
+    }
 
         [Authorize(Policy = RolePermissions.CanDeleteGrape)]
         [HttpPost("DeleteGrape")]
@@ -81,5 +81,4 @@ namespace NegoSudApi.Controllers
             return StatusCode(StatusCodes.Status200OK);
         }
 
-    }
 }

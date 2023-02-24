@@ -11,7 +11,7 @@ public class City : IModelBase
     public DateTime? UpdatedAt { get; set; }
     public string? CreatedBy { get; set; }
     public string? UpdatedBy { get; set; }
-
+    public Country? Country { get; set; }
     public virtual ICollection<Address>? Addresses { get; set; }
       
 }

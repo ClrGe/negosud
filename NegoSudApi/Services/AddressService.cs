@@ -27,6 +27,7 @@ public class AddressService : IAddressService
             {
                 return await _context.Addresses
                     .Include(c => c.City)
+                    .ThenInclude(c => c.Country)
                     .FirstOrDefaultAsync(c => c.Id == id);
             }
 

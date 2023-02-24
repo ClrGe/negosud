@@ -1,53 +1,50 @@
 ﻿using HeimGuard;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Controllers
+namespace NegoSudApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class BottleController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class BottleController : ControllerBase
+    private readonly IBottleService _bottleService;
+
+    public BottleController(IBottleService bottleService)
     {
-        private readonly IBottleService _bottleService;
-        private readonly IHeimGuardClient _heimGuard;
+        _bottleService = bottleService;
+    }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetBottleAsync(int id)
+    {
+        Bottle? dbBottle = await _bottleService.GetBottleAsync(id);
 
-        public BottleController(IBottleService bottleService, IHeimGuardClient heimGuardClient)
+        if (dbBottle == null)
         {
-            _bottleService = bottleService;
-            _heimGuard = heimGuardClient;
+            return StatusCode(StatusCodes.Status404NotFound, $"No Bottle found for id: {id}");
         }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetBottleAsync(int id)
-        {
-            Bottle? dbBottle = await _bottleService.GetBottleAsync(id);
+        Response.Headers.Add( "Access-Control-Allow-Origin", "*");
 
-            if (dbBottle == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Bottle found for id: {id}");
-            }
-            Response.Headers.Add( "Access-Control-Allow-Origin", "*");
-
-            return StatusCode(StatusCodes.Status200OK, dbBottle);
-        }
+        return StatusCode(StatusCodes.Status200OK, dbBottle);
+    }
         
-        [HttpGet]
-        public async Task<IActionResult> GetBottlesAsync()
+    [HttpGet]
+    public async Task<IActionResult> GetBottlesAsync()
+    {
+        var dbBottles = await _bottleService.GetBottlesAsync();
+
+        if (dbBottles == null)
         {
-            var dbBottles = await _bottleService.GetBottlesAsync();
-
-            if (dbBottles == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, "No bottles in database");
-            }
-            Response.Headers.Add( "Access-Control-Allow-Origin", "*");
-
-            return StatusCode(StatusCodes.Status200OK, dbBottles);
+            return StatusCode(StatusCodes.Status404NotFound, "No bottles in database");
         }
+        Response.Headers.Add( "Access-Control-Allow-Origin", "*");
+
+        return StatusCode(StatusCodes.Status200OK, dbBottles);
+    }
 
         [Authorize(Policy = RolePermissions.CanAddBottle)]
         [HttpPost("AddBottle")]
@@ -55,13 +52,13 @@ namespace NegoSudApi.Controllers
         {
             Bottle? dbBottle = await _bottleService.AddBottleAsync(bottle);
 
-            if (dbBottle == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"{bottle.FullName} could not be added.");
-            }
-
-            return StatusCode(StatusCodes.Status201Created, dbBottle);
+        if (dbBottle == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"{bottle.FullName} could not be added.");
         }
+
+        return StatusCode(StatusCodes.Status201Created, dbBottle);
+    }
 
         [Authorize(Policy = RolePermissions.CanEditBottle)]
         [HttpPost("UpdateBottle")]
@@ -72,15 +69,15 @@ namespace NegoSudApi.Controllers
                 return BadRequest();
             }
 
-            Bottle? dbBottle = await _bottleService.UpdateBottleAsync(bottle);
+        Bottle? dbBottle = await _bottleService.UpdateBottleAsync(bottle);
 
-            if (dbBottle == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Bottle found for id: {bottle.Id} - could not update.");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbBottle);
+        if (dbBottle == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No bottle found for id: {bottle.Id} - could not update.");
         }
+
+        return StatusCode(StatusCodes.Status200OK, dbBottle);
+    }
 
         [Authorize(Policy = RolePermissions.CanDeleteBottle)]
         [HttpPost("DeleteBottle")]
@@ -88,12 +85,11 @@ namespace NegoSudApi.Controllers
         {
             bool? status = await _bottleService.DeleteBottleAsync(id);
 
-            if (status == false)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Bottle found for id: {id} - could not be deleted");
-            }
-
-            return StatusCode(StatusCodes.Status200OK);
+        if (status == false)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No bottle found for id: {id} - could not be deleted");
         }
+
+        return StatusCode(StatusCodes.Status200OK);
     }
 }

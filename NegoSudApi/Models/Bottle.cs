@@ -11,18 +11,18 @@ public class Bottle : IModelBase
     public string? Picture { get; set; }
     public int? YearProduced { get; set; }
     public decimal? AlcoholPercentage { get; set; }
-    public decimal? CurrentPrice { get; set; }
+    public decimal? SupplierPrice { get; set; }
+    public decimal? CustomerPrice { get; set; }
     public string? WineType { get; set; }
-
+    public int? ThresholdToOrder { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public string? CreatedBy { get; set; }
     public string? UpdatedBy { get; set; }
-    
+    public virtual VAT? Vat { get; set; }
     public virtual ICollection<BottleStorageLocation>? BottleStorageLocations { get; set; }
     public virtual ICollection<BottleGrape>? BottleGrapes { get; set; }
     public virtual ICollection<BottleSupplier>? BottleSuppliers { get; set; }
-    public virtual ICollection<Supplier>? Suppliers { get; set; }
     public virtual Producer? Producer { get; set; }
     public virtual WineLabel? WineLabel { get; set; }
 }

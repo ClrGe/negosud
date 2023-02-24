@@ -2,21 +2,24 @@
 using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
+using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Controllers
-{
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class CustomerOrderController : ControllerBase
-    {
-        private readonly ICustomerOrderService _customerOrderService;
+namespace NegoSudApi.Controllers;
 
-        public CustomerOrderController(ICustomerOrderService customerOrderService)
-        {
-            _customerOrderService = customerOrderService;
-        }
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class CustomerOrderController : ControllerBase
+{
+    private readonly ICustomerOrderService _customerOrderService;
+    private readonly IVatService _vatService;
+
+    public CustomerOrderController(ICustomerOrderService customerOrderService, IVatService vatService)
+    {
+        _customerOrderService = customerOrderService;
+        _vatService = vatService;
+    }
 
         [Authorize(Policy = RolePermissions.CanGetCustomerOrder)]
         [HttpGet("{id}")]
@@ -24,13 +27,13 @@ namespace NegoSudApi.Controllers
         {
             CustomerOrder? dbCustomerOrder = await _customerOrderService.GetCustomerOrderAsync(id);
 
-            if (dbCustomerOrder == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No customerOrder found for id: {id}");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
+        if (dbCustomerOrder == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No customerOrder found for id: {id}");
         }
+
+        return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
+    }
 
         [Authorize(Policy = RolePermissions.CanGetCustomerOrder)]
         [HttpGet]
@@ -38,13 +41,13 @@ namespace NegoSudApi.Controllers
         {
             var dbCustomerOrders = await _customerOrderService.GetCustomerOrdersAsync();
 
-            if (dbCustomerOrders == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, "No customerOrders in database");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbCustomerOrders);
+        if (dbCustomerOrders == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, "No customerOrders in database");
         }
+
+        return StatusCode(StatusCodes.Status200OK, dbCustomerOrders);
+    }
 
         [Authorize(Policy = RolePermissions.CanAddCustomerOrder)]
         [HttpPost("AddCustomerOrder")]
@@ -52,13 +55,26 @@ namespace NegoSudApi.Controllers
         {
             CustomerOrder? dbCustomerOrder = await _customerOrderService.AddCustomerOrderAsync(customerOrder);
 
-            if (dbCustomerOrder == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"{customerOrder.Reference} could not be added.");
-            }
-
-            return StatusCode(StatusCodes.Status201Created, dbCustomerOrder);
+        if (dbCustomerOrder == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"{customerOrder.Reference} could not be added.");
         }
+        
+        var customerDetails = new List<String>
+        {
+            customerOrder.Customer.FirstName, customerOrder.Customer.LastName, customerOrder.DeliveryAddress.Label!, customerOrder.DeliveryAddress.FirstLine!, customerOrder.DeliveryAddress.City!.Name!, customerOrder.DeliveryAddress.City.ZipCode.ToString()!
+        };
+        
+        // Create a pfd invoice for the customer
+        var pdfBytes = new GeneratePdf(customerOrder.Reference!, customerDetails, (dbCustomerOrder.Lines as List<CustomerOrderLine>)!, _vatService).Save();
+        var stream = new MemoryStream(pdfBytes);
+        Response.Headers.Add("Content-Disposition", $"inline; filename=invoice_{customerOrder.Reference!}.pdf");
+        Response.ContentType = "application/pdf";
+        Response.ContentLength = stream.Length;
+        await stream.CopyToAsync(Response.Body);
+
+        return StatusCode(StatusCodes.Status201Created, dbCustomerOrder);
+    }
 
         [Authorize(Policy = RolePermissions.CanEditCustomerOrder)]
         [HttpPost("UpdateCustomerOrder")]
@@ -69,15 +85,15 @@ namespace NegoSudApi.Controllers
                 return BadRequest();
             }
 
-            CustomerOrder? dbCustomerOrder = await _customerOrderService.UpdateCustomerOrderAsync(customerOrder);
+        CustomerOrder? dbCustomerOrder = await _customerOrderService.UpdateCustomerOrderAsync(customerOrder);
 
-            if (dbCustomerOrder == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No CustomerOrder found for id: {customerOrder.Id} - could not update.");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
+        if (dbCustomerOrder == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No match for query - could not update");
         }
+
+        return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
+    }
 
         [Authorize(Policy = RolePermissions.CanDeleteCustomerOrder)]
         [HttpPost("DeleteCustomerOrder")]
@@ -85,12 +101,11 @@ namespace NegoSudApi.Controllers
         {
             bool? status = await _customerOrderService.DeleteCustomerOrderAsync(id);
 
-            if (status == false)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No CustomerOrder found for id: {id} - could not be deleted");
-            }
-
-            return StatusCode(StatusCodes.Status200OK);
+        if (status == false)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No CustomerOrder found for id: {id} - could not be deleted");
         }
+
+        return StatusCode(StatusCodes.Status200OK);
     }
 }

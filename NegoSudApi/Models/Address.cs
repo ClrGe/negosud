@@ -14,5 +14,7 @@ public class Address : IModelBase
 
     public virtual City? City { get; set; }
     public virtual User? User { get; set; }
+    
+    public virtual Supplier? Supplier { get; set; }
 
 }

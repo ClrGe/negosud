@@ -2,7 +2,8 @@
 using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
-using System.Drawing;
+using NuGet.Packaging;
+
 
 namespace NegoSudApi.Services;
 
@@ -12,16 +13,15 @@ public class CustomerOrderService : ICustomerOrderService
     private readonly ILogger<CustomerOrderService> _logger;
     private readonly IBottleService _bottleService;
     private readonly IUserService _userService;
+    private readonly IAddressService _addressService;
 
-    public CustomerOrderService(NegoSudDbContext context,
-                         ILogger<CustomerOrderService> logger,
-                         IBottleService bottleService,
-                         IUserService userService)
+    public CustomerOrderService(NegoSudDbContext context, ILogger<CustomerOrderService> logger, IBottleService bottleService, IUserService userService, IAddressService addressService)
     {
         _context = context;
         _logger = logger;
         _bottleService = bottleService;
         _userService = userService;
+        _addressService = addressService;
     }
 
     //</inheritdoc>  
@@ -35,6 +35,8 @@ public class CustomerOrderService : ICustomerOrderService
                     .Include(cO => cO.Customer)
                     .Include(cO => cO.Lines)
                     .ThenInclude(l => l.Bottle)
+                    .Include(co => co.Lines)
+                    .ThenInclude(cl => cl.CustomerOrderLineStorageLocations)
                     .FirstOrDefaultAsync(cO => cO.Id == id);
             }
             return await _context.CustomerOrders.FindAsync(id);
@@ -67,7 +69,6 @@ public class CustomerOrderService : ICustomerOrderService
     {
         try
         {
-      
             if(customerOrder.Customer?.Id != null)
             {
                 User? customer = await _userService.GetUserAsync(customerOrder.Customer.Id);
@@ -76,29 +77,36 @@ public class CustomerOrderService : ICustomerOrderService
                     customerOrder.Customer = customer;
                 }
             }
-
-            if(customerOrder.Lines != null)
+            
+            if(customerOrder.DeliveryAddress != null )
             {
-                foreach (CustomerOrderLine line in customerOrder.Lines)
+                Address? dbAddress = await _addressService.GetAddressAsync(customerOrder.DeliveryAddress.Id);
+                if (dbAddress != null)
                 {
-                    if (line.Bottle?.Id != null)
-                    {
-                        Bottle? bottle = await _bottleService.GetBottleAsync(line.Bottle.Id, includeRelations: false);
-                        if (bottle != null)
-                        {
-                            line.Bottle = bottle;
-                        }
-                    }
+                    customerOrder.DeliveryAddress = dbAddress;
                 }
             }
 
-            CustomerOrder newCustomerOrder = (await _context.CustomerOrders.AddAsync(customerOrder)).Entity;
-
-            if (customerOrder.Lines != null)
+            if(customerOrder.Lines != null)
             {
+                foreach (CustomerOrderLine orderLine in customerOrder.Lines)
+                {
+                    if (orderLine.Bottle?.Id == null) continue;
+                    Bottle? dbBottle = await _bottleService.GetBottleAsync(orderLine.Bottle.Id, true);
+                    if (dbBottle != null)
+                    {
+                       orderLine.Bottle = dbBottle;
+                       var availableLocationsAndQuantities = GetAvailableLocationsAndQuantities(dbBottle, orderLine);
+                       orderLine.CustomerOrderLineStorageLocations.AddRange(availableLocationsAndQuantities.Result?.Keys);
+                    }
+                    
+                }
                 await _context.AddRangeAsync(customerOrder.Lines);
             }
+            
+            CustomerOrder newCustomerOrder = (await _context.CustomerOrders.AddAsync(customerOrder)).Entity;
 
+            
             await _context.SaveChangesAsync();
 
             return newCustomerOrder;
@@ -111,12 +119,58 @@ public class CustomerOrderService : ICustomerOrderService
         return null;
     }
 
+    /// <summary>
+    /// Find the location(s) where the bottle is
+    /// </summary>
+    /// <param name="bottle">The bottle in the Database</param>
+    /// <param name="orderLine">The line from the order for this bottle</param>
+    /// <returns>A Collection of location</returns>
+    /// <exception cref="ApplicationException"></exception>
+    private async Task<Dictionary<CustomerOrderLineStorageLocation, int>?> GetAvailableLocationsAndQuantities(Bottle bottle, CustomerOrderLine orderLine)
+    {
+        var availableLocations = bottle.BottleStorageLocations!
+            .Where(bsl => bsl.BottleId == orderLine.Bottle.Id && bsl.Quantity > 0)
+            .OrderByDescending(bsl => bsl.Quantity)
+            .ToList();
+
+        var quantityByLocation = new Dictionary<CustomerOrderLineStorageLocation, int>();
+
+        if (availableLocations.Count == 0)
+        {
+            // TODO : revoir ce message avec lancement d'une commande chez le fournisseur
+            throw new ApplicationException("Nous n'avons pas cette bouteille en stock");
+        }
+
+        var totalQuantity = 0;
+        foreach (var location in availableLocations)
+        {
+            var quantityToAdd = Math.Min((int) (orderLine.Quantity - totalQuantity), (int) location.Quantity);
+            CustomerOrderLineStorageLocation customerOrderLineStorageLocation = new CustomerOrderLineStorageLocation
+            {
+                StorageLocation = location.StorageLocation,
+                CustomerOrderLine = orderLine
+            };
+            quantityByLocation.Add(customerOrderLineStorageLocation, quantityToAdd);
+            totalQuantity += quantityToAdd;
+            if (totalQuantity >= orderLine.Quantity)
+            {
+                // Update the quantity of the BottleStorageLocation entity in the database
+                location.Quantity -= quantityToAdd;
+                await _bottleService.UpdateBottleAsync(bottle);
+                await _context.SaveChangesAsync();
+                break;
+            }
+        }
+
+        return quantityByLocation;
+    }
+
+
     //</inheritdoc>  
     public async Task<CustomerOrder?> UpdateCustomerOrderAsync(CustomerOrder customerOrder)
     {
         try
         {
-
             // get the current customerOrder from db
             CustomerOrder? dbCustomerOrder = await this.GetCustomerOrderAsync(customerOrder.Id);
 
@@ -143,35 +197,42 @@ public class CustomerOrderService : ICustomerOrderService
                 if (customerOrder.Lines != null && dbCustomerOrder.Lines != null)
                 {
 
-                    ICollection<CustomerOrderLine>? dbLines = dbCustomerOrder.Lines.ToList();
+                    ICollection<CustomerOrderLine> dbLines = dbCustomerOrder.Lines.ToList();
 
-                    foreach (CustomerOrderLine Line in customerOrder.Lines)
+                    foreach (CustomerOrderLine line in customerOrder.Lines)
                     {
 
-                        if (Line.Bottle?.Id != null)
+                        if (line.Bottle?.Id != null)
                         {
-                            Bottle? bottle = await _bottleService.GetBottleAsync(Line.Bottle.Id, includeRelations: false);
+                            Bottle? bottle = await _bottleService.GetBottleAsync(line.Bottle.Id, includeRelations: false);
                             if (bottle != null)
                             {
-                                Line.Bottle = bottle;
+                                line.Bottle = bottle;
                             }
                         }
-
+                        
+                        
                         //if the Line already exists
-                        CustomerOrderLine? existingLine = dbLines.FirstOrDefault(l => l.Id == Line.Id);
+                        CustomerOrderLine? existingLine = dbLines.FirstOrDefault(l => l.Id == line.Id);
 
                         if (existingLine != null)
                         {
                             //update the existing Line
-                            existingLine.Bottle = Line.Bottle;
-                            existingLine.Quantity = Line.Quantity;
+                            if ((existingLine.Quantity != line.Quantity || existingLine.Bottle != line.Bottle) && line.Bottle != null)
+                            {
+                                var newLocationsAndQuantities = GetAvailableLocationsAndQuantities(line.Bottle, line);
+                                existingLine.Bottle = line.Bottle;
+                                // existingLine.Quantity = 
+                            }
+                            existingLine.Bottle = line.Bottle;
+                            existingLine.Quantity = line.Quantity;
                             _context.Entry(existingLine).State = EntityState.Modified;
                             dbLines.Remove(existingLine);
                         }
                         else
                         {
                             // otherwise, add the new Line to the current customerOrder
-                            dbCustomerOrder.Lines.Add(Line);
+                            dbCustomerOrder.Lines.Add(line);
                         }
 
                     }
@@ -213,7 +274,7 @@ public class CustomerOrderService : ICustomerOrderService
 
             if (dbCustomerOrder.Lines != null)
             {
-            _context.RemoveRange(dbCustomerOrder.Lines);
+                _context.RemoveRange(dbCustomerOrder.Lines);
             }
             
             _context.CustomerOrders.Remove(dbCustomerOrder);

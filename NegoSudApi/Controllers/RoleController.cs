@@ -24,7 +24,7 @@ public class RoleController :ControllerBase
     {
         Role? dbRole = await _roleService.GetRoleAsync(id);
 
-        if (dbRole == null) return StatusCode(StatusCodes.Status204NoContent, $"No Role found for id: {id}");
+        if (dbRole == null) return StatusCode(StatusCodes.Status404NotFound, $"No Role found for id: {id}");
 
         return StatusCode(StatusCodes.Status200OK, dbRole);
     }
@@ -35,7 +35,7 @@ public class RoleController :ControllerBase
     {
         IEnumerable<Role>? dbCountries = await _roleService.GetRolesAsync();
 
-        if (dbCountries == null) return StatusCode(StatusCodes.Status204NoContent, "No roles in database");
+        if (dbCountries == null) return StatusCode(StatusCodes.Status404NotFound, "No roles in database");
 
         return StatusCode(StatusCodes.Status200OK, dbCountries);
     }
@@ -46,7 +46,7 @@ public class RoleController :ControllerBase
     {
         Role? dbRole = await _roleService.AddRoleAsync(role);
 
-        if (dbRole == null) return StatusCode(StatusCodes.Status204NoContent, $"{role.Name} could not be added.");
+        if (dbRole == null) return StatusCode(StatusCodes.Status404NotFound, $"{role.Name} could not be added.");
 
         return StatusCode(StatusCodes.Status201Created, dbRole);
     }
@@ -59,7 +59,7 @@ public class RoleController :ControllerBase
         Role? dbRole = await _roleService.UpdateRoleAsync(role);
 
         if (dbRole == null)
-            return StatusCode(StatusCodes.Status204NoContent, $"No Role found for id: {role.Id} - could not update.");
+            return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {role.Id} - could not update.");
 
         return StatusCode(StatusCodes.Status200OK, dbRole);
     }
@@ -71,7 +71,7 @@ public class RoleController :ControllerBase
         bool? status = await _roleService.DeleteRoleAsync(id);
 
         if (status == false)
-            return StatusCode(StatusCodes.Status204NoContent, $"No Role found for id: {id} - could not delete");
+            return StatusCode(StatusCodes.Status404NotFound, $"No Role found for id: {id} - could not delete");
 
         return StatusCode(StatusCodes.Status200OK);
     }

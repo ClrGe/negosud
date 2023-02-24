@@ -4,45 +4,45 @@ using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Controllers
+namespace NegoSudApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class CountryController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class CountryController : ControllerBase
+    private readonly ICountryService _countryService;
+
+    public CountryController(ICountryService countryService)
     {
-        private readonly ICountryService _countryService;
+        _countryService = countryService;
+    }
 
-        public CountryController(ICountryService countryService)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCountryAsync(int id)
+    {
+        Country? dbCountry = await _countryService.GetCountryAsync(id);
+
+        if (dbCountry == null)
         {
-            _countryService = countryService;
+            return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {id}");
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCountryAsync(int id)
+        return StatusCode(StatusCodes.Status200OK, dbCountry);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetCountriesAsync()
+    {
+        IEnumerable<Country>? dbCountries = await _countryService.GetCountriesAsync();
+
+        if (dbCountries == null)
         {
-            Country? dbCountry = await _countryService.GetCountryAsync(id);
-
-            if (dbCountry == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {id}");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbCountry);
+            return StatusCode(StatusCodes.Status404NotFound, "No countries in database");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetCountriesAsync()
-        {
-            IEnumerable<Country>? dbCountries = await _countryService.GetCountriesAsync();
-
-            if (dbCountries == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, "No countries in database");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbCountries);
-        }
+        return StatusCode(StatusCodes.Status200OK, dbCountries);
+    }
 
         [Authorize(Policy = RolePermissions.CanAddCountry)]
         [HttpPost("AddCountry")]
@@ -50,13 +50,13 @@ namespace NegoSudApi.Controllers
         {
             Country? dbCountry = await _countryService.AddCountryAsync(country);
 
-            if (dbCountry == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"{country.Name} could not add content.");
-            }
-
-            return StatusCode(StatusCodes.Status201Created, dbCountry);
+        if (dbCountry == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No match - could not add content.");
         }
+
+        return StatusCode(StatusCodes.Status201Created, dbCountry);
+    }
 
         [Authorize(Policy = RolePermissions.CanEditCountry)]
         [HttpPost("UpdateCountry")]
@@ -67,15 +67,15 @@ namespace NegoSudApi.Controllers
                 return BadRequest();
             }
 
-            Country? dbCountry = await _countryService.UpdateCountryAsync(country);
+        Country? dbCountry = await _countryService.UpdateCountryAsync(country);
 
-            if (dbCountry == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {country.Id} - could not update.");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbCountry);
+        if (dbCountry == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {country.Id} - could not update.");
         }
+
+        return StatusCode(StatusCodes.Status200OK, dbCountry);
+    }
 
         [Authorize(Policy = RolePermissions.CanDeleteCountry)]
         [HttpPost("DeleteCountry")]
@@ -83,12 +83,11 @@ namespace NegoSudApi.Controllers
         {
             bool? status = await _countryService.DeleteCountryAsync(id);
 
-            if (status == false)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No Country found for id: {id} - could not delete");
-            }
-
-            return StatusCode(StatusCodes.Status200OK);
+        if (status == false)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {id} - could not delete");
         }
+
+        return StatusCode(StatusCodes.Status200OK);
     }
 }

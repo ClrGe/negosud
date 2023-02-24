@@ -4,19 +4,19 @@ using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Controllers
-{
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class SupplierOrderController : ControllerBase
-    {
-        private readonly ISupplierOrderService _supplierOrderService;
+namespace NegoSudApi.Controllers;
 
-        public SupplierOrderController(ISupplierOrderService supplierOrderService)
-        {
-            _supplierOrderService = supplierOrderService;
-        }
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class SupplierOrderController : ControllerBase
+{
+    private readonly ISupplierOrderService _supplierOrderService;
+
+    public SupplierOrderController(ISupplierOrderService supplierOrderService)
+    {
+        _supplierOrderService = supplierOrderService;
+    }
 
         [Authorize(Policy = RolePermissions.CanGetSupplierOrder)]
         [HttpGet("{id}")]
@@ -24,13 +24,13 @@ namespace NegoSudApi.Controllers
         {
             SupplierOrder? dbSupplierOrder = await _supplierOrderService.GetSupplierOrderAsync(id);
 
-            if (dbSupplierOrder == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No supplierOrder found for id: {id}");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
+        if (dbSupplierOrder == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No supplier order found for id: {id}");
         }
+
+        return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
+    }
 
         [Authorize(Policy = RolePermissions.CanGetSupplierOrder)]
         [HttpGet]
@@ -38,13 +38,13 @@ namespace NegoSudApi.Controllers
         {
             var dbSupplierOrders = await _supplierOrderService.GetSupplierOrdersAsync();
 
-            if (dbSupplierOrders == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, "No supplierOrders in database");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbSupplierOrders);
+        if (dbSupplierOrders == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, "No supplier orders in database");
         }
+
+        return StatusCode(StatusCodes.Status200OK, dbSupplierOrders);
+    }
 
         [Authorize(Policy = RolePermissions.CanAddSupplierOrder)]
         [HttpPost("AddSupplierOrder")]
@@ -52,13 +52,13 @@ namespace NegoSudApi.Controllers
         {
             SupplierOrder? dbSupplierOrder = await _supplierOrderService.AddSupplierOrderAsync(supplierOrder);
 
-            if (dbSupplierOrder == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"{supplierOrder.Reference} could not be added.");
-            }
-
-            return StatusCode(StatusCodes.Status201Created, dbSupplierOrder);
+        if (dbSupplierOrder == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"{supplierOrder.Reference} could not be added.");
         }
+
+        return StatusCode(StatusCodes.Status201Created, dbSupplierOrder);
+    }
 
         [Authorize(Policy = RolePermissions.CanEditSupplierOrder)]
         [HttpPost("UpdateSupplierOrder")]
@@ -69,15 +69,15 @@ namespace NegoSudApi.Controllers
                 return BadRequest();
             }
 
-            SupplierOrder? dbSupplierOrder = await _supplierOrderService.UpdateSupplierOrderAsync(supplierOrder);
+        SupplierOrder? dbSupplierOrder = await _supplierOrderService.UpdateSupplierOrderAsync(supplierOrder);
 
-            if (dbSupplierOrder == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No SupplierOrder found for id: {supplierOrder.Id} - could not update.");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
+        if (dbSupplierOrder == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No Supplier Order found for id: {supplierOrder.Id} - could not update.");
         }
+
+        return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
+    }
 
         [Authorize(Policy = RolePermissions.CanDeleteSupplierOrder)]
         [HttpPost("DeleteSupplierOrder")]
@@ -85,12 +85,11 @@ namespace NegoSudApi.Controllers
         {
             bool? status = await _supplierOrderService.DeleteSupplierOrderAsync(id);
 
-            if (status == false)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No SupplierOrder found for id: {id} - could not be deleted");
-            }
-
-            return StatusCode(StatusCodes.Status200OK);
+        if (status == false)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No Supplier Order found for id: {id} - could not be deleted");
         }
+
+        return StatusCode(StatusCodes.Status200OK);
     }
 }

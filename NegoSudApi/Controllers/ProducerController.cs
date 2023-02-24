@@ -1,12 +1,10 @@
+namespace NegoSudApi.Controllers;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
-
-namespace NegoSudApi.Controllers;
-
-
 
 [ApiController]
 [Route("api/[controller]")]
@@ -33,7 +31,7 @@ public class ProducerController : ControllerBase
 
         if (dbProducer == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No producer found for id: {id}");
+            return StatusCode(StatusCodes.Status404NotFound, $"No Producer found for id: {id}");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbProducer);
@@ -50,7 +48,7 @@ public class ProducerController : ControllerBase
 
         if (dbProducers == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, "No producers in database");
+            return StatusCode(StatusCodes.Status404NotFound, $"No Producer found in database");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbProducers);
@@ -70,7 +68,7 @@ public class ProducerController : ControllerBase
 
         if (dbProducer == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"{producer.Name} could not be added.");
+            return StatusCode(StatusCodes.Status404NotFound, $"{producer.Name} could not be added.");
         }
 
         return StatusCode(StatusCodes.Status201Created, dbProducer);
@@ -96,7 +94,7 @@ public class ProducerController : ControllerBase
 
         if (dbProducer == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No Producer found for id: {producer.Id} - could not update.");
+            return StatusCode(StatusCodes.Status404NotFound, $"No producer found for id: {producer.Id} - could not update.");
         }
 
         return StatusCode(StatusCodes.Status200OK, dbProducer);
@@ -116,7 +114,7 @@ public class ProducerController : ControllerBase
 
         if (producer == null)
         {
-            return StatusCode(StatusCodes.Status204NoContent, $"No Producer found for id: {id} - could not be deleted");
+            return StatusCode(StatusCodes.Status404NotFound, $"No Producer found for id: {id} - could not be deleted");
         }
 
         await _producerService.DeleteProducerAsync(id);

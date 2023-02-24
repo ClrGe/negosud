@@ -27,7 +27,7 @@ public class UserController :ControllerBase
     {
         User? dbUser = await _userService.GetUserAsync(id);
 
-        if (dbUser == null) return StatusCode(StatusCodes.Status204NoContent, $"No User found for id: {id}");
+        if (dbUser == null) return StatusCode(StatusCodes.Status404NotFound, $"No User found for id: {id}");
 
         return StatusCode(StatusCodes.Status200OK, dbUser);
     }
@@ -38,7 +38,7 @@ public class UserController :ControllerBase
     {
         IEnumerable<User>? dbCountries = await _userService.GetUsersAsync();
 
-        if (dbCountries == null) return StatusCode(StatusCodes.Status204NoContent, "No users in database");
+        if (dbCountries == null) return StatusCode(StatusCodes.Status404NotFound, "No users in database");
 
         return StatusCode(StatusCodes.Status200OK, dbCountries);
     }
@@ -50,7 +50,7 @@ public class UserController :ControllerBase
         user.Password = _securePassword.Hash(user);
         User? dbUser = await _userService.AddUserAsync(user);
 
-        if (dbUser == null) return StatusCode(StatusCodes.Status204NoContent, $"{user.Email} could not be added.");
+        if (dbUser == null) return StatusCode(StatusCodes.Status404NotFound, $"{user.Email} could not be added.");
 
         return StatusCode(StatusCodes.Status201Created, dbUser);
     }
@@ -64,7 +64,7 @@ public class UserController :ControllerBase
         User? dbUser = await _userService.UpdateUserAsync(user);
 
         if (dbUser == null)
-            return StatusCode(StatusCodes.Status204NoContent, $"No User found for id: {user.Id} - could not update.");
+            return StatusCode(StatusCodes.Status404NotFound, $"No User found for id: {user.Id} - could not update.");
 
         return StatusCode(StatusCodes.Status200OK, dbUser);
     }
@@ -76,7 +76,7 @@ public class UserController :ControllerBase
         bool? status = await _userService.DeleteUserAsync(id);
 
         if (status == false)
-            return StatusCode(StatusCodes.Status204NoContent, $"No User found for id: {id} - could not delete");
+            return StatusCode(StatusCodes.Status404NotFound, $"No User found for id: {id} - could not delete");
 
         return StatusCode(StatusCodes.Status200OK);
     }

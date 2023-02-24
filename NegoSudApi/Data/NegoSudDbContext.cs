@@ -23,9 +23,10 @@ public class NegoSudDbContext : DbContext
     public virtual DbSet<Permission> Permissions { get; set; }
     public virtual DbSet<PermissionRole> PermissionRoles { get; set; }
     public virtual DbSet<Supplier> Suppliers { get; set; }
-
     public virtual DbSet<CustomerOrder> CustomerOrders { get; set; }
     public virtual DbSet<SupplierOrder> SupplierOrders { get; set; }
+    public virtual DbSet<VAT> Vat { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Bottle>(entity =>
@@ -82,6 +83,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(i => i.Id).UseIdentityColumn();
 
             entity.HasMany(k => k.Regions).WithOne(k => k.Country);
+            entity.HasMany(k => k.Cities).WithOne(k => k.Country);
         });
 
         modelBuilder.Entity<Grape>(entity =>
@@ -171,6 +173,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
+            entity.HasOne(a => a.Supplier).WithOne(s => s.Address).HasForeignKey<Supplier>(s => s.Id);
         });
 
         modelBuilder.Entity<BottleStorageLocation>(entity =>
@@ -217,6 +220,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(l => l.Id).UseIdentityColumn();
             entity.HasOne(l => l.CustomerOrder).WithMany(k => k.Lines);
             entity.HasOne(l => l.Bottle);
+            entity.HasMany(l => l.CustomerOrderLineStorageLocations).WithOne(sl => sl.CustomerOrderLine);
         });
 
         modelBuilder.Entity<SupplierOrder>(entity =>
@@ -243,6 +247,8 @@ public class NegoSudDbContext : DbContext
             entity.Property(l => l.Id).UseIdentityColumn();
             entity.HasOne(l => l.SupplierOrder).WithMany(k => k.Lines);
             entity.HasOne(l => l.Bottle);
+            entity.HasMany(l => l.SupplierOrderLineStorageLocations).WithOne(sl => sl.SupplierOrderLine);
+
         });
 
 
@@ -311,7 +317,63 @@ public class NegoSudDbContext : DbContext
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
-            entity.HasMany(k => k.Bottles).WithMany(k => k.Suppliers);
+            entity.HasOne(s => s.Address);
+        });
+
+        modelBuilder.Entity<PermissionRole>(entity =>
+        {
+            entity.ToTable(nameof(PermissionRole));
+            entity.HasKey(k => new {k.PermissionId, k.RoleId});
+
+            entity.HasOne(k => k.Permission)
+                .WithMany(k => k.PermissionRoles)
+                .HasForeignKey(k => k.PermissionId)
+                .HasPrincipalKey(k => k.Id);
+
+            entity.HasOne(k => k.Role)
+                .WithMany(k => k.PermissionRoles)
+                .HasForeignKey(k => k.RoleId)
+                .HasPrincipalKey(k => k.Id);
+        });
+        
+        modelBuilder.Entity<CustomerOrderLineStorageLocation>(entity =>
+        {
+            entity.ToTable(nameof(CustomerOrderLineStorageLocation));
+            entity.HasKey(k => new {k.CustomerOrderLineId, k.StorageLocationId});
+
+            entity.HasOne(k => k.StorageLocation)
+                .WithMany(k => k.CustomerOrderLineStorageLocations)
+                .HasForeignKey(k => k.StorageLocationId)
+                .HasPrincipalKey(k => k.Id);
+
+            entity.HasOne(k => k.CustomerOrderLine)
+                .WithMany(k => k.CustomerOrderLineStorageLocations)
+                .HasForeignKey(k => k.CustomerOrderLineId)
+                .HasPrincipalKey(k => k.Id);
+        });
+        
+        modelBuilder.Entity<SupplierOrderLineStorageLocation>(entity =>
+        {
+            entity.ToTable(nameof(SupplierOrderLineStorageLocation));
+            entity.HasKey(k => new {k.SupplierOrderLineId, k.StorageLocationId});
+
+            entity.HasOne(k => k.StorageLocation)
+                .WithMany(k => k.SupplierOrderLineStorageLocations)
+                .HasForeignKey(k => k.StorageLocationId)
+                .HasPrincipalKey(k => k.Id);
+
+            entity.HasOne(k => k.SupplierOrderLine)
+                .WithMany(k => k.SupplierOrderLineStorageLocations)
+                .HasForeignKey(k => k.SupplierOrderLineId)
+                .HasPrincipalKey(k => k.Id);
+        });
+        
+        modelBuilder.Entity<VAT>(entity =>
+        {
+            entity.ToTable(nameof(VAT));
+            entity.HasKey(k => k.Id);
+            entity.Property(i => i.Id).UseIdentityColumn();
+            entity.HasMany(s => s.Bottles).WithOne(b => b.Vat);
         });
     }
 }

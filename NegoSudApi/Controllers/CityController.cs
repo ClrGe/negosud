@@ -4,45 +4,45 @@ using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
-namespace NegoSudApi.Controllers
+namespace NegoSudApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class CityController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class CityController : ControllerBase
+    private readonly ICityService _cityService;
+
+    public CityController(ICityService cityService)
     {
-        private readonly ICityService _cityService;
+        _cityService = cityService;
+    }
 
-        public CityController(ICityService cityService)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCityAsync(int id)
+    {
+        City? dbCity = await _cityService.GetCityAsync(id);
+
+        if (dbCity == null)
         {
-            _cityService = cityService;
+            return StatusCode(StatusCodes.Status404NotFound, $"No city found for id: {id}");
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCityAsync(int id)
+        return StatusCode(StatusCodes.Status200OK, dbCity);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetCitiesAsync()
+    {
+        IEnumerable<City>? dbCities = await _cityService.GetCitiesAsync();
+
+        if (dbCities == null)
         {
-            City? dbCity = await _cityService.GetCityAsync(id);
-
-            if (dbCity == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No city found for id: {id}");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbCity);
+            return StatusCode(StatusCodes.Status404NotFound, "No cities in database");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetCitiesAsync()
-        {
-            IEnumerable<City>? dbCities = await _cityService.GetCitiesAsync();
-
-            if (dbCities == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, "No cities in database");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, dbCities);
-        }
+        return StatusCode(StatusCodes.Status200OK, dbCities);
+    }
 
         [Authorize(Policy = RolePermissions.CanAddCity)]
         [HttpPost("AddCity")]
@@ -50,13 +50,13 @@ namespace NegoSudApi.Controllers
         {
             City? dbCity = await _cityService.AddCityAsync(City);
 
-            if (dbCity == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No match - could not add content.");
-            }
-
-            return StatusCode(StatusCodes.Status201Created, dbCity);
+        if (dbCity == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No match - could not add content.");
         }
+
+        return StatusCode(StatusCodes.Status201Created, dbCity);
+    }
 
         [Authorize(Policy = RolePermissions.CanEditCity)]
         [HttpPost("UpdateCity")]
@@ -67,12 +67,12 @@ namespace NegoSudApi.Controllers
                 return BadRequest();
             }
 
-            City? dbCity = await _cityService.UpdateCityAsync(city);
+        City? dbCity = await _cityService.UpdateCityAsync(city);
 
-            if (dbCity == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No city found for id: {city.Id} - could not update.");
-            }
+        if (dbCity == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No city found for id: {city.Id} - could not update.");
+        }
 
             return StatusCode(StatusCodes.Status200OK, dbCity);
         }
@@ -83,12 +83,11 @@ namespace NegoSudApi.Controllers
         {
             bool? status = await _cityService.DeleteCityAsync(id);
 
-            if (status == false)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No city found for id: {id} - could not delete");
-            }
-
-            return StatusCode(StatusCodes.Status200OK);
+        if (status == false)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No city found for id: {city.Id} - could not delete");
         }
+
+        return StatusCode(StatusCodes.Status200OK);
     }
 }
