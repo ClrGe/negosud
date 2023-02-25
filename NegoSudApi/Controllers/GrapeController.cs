@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -38,24 +39,26 @@ public class GrapeController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbGrapes.ToList());
     }
 
-    [HttpPost("AddGrape")]
-    public async Task<IActionResult> AddGrapeAsync(Grape grape)
-    {
-        Grape? dbGrape = await _grapeService.AddGrapeAsync(grape);
-        if (dbGrape == null)
+        [Authorize(Policy = RolePermissions.CanAddGrape)]
+        [HttpPost("AddGrape")]
+        public async Task<IActionResult> AddGrapeAsync(Grape grape)
         {
-            return StatusCode(StatusCodes.Status404NotFound, $"No match for query");
+            Grape? dbGrape = await _grapeService.AddGrapeAsync(grape);
+            if (dbGrape == null)
+            {
+                return StatusCode(StatusCodes.Status204NoContent, $"{grape.GrapeType} could not be added.");
+            }
+            return StatusCode(StatusCodes.Status201Created, dbGrape);
         }
-        return StatusCode(StatusCodes.Status201Created, dbGrape);
-    }
 
-    [HttpPost("UpdateGrape")]
-    public async Task<IActionResult> UpdateGrapeAsync(Grape grape)
-    {
-        if (grape == null)
+        [Authorize(Policy = RolePermissions.CanEditGrape)]
+        [HttpPost("UpdateGrape")]
+        public async Task<IActionResult> UpdateGrapeAsync(Grape grape)
         {
-            return BadRequest();
-        }
+            if (grape == null)
+            {
+                return BadRequest();
+            }
 
         Grape? dbGrape = await _grapeService.UpdateGrapeAsync(grape);
         if (dbGrape == null)
@@ -65,16 +68,17 @@ public class GrapeController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbGrape);
     }
 
-    [HttpPost("DeleteGrape")]
-    public async Task<IActionResult> DeleteGrapeAsync(int id)
-    {
-        Grape? dbGrape = await _grapeService.GetGrapeAsync(id);
-        if (dbGrape == null)
+        [Authorize(Policy = RolePermissions.CanDeleteGrape)]
+        [HttpPost("DeleteGrape")]
+        public async Task<IActionResult> DeleteGrapeAsync(int id)
         {
-            return StatusCode(StatusCodes.Status404NotFound, $"No match for query");
+            Grape? dbGrape = await _grapeService.GetGrapeAsync(id);
+            if (dbGrape == null)
+            {
+                return StatusCode(StatusCodes.Status204NoContent, $"No Grape found for id: {id} - could not be deleted");
+            }
+            await _grapeService.DeleteGrapeAsync(id);
+            return StatusCode(StatusCodes.Status200OK);
         }
-        await _grapeService.DeleteGrapeAsync(id);
-        return StatusCode(StatusCodes.Status200OK);
-    }
 
 }

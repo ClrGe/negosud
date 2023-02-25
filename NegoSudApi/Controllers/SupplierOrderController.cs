@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -17,10 +18,11 @@ public class SupplierOrderController : ControllerBase
         _supplierOrderService = supplierOrderService;
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetSupplierOrderAsync(int id)
-    {
-        SupplierOrder? dbSupplierOrder = await _supplierOrderService.GetSupplierOrderAsync(id);
+        [Authorize(Policy = RolePermissions.CanGetSupplierOrder)]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetSupplierOrderAsync(int id)
+        {
+            SupplierOrder? dbSupplierOrder = await _supplierOrderService.GetSupplierOrderAsync(id);
 
         if (dbSupplierOrder == null)
         {
@@ -30,10 +32,11 @@ public class SupplierOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetSupplierOrdersAsync()
-    {
-        var dbSupplierOrders = await _supplierOrderService.GetSupplierOrdersAsync();
+        [Authorize(Policy = RolePermissions.CanGetSupplierOrder)]
+        [HttpGet]
+        public async Task<IActionResult> GetSupplierOrdersAsync()
+        {
+            var dbSupplierOrders = await _supplierOrderService.GetSupplierOrdersAsync();
 
         if (dbSupplierOrders == null)
         {
@@ -43,10 +46,11 @@ public class SupplierOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbSupplierOrders);
     }
 
-    [HttpPost("AddSupplierOrder")]
-    public async Task<ActionResult<SupplierOrder>> AddSupplierOrder(SupplierOrder supplierOrder)
-    {
-        SupplierOrder? dbSupplierOrder = await _supplierOrderService.AddSupplierOrderAsync(supplierOrder);
+        [Authorize(Policy = RolePermissions.CanAddSupplierOrder)]
+        [HttpPost("AddSupplierOrder")]
+        public async Task<ActionResult<SupplierOrder>> AddSupplierOrder(SupplierOrder supplierOrder)
+        {
+            SupplierOrder? dbSupplierOrder = await _supplierOrderService.AddSupplierOrderAsync(supplierOrder);
 
         if (dbSupplierOrder == null)
         {
@@ -56,13 +60,14 @@ public class SupplierOrderController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbSupplierOrder);
     }
 
-    [HttpPost("UpdateSupplierOrder")]
-    public async Task<IActionResult> UpdateSupplierOrderAsync(SupplierOrder supplierOrder)
-    {
-        if (supplierOrder == null)
+        [Authorize(Policy = RolePermissions.CanEditSupplierOrder)]
+        [HttpPost("UpdateSupplierOrder")]
+        public async Task<IActionResult> UpdateSupplierOrderAsync(SupplierOrder supplierOrder)
         {
-            return BadRequest();
-        }
+            if (supplierOrder == null)
+            {
+                return BadRequest();
+            }
 
         SupplierOrder? dbSupplierOrder = await _supplierOrderService.UpdateSupplierOrderAsync(supplierOrder);
 
@@ -74,10 +79,11 @@ public class SupplierOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
     }
 
-    [HttpPost("DeleteSupplierOrder")]
-    public async Task<IActionResult> DeleteSupplierOrderAsync(int id)
-    {
-        bool? status = await _supplierOrderService.DeleteSupplierOrderAsync(id);
+        [Authorize(Policy = RolePermissions.CanDeleteSupplierOrder)]
+        [HttpPost("DeleteSupplierOrder")]
+        public async Task<IActionResult> DeleteSupplierOrderAsync(int id)
+        {
+            bool? status = await _supplierOrderService.DeleteSupplierOrderAsync(id);
 
         if (status == false)
         {

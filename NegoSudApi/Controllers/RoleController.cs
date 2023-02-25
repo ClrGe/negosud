@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -17,6 +18,7 @@ public class RoleController :ControllerBase
         _roleService = role;
     }
 
+    [Authorize(Policy = RolePermissions.CanGetRole)]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetRoleAsync(int id)
     {
@@ -27,8 +29,9 @@ public class RoleController :ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbRole);
     }
 
+    [Authorize(Policy = RolePermissions.CanGetRole)]
     [HttpGet]
-    public async Task<IActionResult> GetCountriesAsync()
+    public async Task<IActionResult> GetRoles()
     {
         IEnumerable<Role>? dbCountries = await _roleService.GetRolesAsync();
 
@@ -37,6 +40,7 @@ public class RoleController :ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCountries);
     }
 
+    [Authorize(Policy = RolePermissions.CanAddRole)]
     [HttpPost("AddRole")]
     public async Task<ActionResult<Role>> AddRoleAsync(Role role)
     {
@@ -47,6 +51,7 @@ public class RoleController :ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbRole);
     }
 
+    [Authorize(Policy = RolePermissions.CanEditRole)]
     [HttpPost("UpdateRole")]
     public async Task<IActionResult> UpdateRoleAsync(Role role)
     {
@@ -59,6 +64,7 @@ public class RoleController :ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbRole);
     }
 
+    [Authorize(Policy = RolePermissions.CanDeleteRole)]
     [HttpPost("DeleteRole")]
     public async Task<IActionResult> DeleteRoleAsync(int id)
     {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -56,6 +57,7 @@ public class AddressController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbAddress);
     }
 
+    [Authorize(Policy = RolePermissions.CanEditAddress)]
     [HttpPost("UpdateAddress")]
     public async Task<IActionResult> UpdateAddressAsync(Address address)
     {
@@ -74,6 +76,7 @@ public class AddressController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbAddress);
     }
 
+    [Authorize(Policy = RolePermissions.CanDeleteAddress)]
     [HttpPost("DeleteAddress")]
     public async Task<IActionResult> DeleteAddressAsync(int id)
     {

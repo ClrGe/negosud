@@ -8,8 +8,9 @@ public interface IUserService
     /// Get a User entity from the database by its id, including or not subobjects and collections
     /// </summary>
     /// <param name="id">The User's id</param>
+    /// <param name="includeRelations">Indicates whether or not subobjects and collections should be loaded (false if not specified)</param>
     /// <returns>An User with the desired id, or null if it doesn't exist</returns>
-    Task<User?> GetUserAsync(int id);
+    Task<User?> GetUserAsync(int id, bool includeRelations = false);
 
     /// <summary>
     /// Get an IEnumerable of Useres from the database

@@ -9,6 +9,8 @@
     <ItemGroup>
       <PackageReference Include="Aspose.PDF" Version="23.1.1" />
       <PackageReference Include="EFCore.NamingConventions" Version="7.0.0" />
+      <PackageReference Include="HeimGuard" Version="0.3.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.2" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
       <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.2" />

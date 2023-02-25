@@ -21,6 +21,7 @@ public class NegoSudDbContext : DbContext
     public virtual DbSet<Address> Addresses { get; set; }
     public virtual DbSet<Role> Roles { get; set; }
     public virtual DbSet<Permission> Permissions { get; set; }
+    public virtual DbSet<PermissionRole> PermissionRoles { get; set; }
     public virtual DbSet<Supplier> Suppliers { get; set; }
     public virtual DbSet<CustomerOrder> CustomerOrders { get; set; }
     public virtual DbSet<SupplierOrder> SupplierOrders { get; set; }
@@ -274,8 +275,28 @@ public class NegoSudDbContext : DbContext
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
             entity.HasMany(a => a.Users).WithOne(r => r.Role);
         });
-        
-       
+
+        modelBuilder.Entity<PermissionRole>(entity =>
+        {
+            entity.ToTable(nameof(PermissionRole));
+            entity.Property(p => p.CreatedBy).HasMaxLength(200);
+            entity.Property(p => p.UpdatedBy).HasMaxLength(200);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.HasKey(k => new { k.RoleId, k.PermissionId });
+
+            entity.HasOne(k => k.Role)
+                .WithMany(k => k.PermissionRoles)
+                .HasForeignKey(k => k.RoleId)
+                .HasPrincipalKey(k => k.Id);
+
+            entity.HasOne(k => k.Permission)
+                .WithMany(k => k.PermissionRoles)
+                .HasForeignKey(k => k.PermissionId)
+                .HasPrincipalKey(k => k.Id);
+        });
+
+
         modelBuilder.Entity<Permission>(entity =>
         {
             entity.ToTable(nameof(Permission));
@@ -286,7 +307,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
         });
-        
+
         modelBuilder.Entity<Supplier>(entity =>
         {
             entity.ToTable(nameof(Supplier));
@@ -297,22 +318,6 @@ public class NegoSudDbContext : DbContext
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
             entity.HasOne(s => s.Address);
-        });
-
-        modelBuilder.Entity<PermissionRole>(entity =>
-        {
-            entity.ToTable(nameof(PermissionRole));
-            entity.HasKey(k => new {k.PermissionId, k.RoleId});
-
-            entity.HasOne(k => k.Permission)
-                .WithMany(k => k.PermissionRoles)
-                .HasForeignKey(k => k.PermissionId)
-                .HasPrincipalKey(k => k.Id);
-
-            entity.HasOne(k => k.Role)
-                .WithMany(k => k.PermissionRoles)
-                .HasForeignKey(k => k.RoleId)
-                .HasPrincipalKey(k => k.Id);
         });
         
         modelBuilder.Entity<CustomerOrderLineStorageLocation>(entity =>

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NegoSudApi.Migrations
 {
     [DbContext(typeof(NegoSudDbContext))]
-    [Migration("20230224144505_NewOne")]
+    [Migration("20230225182240_New_One")]
     partial class NewOne
     {
         /// <inheritdoc />
@@ -617,10 +617,6 @@ namespace NegoSudApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Access")
-                        .HasColumnType("text")
-                        .HasColumnName("access");
-
                     b.Property<DateTime?>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
@@ -656,19 +652,42 @@ namespace NegoSudApi.Migrations
 
             modelBuilder.Entity("NegoSudApi.Models.PermissionRole", b =>
                 {
-                    b.Property<int>("PermissionId")
-                        .HasColumnType("integer")
-                        .HasColumnName("permission_id");
-
                     b.Property<int>("RoleId")
                         .HasColumnType("integer")
                         .HasColumnName("role_id");
 
-                    b.HasKey("PermissionId", "RoleId")
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("permission_id");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(0)
+                        .HasColumnType("timestamp(0) with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasPrecision(0)
+                        .HasColumnType("timestamp(0) with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("RoleId", "PermissionId")
                         .HasName("pk_permission_role");
 
-                    b.HasIndex("RoleId")
-                        .HasDatabaseName("ix_permission_role_role_id");
+                    b.HasIndex("PermissionId")
+                        .HasDatabaseName("ix_permission_role_permission_id");
 
                     b.ToTable("PermissionRole", (string)null);
                 });
@@ -1362,7 +1381,7 @@ namespace NegoSudApi.Migrations
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_permission_role_permission_permission_id");
+                        .HasConstraintName("fk_permission_role_permissions_permission_id");
 
                     b.HasOne("NegoSudApi.Models.Role", "Role")
                         .WithMany("PermissionRoles")

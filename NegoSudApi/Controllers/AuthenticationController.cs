@@ -1,3 +1,4 @@
+using System.Net;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
@@ -25,21 +26,50 @@ public class AuthenticationController : ControllerBase
     
     [HttpPost]
     [Route("Login")]
-    public Task<ActionResult<string>> Login(User user)
+    public async Task<ActionResult<string>> Login(User user)
     {
         var dbUser = _jwtAuthenticationService.Authenticate(user.Email, user.Password);
         if (dbUser != null)
         {
-            var claims = new List<Claim>
+            List<Claim> claims = new List<Claim>
             {
-                new(ClaimTypes.Email, user.Email)
+                new(ClaimTypes.Email, user.Email),                
             };
-            var token = _jwtAuthenticationService.GenerateToken(_configuration["Jwt:Key"]!, claims);
-            return Task.FromResult<ActionResult<string>>(Ok(token));
+
+            Role? userRole = (await _userService.GetUserAsync(dbUser.Id, includeRelations: true)).Role;
+
+            if(userRole != null)
+            {
+                claims.Add(new(ClaimTypes.Role, userRole?.Name));
+            }
+
+            string? token = _jwtAuthenticationService.GenerateToken(_configuration["Jwt:Key"]!, claims);
+
+            User response = new User()
+            {
+                Id = dbUser.Id,
+                FirstName = dbUser.FirstName,
+                LastName = dbUser.LastName,
+                Email = dbUser.Email,
+                Role = userRole,
+            };
+
+            Response.Cookies.Append(
+            "session",
+            token,
+            new CookieOptions()
+            {
+                IsEssential = true,
+                HttpOnly = false,
+                Secure = false,
+                SameSite = SameSiteMode.Lax,
+            }
+            );
+            return StatusCode(StatusCodes.Status200OK, response);
         }
-        return Task.FromResult<ActionResult<string>>(Unauthorized());
+        return StatusCode(StatusCodes.Status401Unauthorized);
     }
-    
+
     [HttpPost]
     [Route("Register")]
     public async Task<ActionResult<string>> Register(User user)
@@ -47,7 +77,10 @@ public class AuthenticationController : ControllerBase
         var userToAdd = new User
         {
             Email = user.Email,
-            Password = user.Password
+            Password = user.Password,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Role = user.Role,
         };
         
         userToAdd.Password = _securePassword.Hash(userToAdd);
@@ -55,6 +88,41 @@ public class AuthenticationController : ControllerBase
 
         if (dbUser == null) return StatusCode(StatusCodes.Status404NotFound, $"No match - could not add content.");
 
-        return StatusCode(StatusCodes.Status201Created, dbUser.Email);
+        List<Claim> claims = new List<Claim>
+        {
+            new(ClaimTypes.Email, dbUser.Email)
+        };
+
+        Role? userRole = (await _userService.GetUserAsync(dbUser.Id, includeRelations: true)).Role;
+
+        if (userRole != null)
+        {
+            claims.Add(new(ClaimTypes.Role, userRole?.Name));
+        }
+
+        string? token = _jwtAuthenticationService.GenerateToken(_configuration["Jwt:Key"]!, claims);
+
+        User response = new User()
+        {
+            Id = dbUser.Id,
+            FirstName = dbUser.FirstName,
+            LastName = dbUser.LastName,
+            Email = dbUser.Email,
+            Role = userRole,
+        };
+
+        Response.Cookies.Append(
+            "session",
+            token,
+            new CookieOptions()
+            {
+                IsEssential = true,
+                HttpOnly = false,
+                Secure = false,
+                SameSite = SameSiteMode.Lax,
+            }
+            );
+
+        return StatusCode(StatusCodes.Status201Created, response);
     }
 }

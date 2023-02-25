@@ -52,7 +52,6 @@ namespace NegoSudApi.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    access = table.Column<string>(type: "text", nullable: true),
                     name = table.Column<string>(type: "text", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
@@ -180,13 +179,17 @@ namespace NegoSudApi.Migrations
                 columns: table => new
                 {
                     permissionid = table.Column<int>(name: "permission_id", type: "integer", nullable: false),
-                    roleid = table.Column<int>(name: "role_id", type: "integer", nullable: false)
+                    roleid = table.Column<int>(name: "role_id", type: "integer", nullable: false),
+                    createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
+                    updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_permission_role", x => new { x.permissionid, x.roleid });
+                    table.PrimaryKey("pk_permission_role", x => new { x.roleid, x.permissionid });
                     table.ForeignKey(
-                        name: "fk_permission_role_permission_permission_id",
+                        name: "fk_permission_role_permissions_permission_id",
                         column: x => x.permissionid,
                         principalTable: "Permission",
                         principalColumn: "id",
@@ -685,9 +688,9 @@ namespace NegoSudApi.Migrations
                 column: "storage_location_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_permission_role_role_id",
+                name: "ix_permission_role_permission_id",
                 table: "PermissionRole",
-                column: "role_id");
+                column: "permission_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_producer_address_id",

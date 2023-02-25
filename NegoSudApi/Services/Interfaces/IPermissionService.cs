@@ -12,6 +12,13 @@ public interface IPermissionService
     Task<Permission?> GetPermissionAsync(int id);
 
     /// <summary>
+    /// Get a Permission entity from the database by its name, including or not subobjects and collections
+    /// </summary>
+    /// <param name="name">The Permission's id</param>
+    /// <returns>An Permission with the desired name, or null if it doesn't exist</returns>
+    Task<Permission?> GetPermissionAsync(string name);
+
+    /// <summary>
     /// Get an IEnumerable of Permissions from the database
     /// </summary>
     /// <returns>A collection of Permission</returns>
