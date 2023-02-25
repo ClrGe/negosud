@@ -65,7 +65,7 @@ public class AuthenticationController : ControllerBase
                 SameSite = SameSiteMode.Lax,
             }
             );
-            return StatusCode(StatusCodes.Status200OK, response);
+            return StatusCode(StatusCodes.Status200OK, token);
         }
         return StatusCode(StatusCodes.Status401Unauthorized);
     }
