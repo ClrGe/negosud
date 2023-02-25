@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Aspose.Pdf.Operators;
+using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
@@ -150,7 +151,111 @@ public class BottleService : IBottleService
 
         return null;
     }
+    
+    //</inheritdoc>  
+    public async Task<ICollection<Bottle>> MassAddBottleAsync(ICollection<Bottle>? bottles)
+    {
+        try
+        {
+            if (bottles != null)
+            {
+                foreach (Bottle bottle in bottles)
+                {
+                    if (bottle.BottleStorageLocations != null)
+                    {
+                        foreach (BottleStorageLocation bottleStorageLocation in bottle.BottleStorageLocations)
+                        {
+                            if (bottleStorageLocation.StorageLocation?.Id != null)
+                            {
+                                StorageLocation? location = await _getStorageLocationService.GetStorageLocationAsync(bottleStorageLocation.StorageLocation.Id, includeRelations: false);
+                                if (location != null)
+                                {
+                                    bottleStorageLocation.StorageLocation = location;
+                                    bottleStorageLocation.Bottle = bottle;
+                                }
+                            }
+                            await _context.AddRangeAsync(bottle.BottleStorageLocations);
+                        }
+                    }
+                    
+                    if (bottle.BottleGrapes != null)
+                    {
+                        foreach (BottleGrape bottleGrape in bottle.BottleGrapes)
+                        {
+                            if (bottleGrape.Grape?.Id != null)
+                            {
+                                Grape? grape = await _grapeService.GetGrapeAsync(bottleGrape.Grape.Id, includeRelations: false);
+                                if (grape != null)
+                                {
+                                    bottleGrape.Grape = grape;
+                                    bottleGrape.Bottle = bottle;
+                                }
+                            }
+                            await _context.AddRangeAsync(bottle.BottleGrapes);
+                        }
+                    }
 
+                    if (bottle.WineLabel?.Id != null)
+                    {
+                        WineLabel? wineLabel =
+                            await _wineLabelService.GetWineLabelAsync(bottle.WineLabel.Id, includeRelations: false);
+                        if (wineLabel != null)
+                        {
+                            bottle.WineLabel = wineLabel;
+                        }
+                    }
+
+                    if (bottle.Producer?.Id != null)
+                    {
+                        Producer? producer =
+                            await _producerService.GetProducerAsync(bottle.Producer.Id, includeRelations: false);
+                        if (producer != null)
+                        {
+                            bottle.Producer = producer;
+                        }
+                    } 
+            
+                    if (bottle.Vat?.Id != null)
+                    {
+                        VAT? dbVat =
+                            await _vatService.GetVatAsync(bottle.Vat.Id);
+                        if (dbVat != null)
+                        {
+                            bottle.Vat = dbVat;
+                        }
+                    }
+                }
+                await _context.BulkInsertAsync(bottles);
+                return bottles;
+
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
+        }
+
+        return null;
+    }
+    
+    //</inheritdoc>  
+    public async Task<ICollection<Bottle>> MassUpdateBottleAsync(ICollection<Bottle>? bottles)
+    {
+        try
+        {
+            if (bottles != null)
+            {
+                await _context.BulkUpdateAsync(bottles);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
+        }
+
+        return null;
+    }
+    
     //</inheritdoc>  
     public async Task<Bottle?> UpdateBottleAsync(Bottle bottle)
     {
