@@ -15,7 +15,7 @@ public class SupplierOrder : IModelBase
     public string? CancelledBy { get; set; }
     public DateTime? DateOrder { get; set; }
     public DateTime? DateDelivery { get; set; }
-    public int DeliveryStatus { get; set; }
+    public int? DeliveryStatus { get; set; }
     public virtual Supplier? Supplier { get; set; }
     public virtual ICollection<SupplierOrderLine>? Lines { get; set; }
 }

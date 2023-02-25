@@ -104,7 +104,7 @@ public class SupplierOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK);
     }
     
-    private bool SendEmailWithAttachment(string from, string to, string subject, string filePath, IConfiguration configuration)
+    private bool SendEmailWithAttachment(string from, string to, string subject, string filePathToAttach, IConfiguration configuration)
     {
         string htmlBody = "<html><body><p>Bonjour,</p>" +
                           "<p>Nous souhaiterions vous commande les références ci jointes,</p>" +
@@ -118,7 +118,7 @@ public class SupplierOrderController : ControllerBase
         };
     
         // Add the PDF file as an attachment
-        var attachment = new Attachment(filePath);
+        var attachment = new Attachment(filePathToAttach);
         message.Attachments.Add(attachment);
         
 

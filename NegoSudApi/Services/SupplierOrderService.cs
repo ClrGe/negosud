@@ -76,30 +76,33 @@ public class SupplierOrderService : ISupplierOrderService
                     supplierOrder.Supplier = dbSupplier;
                 }
             }
-            
-          
+
+            SupplierOrder newSupplierOrder = (await _context.SupplierOrders.AddAsync(supplierOrder)).Entity;
+
             if(supplierOrder.Lines != null)
             {
                 foreach (SupplierOrderLine orderLine in supplierOrder.Lines)
                 {
-                    if (orderLine.Bottle?.Id == null) continue;
-                    Bottle? dbBottle = await _bottleService.GetBottleAsync(orderLine.Bottle.Id, true);
+                    if (orderLine.BottleId == null) continue;
+                    Bottle? dbBottle = await _bottleService.GetBottleAsync((int) orderLine.BottleId);
                     if (dbBottle != null)
                     {
                         orderLine.Bottle = dbBottle;
                     }
+
+                    // set the SupplierOrderId for the SupplierOrderLine
+                    orderLine.SupplierOrderId = newSupplierOrder.Id;
                 }
-                
+
                 await _context.AddRangeAsync(supplierOrder.Lines);
             }
 
             supplierOrder.DeliveryStatus = DeliveryStatus.Pending.GetHashCode();
-           
-            SupplierOrder newSupplierOrder = (await _context.SupplierOrders.AddAsync(supplierOrder)).Entity;
-            
+
             await _context.SaveChangesAsync();
 
             return newSupplierOrder;
+
         }
         catch (Exception ex)
         {

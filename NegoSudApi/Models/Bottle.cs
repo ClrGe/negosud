@@ -21,10 +21,11 @@ public class Bottle : IModelBase
     public string? CreatedBy { get; set; }
     public string? UpdatedBy { get; set; }
     public virtual VAT? Vat { get; set; }
-    public int VatId { get; set; }
-    public int ProducerId { get; set; }
-    public int WineLabelId { get; set; }
+    public int? VatId { get; set; }
+    public int? ProducerId { get; set; }
+    public int? WineLabelId { get; set; }
     public virtual ICollection<BottleStorageLocation>? BottleStorageLocations { get; set; }
+    public virtual ICollection<SupplierOrderLine>? SupplierOrderLines { get; set; }
     public virtual ICollection<BottleGrape>? BottleGrapes { get; set; }
     public virtual ICollection<BottleSupplier>? BottleSuppliers { get; set; }
     public virtual Producer? Producer { get; set; }

@@ -13,5 +13,9 @@
   "Jwt": {
     "Key":"ThisIsMySecretKey",
     "Issuer":"Test.com"
+  },
+  "EmailSettings": {
+    "Username": "YourUserName",
+    "Password": "YourPassWord"
   }
 }

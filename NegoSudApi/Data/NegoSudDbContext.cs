@@ -234,7 +234,6 @@ public class NegoSudDbContext : DbContext
             entity.HasKey(cO => cO.Id);
             entity.Property(cO => cO.Id).UseIdentityColumn();
             entity.HasOne(cO => cO.Supplier);
-            entity.HasMany(cO => cO.Lines).WithOne(k => k.SupplierOrder);
         });
 
         modelBuilder.Entity<SupplierOrderLine>(entity =>
@@ -246,8 +245,8 @@ public class NegoSudDbContext : DbContext
             entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
             entity.HasKey(l => l.Id);
             entity.Property(l => l.Id).UseIdentityColumn();
-            entity.HasOne(l => l.SupplierOrder).WithMany(k => k.Lines);
-            entity.HasOne(l => l.Bottle);
+            entity.HasOne(l => l.SupplierOrder).WithMany(k => k.Lines).HasForeignKey(so => so.SupplierOrderId);
+            entity.HasOne(c => c.Bottle).WithMany(c => c.SupplierOrderLines).HasForeignKey(a => a.BottleId);
 
         });
         
