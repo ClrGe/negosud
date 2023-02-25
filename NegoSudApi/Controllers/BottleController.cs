@@ -61,7 +61,7 @@ public class BottleController : ControllerBase
         ICollection<Bottle>? dbBottles = await _bottleService.MassAddBottleAsync(bottles);
 
         return dbBottles == null ? StatusCode(StatusCodes.Status404NotFound, "No match, no changes were made.") : StatusCode(StatusCodes.Status200OK, dbBottles);
-    }
+    }-
 
     [Authorize(Policy = RolePermissions.CanEditBottle)]
     [HttpPost("UpdateBottle")]

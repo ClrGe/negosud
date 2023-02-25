@@ -89,7 +89,7 @@ public class Startup
         .MapAuthorizationPolicies();
 
 
-        var connectionString = Configuration.GetConnectionString("NegoSudDbContext") ??
+        var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext") ??
                                throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
         services.AddDbContext<NegoSudDbContext>(options =>
