@@ -45,7 +45,7 @@ public interface IBottleService
     /// </summary>
     /// <param name="bottles"></param>
     /// <returns>int</returns>
-    Task<ICollection<Bottle>> MassAddBottleAsync(ICollection<Bottle>? bottles);
+    Task<ICollection<Bottle>?> MassAddBottleAsync(ICollection<Bottle>? bottles);
     
     /// <summary>
     /// 
