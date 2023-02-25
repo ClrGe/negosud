@@ -319,22 +319,6 @@ public class NegoSudDbContext : DbContext
             entity.Property(i => i.Id).UseIdentityColumn();
             entity.HasOne(s => s.Address);
         });
-
-        modelBuilder.Entity<PermissionRole>(entity =>
-        {
-            entity.ToTable(nameof(PermissionRole));
-            entity.HasKey(k => new {k.PermissionId, k.RoleId});
-
-            entity.HasOne(k => k.Permission)
-                .WithMany(k => k.PermissionRoles)
-                .HasForeignKey(k => k.PermissionId)
-                .HasPrincipalKey(k => k.Id);
-
-            entity.HasOne(k => k.Role)
-                .WithMany(k => k.PermissionRoles)
-                .HasForeignKey(k => k.RoleId)
-                .HasPrincipalKey(k => k.Id);
-        });
         
         modelBuilder.Entity<CustomerOrderLineStorageLocation>(entity =>
         {

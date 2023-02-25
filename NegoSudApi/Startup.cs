@@ -89,7 +89,7 @@ public class Startup
         .MapAuthorizationPolicies();
 
 
-        var connectionString = Configuration.GetConnectionString("DefaultNegoSudDbContext") ??
+        var connectionString = Configuration.GetConnectionString("NegoSudDbContext") ??
                                throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
         services.AddDbContext<NegoSudDbContext>(options =>
@@ -101,6 +101,8 @@ public class Startup
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, NegoSudDbContext dbContext)
     {
         dbContext.Database.Migrate();
+
+        dbContext.SaveChanges();
 
         // Seed Default Permissions
         List<Permission> dbPermissions = dbContext.Permissions.ToList();
@@ -115,6 +117,8 @@ public class Startup
                 dbContext.Permissions.Add(newPermission);
             }
         }
+
+        dbContext.SaveChanges();
         // Seed Default Role
         List<Role> dbRoles = dbContext.Roles.ToList();
         foreach(var role in RolePermissions.Roles)

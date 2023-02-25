@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using HeimGuard;
+using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
@@ -11,12 +12,14 @@ namespace NegoSudApi.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPermissionService _permissionService;
         private readonly IRoleService _roleService;
+        private readonly NegoSudDbContext _context;
 
-        public UserPermissionService(IHttpContextAccessor httpContextAccessor, IPermissionService permissionService, IRoleService roleService)
+        public UserPermissionService(IHttpContextAccessor httpContextAccessor, IPermissionService permissionService, IRoleService roleService, NegoSudDbContext context)
         {
             _httpContextAccessor = httpContextAccessor;
             _permissionService = permissionService;
             _roleService = roleService;
+            _context = context;
         }
 
         private ClaimsPrincipal GetUser()
@@ -55,7 +58,7 @@ namespace NegoSudApi.Services
         {
             var roles = GetUserRoles();
 
-            if(roles.Any(role => role == "Admin"))
+            if(roles.Any(role => role == RolePermissions.Admin))
             {
                 return true;
             }
@@ -65,7 +68,7 @@ namespace NegoSudApi.Services
                 Role? dbRole = await _roleService.GetRoleAsync(role);
                 if (dbRole != null)
                 {
-                    if(dbRole.PermissionRoles.Any(rp => rp.Permission?.Name == permission))
+                    if(_context.PermissionRoles.Where(pr => pr.RoleId == dbRole.Id).Include(pr => pr.Permission).Any(rp => rp.Permission.Name == permission))
                     {
                         return true;
                     }

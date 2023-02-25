@@ -649,11 +649,11 @@ namespace NegoSudApi.Migrations
 
             modelBuilder.Entity("NegoSudApi.Models.PermissionRole", b =>
                 {
-                    b.Property<int?>("RoleId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("integer")
                         .HasColumnName("role_id");
 
-                    b.Property<int?>("PermissionId")
+                    b.Property<int>("PermissionId")
                         .HasColumnType("integer")
                         .HasColumnName("permission_id");
 
@@ -1202,23 +1202,6 @@ namespace NegoSudApi.Migrations
                     b.ToTable("WineLabel", (string)null);
                 });
 
-            modelBuilder.Entity("BottleSupplier", b =>
-                {
-                    b.HasOne("NegoSudApi.Models.Bottle", null)
-                        .WithMany()
-                        .HasForeignKey("BottlesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_bottle_supplier_bottles_bottles_id");
-
-                    b.HasOne("NegoSudApi.Models.Supplier", null)
-                        .WithMany()
-                        .HasForeignKey("SuppliersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_bottle_supplier_suppliers_suppliers_id");
-                });
-
             modelBuilder.Entity("NegoSudApi.Models.Address", b =>
                 {
                     b.HasOne("NegoSudApi.Models.City", "City")
@@ -1395,7 +1378,7 @@ namespace NegoSudApi.Migrations
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_permission_role_permission_permission_id");
+                        .HasConstraintName("fk_permission_role_permissions_permission_id");
 
                     b.HasOne("NegoSudApi.Models.Role", "Role")
                         .WithMany("PermissionRoles")

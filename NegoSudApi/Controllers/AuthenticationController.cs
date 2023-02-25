@@ -80,6 +80,7 @@ public class AuthenticationController : ControllerBase
             Password = user.Password,
             FirstName = user.FirstName,
             LastName = user.LastName,
+            Role = user.Role,
         };
         
         userToAdd.Password = _securePassword.Hash(userToAdd);

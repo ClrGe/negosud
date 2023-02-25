@@ -41,16 +41,16 @@ public class BottleController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbBottles);
     }
 
-        [Authorize(Policy = RolePermissions.CanAddBottle)]
-        [HttpPost("AddBottle")]
-        public async Task<ActionResult<Bottle>> AddBottle(Bottle bottle)
-        {
-            Bottle? dbBottle = await _bottleService.AddBottleAsync(bottle);
+    [Authorize(Policy = RolePermissions.CanAddBottle)]
+    [HttpPost("AddBottle")]
+    public async Task<ActionResult<Bottle>> AddBottle(Bottle bottle)
+    {
+        Bottle? dbBottle = await _bottleService.AddBottleAsync(bottle);
 
-        if (dbBottle == null)
-            return StatusCode(StatusCodes.Status404NotFound, $"{bottle.FullName} could not be added.");
+    if (dbBottle == null)
+        return StatusCode(StatusCodes.Status404NotFound, $"{bottle.FullName} could not be added.");
 
-        return StatusCode(StatusCodes.Status201Created, dbBottle);
+    return StatusCode(StatusCodes.Status201Created, dbBottle);
     }
 
     [HttpPost("MassAddBottle")]
@@ -63,19 +63,19 @@ public class BottleController : ControllerBase
         return dbBottles == null ? StatusCode(StatusCodes.Status404NotFound, "No match, no changes were made.") : StatusCode(StatusCodes.Status200OK, dbBottles);
     }
 
-        [Authorize(Policy = RolePermissions.CanEditBottle)]
-        [HttpPost("UpdateBottle")]
-        public async Task<IActionResult> UpdateBottleAsync(Bottle bottle)
-        {
-            if (bottle == null) return BadRequest();
+    [Authorize(Policy = RolePermissions.CanEditBottle)]
+    [HttpPost("UpdateBottle")]
+    public async Task<IActionResult> UpdateBottleAsync(Bottle bottle)
+    {
+        if (bottle == null) return BadRequest();
 
-        var dbBottle = await _bottleService.UpdateBottleAsync(bottle);
+    var dbBottle = await _bottleService.UpdateBottleAsync(bottle);
 
-        if (dbBottle == null)
-            return StatusCode(StatusCodes.Status404NotFound,
-                $"No bottle found for id: {bottle.Id} - could not update.");
+    if (dbBottle == null)
+        return StatusCode(StatusCodes.Status404NotFound,
+            $"No bottle found for id: {bottle.Id} - could not update.");
 
-        return StatusCode(StatusCodes.Status200OK, dbBottle);
+    return StatusCode(StatusCodes.Status200OK, dbBottle);
     }
 
     [HttpPost("MassUpdateBottle")]
@@ -89,15 +89,15 @@ public class BottleController : ControllerBase
 
     }
 
-        [Authorize(Policy = RolePermissions.CanDeleteBottle)]
-        [HttpPost("DeleteBottle")]
-        public async Task<IActionResult> DeleteBottleAsync(int id)
-        {
-            bool? status = await _bottleService.DeleteBottleAsync(id);
+    [Authorize(Policy = RolePermissions.CanDeleteBottle)]
+    [HttpPost("DeleteBottle")]
+    public async Task<IActionResult> DeleteBottleAsync(int id)
+    {
+        bool? status = await _bottleService.DeleteBottleAsync(id);
 
-        if (status == false)
-            return StatusCode(StatusCodes.Status404NotFound, $"No bottle found for id: {id} - could not be deleted");
+    if (status == false)
+        return StatusCode(StatusCodes.Status404NotFound, $"No bottle found for id: {id} - could not be deleted");
 
-        return StatusCode(StatusCodes.Status200OK);
+    return StatusCode(StatusCodes.Status200OK);
     }
 }
