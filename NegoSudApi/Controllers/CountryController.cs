@@ -8,7 +8,6 @@ namespace NegoSudApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class CountryController : ControllerBase
 {
     private readonly ICountryService _countryService;

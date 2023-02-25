@@ -8,7 +8,6 @@ namespace NegoSudApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class PermissionController : ControllerBase
 {
     private readonly IPermissionService _permissionService;

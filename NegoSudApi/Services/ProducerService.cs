@@ -11,12 +11,14 @@ public class ProducerService : IProducerService
     private readonly NegoSudDbContext _context;
     private readonly ILogger<ProducerService> _logger;
     private readonly IRegionService _regionService;
+    private readonly IAddressService _addressService;
 
-    public ProducerService(NegoSudDbContext context, ILogger<ProducerService> logger, IRegionService regionService)
+    public ProducerService(NegoSudDbContext context, ILogger<ProducerService> logger, IRegionService regionService, IAddressService addressService)
     {
         _context = context;
         _logger = logger;
         _regionService = regionService;
+        _addressService = addressService;
     }
 
     //</inheritdoc> 
@@ -29,6 +31,7 @@ public class ProducerService : IProducerService
                 return await _context.Producers
                     .Include(p => p.Region)
                     .Include(p => p.Bottles)
+                    .Include(p => p.Address)
                     .FirstOrDefaultAsync(p => p.Id == id);
             }
             return await _context.Producers.FindAsync(id);
@@ -78,6 +81,23 @@ public class ProducerService : IProducerService
                 producer.Region = await _regionService.AddRegionAsync(producer.Region);
             }
 
+            Address? address = null;
+            if (producer.Address?.Id != null)
+            {
+                address = await _addressService.GetAddressAsync(producer.Address.Id, includeRelations: false);
+            }
+
+            // If we found a address in the database
+            if (address != null)
+            {
+                producer.Address = address;
+            }
+            // If we want to add a new address into the database from the AddProducerForm
+            else if (producer.Address != null)
+            {
+                producer.Address = await _addressService.AddAddressAsync(producer.Address);
+            }
+
             // Create the producer in the database
             Producer newProducer = (await _context.Producers.AddAsync(producer)).Entity;
 
@@ -105,6 +125,16 @@ public class ProducerService : IProducerService
                 if (region != null)
                 {
                     producer.Region = region;
+                }
+            }
+
+            if (producer.Address?.Id != null)
+            {
+                Address? address = await _addressService.GetAddressAsync(producer.Address.Id, includeRelations: false);
+                // If we found a region in the database
+                if (address != null)
+                {
+                    producer.Address = address;
                 }
             }
 
