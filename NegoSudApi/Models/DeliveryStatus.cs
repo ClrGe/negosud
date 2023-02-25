@@ -3,9 +3,11 @@ namespace NegoSudApi.Models;
 public enum DeliveryStatus
 {
     New = 1,
-    Ready = 2,
-    Pending = 3,
-    Delivered = 4,
-    Failed = 5,
-    Cancelled = 6
+    OnHold = 2,
+    Validate = 3,
+    Ready = 4,
+    Pending = 5,
+    Delivered = 6,
+    Failed = 7,
+    Cancelled = 8
 }

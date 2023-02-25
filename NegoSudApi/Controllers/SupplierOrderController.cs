@@ -19,7 +19,6 @@ public class SupplierOrderController : ControllerBase
     private readonly ILogger<SupplierOrderController> _logger;
     private readonly IConfiguration _configuration;
 
-
     public SupplierOrderController(ISupplierOrderService supplierOrderService, IVatService vatService, ILogger<SupplierOrderController> logger, IConfiguration configuration)
     {
         _supplierOrderService = supplierOrderService;
@@ -69,8 +68,16 @@ public class SupplierOrderController : ControllerBase
         {
             List<IOrderLine> supplierOrderLines = dbSupplierOrder.Lines.Cast<IOrderLine>().ToList();
 
-            var negoSudDetails = new List<string> {"NegoSud", "80 avenue Edmund Halley", "Saint-Étienne-du-Rouvray", "76800", "France"};
-            var pdfPath = new GeneratePdf(supplierOrder.Reference, negoSudDetails, supplierOrderLines, _vatService).SavePurchaseOrderLocally();
+            var negoSudDetails = _configuration.GetSection("NegoSudDetails:Address").Value.Split(" ").ToList();
+            var supplierDetails = new List<string>
+            {
+                supplierOrder.Supplier.Address.AddressLine1, 
+                supplierOrder.Supplier.Address.AddressLine2,
+                supplierOrder.Supplier.Address.City.Name, 
+                supplierOrder.Supplier.Address.City.ZipCode.ToString(), 
+                supplierOrder.Supplier.Address.City.Country.Name
+            };
+            var pdfPath = new GeneratePdf(supplierOrder.Reference, negoSudDetails, supplierOrderLines, supplierDetails, _vatService).SavePurchaseOrderLocally();
             isEmailSent = this.SendEmailWithAttachment(supplierOrder.Supplier.Email, $"Bon de commande", pdfPath, _configuration);
             
             if (!string.IsNullOrEmpty(pdfPath) && isEmailSent)
@@ -130,7 +137,7 @@ public class SupplierOrderController : ControllerBase
         var emailSettings = configuration.GetSection("EmailSettings");
         var emailUsername = emailSettings.GetValue<string>("Username");
         var emailPassword = emailSettings.GetValue<string>("Password");
-        var emailSender = emailUsername + "@gmail.com";
+        var emailSender = emailSettings.GetValue<string>("EmailAddress");
         
         var message = new MailMessage(emailSender, recipient)
         {

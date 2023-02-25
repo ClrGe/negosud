@@ -17,5 +17,9 @@
   "EmailSettings": {
     "Username": "YourUserName",
     "Password": "YourPassWord"
+  },
+  "NegoSudDetails": {
+    "Address": "80 avenue Edmund Halley Saint-Étienne-du-Rouvray 76800 France",
+    "Password": "YourPassWord"
   }
 }

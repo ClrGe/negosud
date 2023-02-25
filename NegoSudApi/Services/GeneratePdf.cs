@@ -1,3 +1,5 @@
+using System.Configuration;
+
 namespace NegoSudApi.Services;
 
 using System.Globalization;
@@ -11,13 +13,7 @@ using NegoSudApi.Models.Interfaces;
 using NegoSudApi.Services.Interfaces;
 
 /// <summary>
-///  /// <summary>
 /// Class uses to generate an invoice PDF 
-/// </summary>
-/// <param name="invoiceNumber">The number of the invoice. Include the date and the Customer's id</param>
-/// <param name="billTo">The Customer info</param>
-/// <param name="orderLines">The details of the order</param>
-/// <param name="vatService">The value added Tax for the bottle(s)</param>
 /// </summary>
 public class GeneratePdf : IDisposable
 {
@@ -42,15 +38,14 @@ public class GeneratePdf : IDisposable
     /// Instantiate a new instance of the generate pdf class
     /// </summary>
     /// <param name="invoiceNumber">The number of the invoice. Include the date and the Customer's id</param>
-    /// <param name="billTo">The Customer info</param>
+    /// <param name="billTo">at who is the bill is addressed to</param>
     /// <param name="orderLines">The details of the order</param>
+    /// <param name="billFrom">Who's ht supplier</param>
     /// <param name="vatService">The value added Tax for the bottle(s)</param>
-    public GeneratePdf(string invoiceNumber, List<string> billTo, List<IOrderLine> orderLines,
-        IVatService vatService)
+    public GeneratePdf(string invoiceNumber, List<string> billTo, List<IOrderLine> orderLines,List<string> billFrom, IVatService vatService)
     {
         _invoiceNumber = invoiceNumber;
-        _billFrom = new List<string>
-            {"NegoSud", "80 avenue Edmund Halley", "Saint-Étienne-du-Rouvray", "76800", "France"};
+        _billFrom = billFrom;
         _billTo = billTo;
         _orderLines = orderLines;
         _vatService = vatService;
@@ -64,7 +59,7 @@ public class GeneratePdf : IDisposable
             "Merci pour votre achat chez NegoSud"
         };
         _footer = "site e-commerce link";
-        _logo = new LogoImage("C:\\temp\\logo.png", 160, 120);
+        _logo = new LogoImage(160, 120);
         _cultureInfo = new CultureInfo("fr-FR");
         _pdfDocument = new Document();
         _pdfDocument.PageInfo.Margin.Left = 36;
@@ -398,6 +393,7 @@ public class GeneratePdf : IDisposable
         var cell = headerRow.Cells.Add("#");
         cell.Alignment = HorizontalAlignment.Center;
         headerRow.Cells.Add("Produits");
+        headerRow.Cells.Add("Prix");
         headerRow.Cells.Add("Quantité");
         headerRow.Cells.Add("Total");
         foreach (Cell headerRowCell in headerRow.Cells)
@@ -538,9 +534,9 @@ public class LogoImage
     public readonly int Width;
     public readonly int Height;
 
-    public LogoImage(string filePath, int width, int height)
+    public LogoImage(int width, int height)
     {
-        FilePath = filePath;
+        FilePath = Directory.GetFiles(Environment.CurrentDirectory, "logo.png", SearchOption.AllDirectories).First()?? throw new Exception("Missing logo");
         Width = width;
         Height = height;
     }

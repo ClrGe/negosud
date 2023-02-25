@@ -14,11 +14,13 @@ public class CustomerOrderController : ControllerBase
 {
     private readonly ICustomerOrderService _customerOrderService;
     private readonly IVatService _vatService;
+    private readonly IConfiguration _configuration;
 
-    public CustomerOrderController(ICustomerOrderService customerOrderService, IVatService vatService)
+    public CustomerOrderController(ICustomerOrderService customerOrderService, IVatService vatService, IConfiguration configuration)
     {
         _customerOrderService = customerOrderService;
         _vatService = vatService;
+        _configuration = configuration;
     }
 
     [HttpGet("{id}")]
@@ -59,12 +61,13 @@ public class CustomerOrderController : ControllerBase
         
         var customerDetails = new List<String>
         {
-            customerOrder.Customer.FirstName, customerOrder.Customer.LastName, customerOrder.DeliveryAddress.Label!, customerOrder.DeliveryAddress.FirstLine!, customerOrder.DeliveryAddress.City!.Name!, customerOrder.DeliveryAddress.City.ZipCode.ToString()!
+            customerOrder.Customer.FirstName, customerOrder.Customer.LastName, customerOrder.DeliveryAddress.AddressLine1!, customerOrder.DeliveryAddress.AddressLine2!, customerOrder.DeliveryAddress.City!.Name!, customerOrder.DeliveryAddress.City.ZipCode.ToString()!
         };
         
-        List<IOrderLine> customerOrderLines = new List<IOrderLine>((dbCustomerOrder.Lines as List<CustomerOrderLine>)!);
         // Create a pfd invoice for the customer
-        var pdfBytes = new GeneratePdf(customerOrder.Reference!, customerDetails, customerOrderLines, _vatService).SaveInvoice();
+        var negoSudDetails = _configuration.GetSection("NegoSudDetails:Address").Value.Split(" ").ToList();
+        List<IOrderLine> customerOrderLines = new List<IOrderLine>((dbCustomerOrder.Lines as List<CustomerOrderLine>)!);
+        var pdfBytes = new GeneratePdf(customerOrder.Reference!, customerDetails, customerOrderLines, negoSudDetails, _vatService).SaveInvoice();
         var stream = new MemoryStream(pdfBytes);
         Response.Headers.Add("Content-Disposition", $"inline; filename=invoice_{customerOrder.Reference!}.pdf");
         Response.ContentType = "application/pdf";

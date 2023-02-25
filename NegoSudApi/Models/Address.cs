@@ -5,8 +5,8 @@ namespace NegoSudApi.Models;
 public class Address : IModelBase
 {
     public int Id { get; set; }
-    public string? Label { get; set; }
-    public string? FirstLine { get; set; }
+    public string? AddressLine1 { get; set; }
+    public string? AddressLine2 { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public string? CreatedBy { get; set; }
