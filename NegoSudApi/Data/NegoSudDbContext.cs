@@ -21,6 +21,7 @@ public class NegoSudDbContext : DbContext
     public virtual DbSet<Address> Addresses { get; set; }
     public virtual DbSet<Role> Roles { get; set; }
     public virtual DbSet<Permission> Permissions { get; set; }
+    public virtual DbSet<PermissionRole> PermissionRoles { get; set; }
     public virtual DbSet<Supplier> Suppliers { get; set; }
     public virtual DbSet<CustomerOrder> CustomerOrders { get; set; }
     public virtual DbSet<SupplierOrder> SupplierOrders { get; set; }
@@ -36,7 +37,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
             entity.HasIndex(i => i.WineType);
             entity.HasOne(a => a.Vat).WithMany(c => c.Bottles).HasForeignKey(a => a.VatId);
             entity.HasOne(a => a.Producer).WithMany(c => c.Bottles).HasForeignKey(a => a.ProducerId);
@@ -51,7 +52,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");;
         });
 
         modelBuilder.Entity<BottleGrape>(entity =>
@@ -60,7 +61,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");;
             entity.HasKey(k => new {k.BottleId,k.GrapeId});
 
             entity.HasOne(k => k.Bottle)
@@ -80,7 +81,7 @@ public class NegoSudDbContext : DbContext
             entity.ToTable(nameof(Country));
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");;
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
         });
@@ -91,7 +92,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");;
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
         });
@@ -102,7 +103,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");;
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
         });
@@ -113,7 +114,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");;
             entity.HasKey(k => new { k.BottleId, k.SupplierId});
             
             entity.HasOne(k => k.Bottle)
@@ -133,7 +134,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
         });
@@ -144,7 +145,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
             entity.HasMany(k => k.Producers).WithOne(k => k.Region);
@@ -157,7 +158,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
             entity.HasOne(c => c.Country).WithMany(c => c.Cities).HasForeignKey(a => a.CountryId);
@@ -170,7 +171,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
             entity.HasOne(a => a.City).WithMany(c => c.Addresses).HasForeignKey(a => a.CityId);
@@ -183,7 +184,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
             entity.HasKey(k => new { k.BottleId, k.StorageLocationId});
             
             entity.HasOne(k => k.Bottle)
@@ -203,7 +204,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(cO => cO.CreatedBy).HasMaxLength(200);
             entity.Property(cO => cO.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
             entity.HasKey(cO => cO.Id);
             entity.Property(cO => cO.Id).UseIdentityColumn();
             entity.HasOne(cO => cO.Customer);
@@ -216,7 +217,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(l => l.CreatedBy).HasMaxLength(200);
             entity.Property(l => l.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
             entity.HasKey(l => l.Id);
             entity.Property(l => l.Id).UseIdentityColumn();
             entity.HasOne(l => l.CustomerOrder).WithMany(k => k.Lines);
@@ -230,7 +231,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(sO => sO.CreatedBy).HasMaxLength(200);
             entity.Property(sO => sO.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
             entity.HasKey(cO => cO.Id);
             entity.Property(cO => cO.Id).UseIdentityColumn();
             entity.HasOne(cO => cO.Supplier);
@@ -242,7 +243,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(l => l.CreatedBy).HasMaxLength(200);
             entity.Property(l => l.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
             entity.HasKey(l => l.Id);
             entity.Property(l => l.Id).UseIdentityColumn();
             entity.HasOne(l => l.SupplierOrder).WithMany(k => k.Lines).HasForeignKey(so => so.SupplierOrderId);
@@ -258,7 +259,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -269,11 +270,31 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
             entity.HasMany(a => a.Users).WithOne(r => r.Role);
         });
-        
-       
+
+        modelBuilder.Entity<PermissionRole>(entity =>
+        {
+            entity.ToTable(nameof(PermissionRole));
+            entity.Property(p => p.CreatedBy).HasMaxLength(200);
+            entity.Property(p => p.UpdatedBy).HasMaxLength(200);
+            entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.HasKey(k => new { k.RoleId, k.PermissionId });
+
+            entity.HasOne(k => k.Role)
+                .WithMany(k => k.PermissionRoles)
+                .HasForeignKey(k => k.RoleId)
+                .HasPrincipalKey(k => k.Id);
+
+            entity.HasOne(k => k.Permission)
+                .WithMany(k => k.PermissionRoles)
+                .HasForeignKey(k => k.PermissionId)
+                .HasPrincipalKey(k => k.Id);
+        });
+
+
         modelBuilder.Entity<Permission>(entity =>
         {
             entity.ToTable(nameof(Permission));
@@ -282,7 +303,7 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
         });
         
         modelBuilder.Entity<Supplier>(entity =>
@@ -291,27 +312,12 @@ public class NegoSudDbContext : DbContext
             entity.Property(p => p.CreatedBy).HasMaxLength(200);
             entity.Property(p => p.UpdatedBy).HasMaxLength(200);
             entity.Property(t => t.CreatedAt).HasPrecision(0).ValueGeneratedOnAdd().HasDefaultValueSql("NOW()");
-            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate();
+            entity.Property(t => t.UpdatedAt).HasPrecision(0).ValueGeneratedOnAddOrUpdate().HasDefaultValueSql("NOW()");
             entity.HasKey(k => k.Id);
             entity.Property(i => i.Id).UseIdentityColumn();
             entity.HasOne(s => s.Address).WithOne(a => a.Supplier).HasForeignKey<Address>(a => a.SupplierId).OnDelete(DeleteBehavior.Restrict);
         });
-
-        modelBuilder.Entity<PermissionRole>(entity =>
-        {
-            entity.ToTable(nameof(PermissionRole));
-            entity.HasKey(k => new {k.PermissionId, k.RoleId});
-
-            entity.HasOne(k => k.Permission)
-                .WithMany(k => k.PermissionRoles)
-                .HasForeignKey(k => k.PermissionId)
-                .HasPrincipalKey(k => k.Id);
-
-            entity.HasOne(k => k.Role)
-                .WithMany(k => k.PermissionRoles)
-                .HasForeignKey(k => k.RoleId)
-                .HasPrincipalKey(k => k.Id);
-        });
+        
         
         modelBuilder.Entity<CustomerOrderLineStorageLocation>(entity =>
         {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -17,6 +18,7 @@ public class PermissionController : ControllerBase
         _permissionService = permissionService;
     }
 
+    [Authorize(Policy = RolePermissions.CanGetPermission)]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPermissionAsync(int id)
     {
@@ -30,6 +32,7 @@ public class PermissionController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbPermission);
     }
 
+    [Authorize(Policy = RolePermissions.CanGetPermission)]
     [HttpGet]
     public async Task<IActionResult> GetPermissionsAsync()
     {
@@ -43,6 +46,7 @@ public class PermissionController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbPermissions);
     }
 
+    [Authorize(Policy = RolePermissions.CanAddPermission)]
     [HttpPost("AddPermission")]
     public async Task<ActionResult<Permission>> AddPermissionAsync(Permission permission)
     {
@@ -56,6 +60,7 @@ public class PermissionController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbPermission);
     }
 
+    [Authorize(Policy = RolePermissions.CanEditPermission)]
     [HttpPost("UpdatePermission/{id}")]
     public async Task<IActionResult> UpdatePermissionAsync(Permission permission)
     {
@@ -74,6 +79,7 @@ public class PermissionController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbPermission);
     }
 
+    [Authorize(Policy = RolePermissions.CanDeletePermission)]
     [HttpPost("DeletePermission/{id}")]
     public async Task<IActionResult> DeletePermissionAsync([FromBody]int id)
     {

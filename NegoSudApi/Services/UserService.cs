@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
@@ -19,10 +20,17 @@ public class UserService : IUserService
     }
 
     // </inheritdoc>
-    public async Task<User?> GetUserAsync(int id)
+    public async Task<User?> GetUserAsync(int id, bool includeRelations = false)
     {
         try
         {
+            if (includeRelations)
+            {
+                return await _context.Users
+                    .Include(u => u.Role)
+                    .Include(u => u.Addresses)
+                    .FirstOrDefaultAsync(u => u.Id == id);
+            }
             return await _context.Users.FindAsync(id);
         }
         catch (Exception ex)
@@ -53,6 +61,16 @@ public class UserService : IUserService
     {
         try
         {
+            if(user.Role?.Id != null)
+            {
+                Role? role = await _roleService.GetRoleAsync(user.Role.Id);
+                if(role != null)
+                {
+                    user.Role = role;
+                }
+                
+            }
+
             await _context.AddAsync(user);
             await _context.SaveChangesAsync();
             return await _context.Users.FindAsync(user.Id);

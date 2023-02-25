@@ -1,10 +1,7 @@
-﻿using System.Net;
-using System.Net.Mail;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
-using NegoSudApi.Models.Interfaces;
-using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Controllers;
@@ -15,19 +12,15 @@ namespace NegoSudApi.Controllers;
 public class SupplierOrderController : ControllerBase
 {
     private readonly ISupplierOrderService _supplierOrderService;
-    private readonly IVatService _vatService;
-    private readonly ILogger<SupplierOrderController> _logger;
-    private readonly IConfiguration _configuration;
 
-    public SupplierOrderController(ISupplierOrderService supplierOrderService, IVatService vatService, ILogger<SupplierOrderController> logger, IConfiguration configuration)
+
+    public SupplierOrderController(ISupplierOrderService supplierOrderService)
     {
         _supplierOrderService = supplierOrderService;
-        _vatService = vatService;
-        _logger = logger;
-        _configuration = configuration;
     }
 
-    [HttpGet("{id}")]
+    [Authorize(Policy = RolePermissions.CanGetSupplierOrder)]
+        [HttpGet("{id}")]
     public async Task<IActionResult> GetSupplierOrderAsync(int id)
     {
         SupplierOrder? dbSupplierOrder = await _supplierOrderService.GetSupplierOrderAsync(id);
@@ -40,7 +33,8 @@ public class SupplierOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
     }
 
-    [HttpGet]
+    [Authorize(Policy = RolePermissions.CanGetSupplierOrder)]
+        [HttpGet]
     public async Task<IActionResult> GetSupplierOrdersAsync()
     {
         var dbSupplierOrders = await _supplierOrderService.GetSupplierOrdersAsync();
@@ -53,7 +47,8 @@ public class SupplierOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbSupplierOrders);
     }
 
-    [HttpPost("AddSupplierOrder")]
+    [Authorize(Policy = RolePermissions.CanAddSupplierOrder)]
+        [HttpPost("AddSupplierOrder")]
     public async Task<ActionResult<SupplierOrder>> AddSupplierOrder(SupplierOrder supplierOrder)
     {
         SupplierOrder? dbSupplierOrder = await _supplierOrderService.AddSupplierOrderAsync(supplierOrder);
@@ -63,33 +58,11 @@ public class SupplierOrderController : ControllerBase
             return StatusCode(StatusCodes.Status404NotFound, $"{supplierOrder.Reference} could not be added.");
         }
 
-        bool isEmailSent = false;
-        if (dbSupplierOrder.Lines != null)
-        {
-            List<IOrderLine> supplierOrderLines = dbSupplierOrder.Lines.Cast<IOrderLine>().ToList();
-
-            var negoSudDetails = _configuration.GetSection("NegoSudDetails:Address").Value.Split(" ").ToList();
-            var supplierDetails = new List<string>
-            {
-                supplierOrder.Supplier.Address.AddressLine1, 
-                supplierOrder.Supplier.Address.AddressLine2,
-                supplierOrder.Supplier.Address.City.Name, 
-                supplierOrder.Supplier.Address.City.ZipCode.ToString(), 
-                supplierOrder.Supplier.Address.City.Country.Name
-            };
-            var pdfPath = new GeneratePdf(supplierOrder.Reference, negoSudDetails, supplierOrderLines, supplierDetails, _vatService).SavePurchaseOrderLocally();
-            isEmailSent = this.SendEmailWithAttachment(supplierOrder.Supplier.Email, $"Bon de commande", pdfPath, _configuration);
-            
-            if (!string.IsNullOrEmpty(pdfPath) && isEmailSent)
-            {
-                System.IO.File.Delete(pdfPath);
-            }
-        }
-
-        return isEmailSent ? StatusCode(StatusCodes.Status201Created, dbSupplierOrder + "Commande envoyée au fournisseur") : StatusCode(StatusCodes.Status201Created, dbSupplierOrder + "Commande NON envoyée au fournisseur ");
+        return StatusCode(StatusCodes.Status201Created, dbSupplierOrder) ;
     }
 
-    [HttpPost("UpdateSupplierOrder")]
+    [Authorize(Policy = RolePermissions.CanEditSupplierOrder)]
+        [HttpPost("UpdateSupplierOrder")]
     public async Task<IActionResult> UpdateSupplierOrderAsync(SupplierOrder supplierOrder)
     {
         if (supplierOrder == null)
@@ -107,7 +80,8 @@ public class SupplierOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbSupplierOrder);
     }
 
-    [HttpPost("DeleteSupplierOrder")]
+    [Authorize(Policy = RolePermissions.CanDeleteSupplierOrder)]
+        [HttpPost("DeleteSupplierOrder")]
     public async Task<IActionResult> DeleteSupplierOrderAsync([FromBody]int id)
     {
         bool? status = await _supplierOrderService.DeleteSupplierOrderAsync(id);
@@ -120,52 +94,5 @@ public class SupplierOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK);
     }
     
-    /// <summary>
-    /// Sends an email message with a PDF attachment to the specified recipient email address.
-    /// </summary>
-    /// <param name="recipient">The email address of the recipient.</param>
-    /// <param name="emailSubject">The subject of the email message.</param>
-    /// <param name="filePathToAttach">The path to the PDF file to attach to the email.</param>
-    /// <param name="configuration">Provides access to the application's configuration settings.</param>
-    /// <returns>Returns true if the email is sent successfully; otherwise, false.</returns>
-    private bool SendEmailWithAttachment(string recipient, string emailSubject, string filePathToAttach, IConfiguration configuration)
-    {
-        string htmlBody = "<html><body><p>Bonjour,</p>" +
-                          "<p>Nous souhaiterions vous commande les références ci jointes,</p>" +
-                          "<p>Bien à vous,</p></body></html>";
-
-        var emailSettings = configuration.GetSection("EmailSettings");
-        var emailUsername = emailSettings.GetValue<string>("Username");
-        var emailPassword = emailSettings.GetValue<string>("Password");
-        var emailSender = emailSettings.GetValue<string>("EmailAddress");
-        
-        var message = new MailMessage(emailSender, recipient)
-        {
-            Subject = emailSubject,
-            Body = htmlBody,
-            IsBodyHtml = true 
-        };
     
-        // Add the PDF file as an attachment
-        var attachment = new Attachment(filePathToAttach);
-        message.Attachments.Add(attachment);
-
-        var client = new SmtpClient("smtp.gmail.com", 587) 
-        {
-            Credentials = new NetworkCredential(emailUsername, emailPassword),
-            EnableSsl = true
-        };
-    
-        try
-        {
-            client.Send(message);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            _logger.Log( LogLevel.Warning, "Error sending email: {ExceptionMessage}", ex.Message);
-            return false;
-        }
-      
-    }
 }

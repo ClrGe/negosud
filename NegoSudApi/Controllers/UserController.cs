@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
@@ -20,6 +21,7 @@ public class UserController :ControllerBase
         _securePassword = securePassword;
     }
 
+    [Authorize(Policy = RolePermissions.CanGetUser)]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserAsync(int id)
     {
@@ -30,8 +32,9 @@ public class UserController :ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbUser);
     }
 
+    [Authorize(Policy = RolePermissions.CanGetUser)]
     [HttpGet]
-    public async Task<IActionResult> GetCountriesAsync()
+    public async Task<IActionResult> GetUsersAsync()
     {
         IEnumerable<User>? dbCountries = await _userService.GetUsersAsync();
 
@@ -40,6 +43,7 @@ public class UserController :ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCountries);
     }
 
+    [Authorize(Policy = RolePermissions.CanAddUser)]
     [HttpPost("AddUser")]
     public async Task<ActionResult<User>> AddUserAsync(User user)
     {
@@ -51,6 +55,7 @@ public class UserController :ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbUser);
     }
 
+    [Authorize(Policy = RolePermissions.CanEditUser)]
     [HttpPost("UpdateUser")]
     public async Task<IActionResult> UpdateUserAsync(User user)
     {
@@ -64,6 +69,7 @@ public class UserController :ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbUser);
     }
 
+    [Authorize(Policy = RolePermissions.CanDeleteUser)]
     [HttpPost("DeleteUser")]
     public async Task<IActionResult> DeleteUserAsync([FromBody]int id)
     {

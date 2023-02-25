@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -43,10 +44,11 @@ public class CountryController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCountries);
     }
 
-    [HttpPost("AddCountry")]
-    public async Task<ActionResult<Country>> AddCountryAsync(Country country)
-    {
-        Country? dbCountry = await _countryService.AddCountryAsync(country);
+        [Authorize(Policy = RolePermissions.CanAddCountry)]
+        [HttpPost("AddCountry")]
+        public async Task<ActionResult<Country>> AddCountryAsync(Country country)
+        {
+            Country? dbCountry = await _countryService.AddCountryAsync(country);
 
         if (dbCountry == null)
         {
@@ -56,13 +58,14 @@ public class CountryController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbCountry);
     }
 
-    [HttpPost("UpdateCountry")]
-    public async Task<IActionResult> UpdateCountryAsync(Country country)
-    {
-        if (country == null)
+        [Authorize(Policy = RolePermissions.CanEditCountry)]
+        [HttpPost("UpdateCountry")]
+        public async Task<IActionResult> UpdateCountryAsync(Country country)
         {
-            return BadRequest();
-        }
+            if (country == null)
+            {
+                return BadRequest();
+            }
 
         Country? dbCountry = await _countryService.UpdateCountryAsync(country);
 
@@ -74,10 +77,11 @@ public class CountryController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCountry);
     }
 
-    [HttpPost("DeleteCountry")]
-    public async Task<IActionResult> DeleteCountryAsync([FromBody]int id)
-    {
-        bool? status = await _countryService.DeleteCountryAsync(id);
+        [Authorize(Policy = RolePermissions.CanDeleteCountry)]
+        [HttpPost("DeleteCountry")]
+        public async Task<IActionResult> DeleteCountryAsync(int id)
+        {
+            bool? status = await _countryService.DeleteCountryAsync(id);
 
         if (status == false)
         {

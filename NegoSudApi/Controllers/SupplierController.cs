@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -17,12 +18,12 @@ public class SupplierController : ControllerBase
         _supplierService = supplierService;
     }
 
-    
     /// <summary>
     /// Method to return a Supplier matching query
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
+    [Authorize(Policy = RolePermissions.CanGetSupplier)]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetSupplierAsync(int id)
     {
@@ -40,6 +41,7 @@ public class SupplierController : ControllerBase
     /// Method to return all existing Suppliers
     /// </summary>
     /// <returns></returns>
+    [Authorize(Policy = RolePermissions.CanGetSupplier)]
     [HttpGet]
     public async Task<IActionResult> GetSuppliersAsync()
     {
@@ -53,12 +55,13 @@ public class SupplierController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbSuppliers);
     }
 
-    
+
     /// <summary>
     /// Method to add a new Supplier to the database
     /// </summary>
     /// <param name="supplier"></param>
     /// <returns></returns>
+    [Authorize(Policy = RolePermissions.CanAddSupplier)]
     [HttpPost("AddSupplier")]
     public async Task<ActionResult<Supplier>> AddSupplierAsync(Supplier supplier)
     {
@@ -72,13 +75,14 @@ public class SupplierController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbSupplier);
     }
 
-    
+
     /// <summary>
     /// update existing record matching query
     /// </summary>
     /// <param name="id"></param>
     /// <param name="supplier"></param>
     /// <returns></returns>
+    [Authorize(Policy = RolePermissions.CanEditSupplier)]
     [HttpPost("UpdateSupplier")]
     public async Task<IActionResult> UpdateSupplierAsync(Supplier supplier)
     {
@@ -96,13 +100,14 @@ public class SupplierController : ControllerBase
 
         return StatusCode(StatusCodes.Status200OK, dbSupplier);
     }
-    
-    
+
+
     /// <summary>
     /// Delete individual Supplier matching query
     /// </summary>
     /// <param name="id">The Supplier's id to delete</param>
     /// <returns>Status code</returns>
+    [Authorize(Policy = RolePermissions.CanDeleteSupplier)]
     [HttpPost("DeleteSupplier")]
     public async Task<IActionResult> DeleteSupplierAsync([FromBody]int id)
     {

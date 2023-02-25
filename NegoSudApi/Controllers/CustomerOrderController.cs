@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
+using NegoSudApi.Services;
 using NegoSudApi.Models.Interfaces;
 using NegoSudApi.Services;
 using NegoSudApi.Services.Interfaces;
@@ -23,10 +25,11 @@ public class CustomerOrderController : ControllerBase
         _configuration = configuration;
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetCustomerOrderAsync(int id)
-    {
-        CustomerOrder? dbCustomerOrder = await _customerOrderService.GetCustomerOrderAsync(id);
+        [Authorize(Policy = RolePermissions.CanGetCustomerOrder)]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCustomerOrderAsync(int id)
+        {
+            CustomerOrder? dbCustomerOrder = await _customerOrderService.GetCustomerOrderAsync(id);
 
         if (dbCustomerOrder == null)
         {
@@ -36,10 +39,10 @@ public class CustomerOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetCustomerOrdersAsync()
-    {
-        var dbCustomerOrders = await _customerOrderService.GetCustomerOrdersAsync();
+        [HttpGet]
+        public async Task<IActionResult> GetCustomerOrdersAsync()
+        {
+            var dbCustomerOrders = await _customerOrderService.GetCustomerOrdersAsync();
 
         if (dbCustomerOrders == null)
         {
@@ -49,10 +52,11 @@ public class CustomerOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCustomerOrders);
     }
 
-    [HttpPost("AddCustomerOrder")]
-    public async Task<ActionResult<CustomerOrder>> AddCustomerOrder(CustomerOrder customerOrder)
-    {
-        CustomerOrder? dbCustomerOrder = await _customerOrderService.AddCustomerOrderAsync(customerOrder);
+        [Authorize(Policy = RolePermissions.CanAddCustomerOrder)]
+        [HttpPost("AddCustomerOrder")]
+        public async Task<ActionResult<CustomerOrder>> AddCustomerOrder(CustomerOrder customerOrder)
+        {
+            CustomerOrder? dbCustomerOrder = await _customerOrderService.AddCustomerOrderAsync(customerOrder);
 
         if (dbCustomerOrder == null)
         {
@@ -77,13 +81,14 @@ public class CustomerOrderController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbCustomerOrder);
     }
 
-    [HttpPost("UpdateCustomerOrder")]
-    public async Task<IActionResult> UpdateCustomerOrderAsync(CustomerOrder? customerOrder)
-    {
-        if (customerOrder == null)
+        [Authorize(Policy = RolePermissions.CanEditCustomerOrder)]
+        [HttpPost("UpdateCustomerOrder")]
+        public async Task<IActionResult> UpdateCustomerOrderAsync(CustomerOrder customerOrder)
         {
-            return BadRequest();
-        }
+            if (customerOrder == null)
+            {
+                return BadRequest();
+            }
 
         CustomerOrder? dbCustomerOrder = await _customerOrderService.UpdateCustomerOrderAsync(customerOrder);
 
@@ -95,10 +100,11 @@ public class CustomerOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
     }
 
-    [HttpPost("DeleteCustomerOrder")]
-    public async Task<IActionResult> DeleteCustomerOrderAsync([FromBody]int id)
-    {
-        bool? status = await _customerOrderService.DeleteCustomerOrderAsync(id);
+        [Authorize(Policy = RolePermissions.CanDeleteCustomerOrder)]
+        [HttpPost("DeleteCustomerOrder")]
+        public async Task<IActionResult> DeleteCustomerOrderAsync(int id)
+        {
+            bool? status = await _customerOrderService.DeleteCustomerOrderAsync(id);
 
         if (status == false)
         {

@@ -1,5 +1,3 @@
-using System.Configuration;
-
 namespace NegoSudApi.Services;
 
 using System.Globalization;

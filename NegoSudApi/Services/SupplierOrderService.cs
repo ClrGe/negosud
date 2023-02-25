@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
+using NegoSudApi.Models.Interfaces;
 using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services;
@@ -11,17 +12,23 @@ public class SupplierOrderService : ISupplierOrderService
     private readonly ILogger<SupplierOrderService> _logger;
     private readonly ISupplierService _supplierService;
     private readonly IBottleService _bottleService;
+    private readonly IConfiguration _configuration;
+    private readonly IEmailService _emailService;
+    private readonly IVatService _vatService;
 
 
     public SupplierOrderService(NegoSudDbContext context,
         ILogger<SupplierOrderService> logger,
         ISupplierService supplierService,
-        IBottleService bottleService)
+        IBottleService bottleService, IConfiguration configuration, IEmailService emailService, IVatService vatService)
     {
         _context = context;
         _logger = logger;
         _supplierService = supplierService;
         _bottleService = bottleService;
+        _configuration = configuration;
+        _emailService = emailService;
+        _vatService = vatService;
     }
 
     //</inheritdoc>  
@@ -100,12 +107,17 @@ public class SupplierOrderService : ISupplierOrderService
                 }
 
                 await _context.AddRangeAsync(supplierOrder.Lines);
+                
+                await SendPurchaseOrder(supplierOrder);
             }
 
             supplierOrder.DeliveryStatus = DeliveryStatus.Pending.GetHashCode();
 
             await _context.SaveChangesAsync();
-
+        if (supplierOrder.Lines != null)
+        {
+            
+        }
             return newSupplierOrder;
 
         }
@@ -115,6 +127,41 @@ public class SupplierOrderService : ISupplierOrderService
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Sends a purchase order to a supplier and saves a copy of the purchase order as a PDF.
+    /// </summary>
+    /// <param name="supplierOrder">The SupplierOrder object containing the order information.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>
+    /// <remarks>
+    /// This method generates a PDF file containing the purchase order information, and sends it to the supplier's email address
+    /// specified in the SupplierOrder object using the EmailService. The email subject is "Bon de commande".
+    /// The PDF file is saved locally using the GeneratePdf class, and is deleted after the email is successfully sent.
+    /// </remarks>
+    private async Task SendPurchaseOrder(SupplierOrder supplierOrder)
+    {
+        List<IOrderLine> supplierOrderLines = supplierOrder.Lines.Cast<IOrderLine>().ToList();
+
+        var negoSudDetails = _configuration.GetSection("NegoSudDetails:Address").Value.Split(" ").ToList();
+        var supplierDetails = new List<string>
+        {
+            supplierOrder.Supplier.Address.AddressLine1,
+            supplierOrder.Supplier.Address.AddressLine2,
+            supplierOrder.Supplier.Address.City.Name,
+            supplierOrder.Supplier.Address.City.ZipCode.ToString(),
+            supplierOrder.Supplier.Address.City.Country.Name
+        };
+        var pdfPath =
+            new GeneratePdf(supplierOrder.Reference, negoSudDetails, supplierOrderLines, supplierDetails, _vatService)
+                .SavePurchaseOrderLocally();
+        var isEmailSent = await _emailService.SendPurchaseOrderEmailAsync(supplierOrder.Supplier.Email, $"Bon de commande",
+            pdfPath, _configuration);
+
+        if (!string.IsNullOrEmpty(pdfPath) && isEmailSent)
+        {
+            System.IO.File.Delete(pdfPath);
+        }
     }
 
     //</inheritdoc>  

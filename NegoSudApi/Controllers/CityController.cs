@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -43,19 +44,21 @@ public class CityController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCities);
     }
 
+    [Authorize(Policy = RolePermissions.CanAddCity)]
     [HttpPost("AddCity")]
-    public async Task<ActionResult<City>> AddCityAsync(City city)
+    public async Task<ActionResult<City>> AddCityAsync(City City)
     {
-        City? dbCity = await _cityService.AddCityAsync(city);
+        City? dbCity = await _cityService.AddCityAsync(City);
 
-        if (dbCity == null)
-        {
-            return StatusCode(StatusCodes.Status404NotFound, $"No match - could not add content.");
-        }
-
-        return StatusCode(StatusCodes.Status201Created, dbCity);
+    if (dbCity == null)
+    {
+        return StatusCode(StatusCodes.Status404NotFound, $"No match - could not add content.");
     }
 
+    return StatusCode(StatusCodes.Status201Created, dbCity);
+    }
+
+    [Authorize(Policy = RolePermissions.CanEditCity)]
     [HttpPost("UpdateCity")]
     public async Task<IActionResult> UpdateCityAsync(City city)
     {
@@ -64,26 +67,27 @@ public class CityController : ControllerBase
             return BadRequest();
         }
 
-        City? dbCity = await _cityService.UpdateCityAsync(city);
+    City? dbCity = await _cityService.UpdateCityAsync(city);
 
-        if (dbCity == null)
-        {
-            return StatusCode(StatusCodes.Status404NotFound, $"No city found for id: {city.Id} - could not update.");
-        }
+    if (dbCity == null)
+    {
+        return StatusCode(StatusCodes.Status404NotFound, $"No city found for id: {city.Id} - could not update.");
+    }
 
         return StatusCode(StatusCodes.Status200OK, dbCity);
     }
-    
+
+    [Authorize(Policy = RolePermissions.CanDeleteCity)]
     [HttpPost("DeleteCity")]
-    public async Task<IActionResult> DeleteCityAsync([FromBody]int id)
+    public async Task<IActionResult> DeleteCityAsync(int id)
     {
         bool? status = await _cityService.DeleteCityAsync(id);
 
-        if (status == false)
-        {
-            return StatusCode(StatusCodes.Status404NotFound, $"No city found for id: {id} - could not delete");
-        }
+    if (status == false)
+    {
+        return StatusCode(StatusCodes.Status404NotFound, $"No city found for id: {id} - could not delete");
+    }
 
-        return StatusCode(StatusCodes.Status200OK);
+    return StatusCode(StatusCodes.Status200OK);
     }
 }

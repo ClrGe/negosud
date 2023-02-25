@@ -2,6 +2,7 @@ namespace NegoSudApi.Controllers;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
 
@@ -17,7 +18,7 @@ public class ProducerController : ControllerBase
         _producerService = producerService;
     }
 
-    
+
     /// <summary>
     /// Method to return a producer matching query
     /// </summary>
@@ -53,12 +54,13 @@ public class ProducerController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbProducers);
     }
 
-    
+
     /// <summary>
     /// Method to add a new producer to the database
     /// </summary>
     /// <param name="producer"></param>
     /// <returns></returns>
+    [Authorize(Policy = RolePermissions.CanAddProducer)]
     [HttpPost("AddProducer")]
     public async Task<ActionResult<Producer>> AddProducerAsync(Producer producer)
     {
@@ -72,13 +74,14 @@ public class ProducerController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbProducer);
     }
 
-    
+
     /// <summary>
     /// update existing record matching query
     /// </summary>
     /// <param name="id"></param>
     /// <param name="producer"></param>
     /// <returns></returns>
+    [Authorize(Policy = RolePermissions.CanEditProducer)]
     [HttpPost("UpdateProducer")]
     public async Task<IActionResult> UpdateProducerAsync(Producer producer)
     {
@@ -96,13 +99,14 @@ public class ProducerController : ControllerBase
 
         return StatusCode(StatusCodes.Status200OK, dbProducer);
     }
-    
-    
+
+
     /// <summary>
     /// Delete individual producer matching query
     /// </summary>
     /// <param name="id">The producer's id to delete</param>
     /// <returns>Status code</returns>
+    [Authorize(Policy = RolePermissions.CanDeleteProducer)]
     [HttpPost("DeleteProducer")]
     public async Task<IActionResult> DeleteProducerAsync([FromBody]int id)
     {
