@@ -26,14 +26,14 @@ public class AuthenticationController : ControllerBase
     
     [HttpPost]
     [Route("Login")]
-    public Task<ActionResult<string>> Login(User user)
+    public async Task<ActionResult<string>> Login(User user)
     {
         var dbUser = _jwtAuthenticationService.Authenticate(user.Email, user.Password);
         if (dbUser != null)
         {
             List<Claim> claims = new List<Claim>
             {
-                new(ClaimTypes.Email, model.Email),                
+                new(ClaimTypes.Email, user.Email),                
             };
 
             Role? userRole = (await _userService.GetUserAsync(dbUser.Id, includeRelations: true)).Role;
@@ -44,12 +44,14 @@ public class AuthenticationController : ControllerBase
             }
 
             string? token = _jwtAuthenticationService.GenerateToken(_configuration["Jwt:Key"]!, claims);
-            User user = new User()
+
+            User response = new User()
             {
                 Id = dbUser.Id,
                 FirstName = dbUser.FirstName,
                 LastName = dbUser.LastName,
-                Email = dbUser.Email
+                Email = dbUser.Email,
+                Role = userRole,
             };
 
             Response.Cookies.Append(
@@ -63,7 +65,7 @@ public class AuthenticationController : ControllerBase
                 SameSite = SameSiteMode.Lax,
             }
             );
-            return StatusCode(StatusCodes.Status200OK, user);
+            return StatusCode(StatusCodes.Status200OK, response);
         }
         return StatusCode(StatusCodes.Status401Unauthorized);
     }
@@ -90,6 +92,13 @@ public class AuthenticationController : ControllerBase
             new(ClaimTypes.Email, dbUser.Email)
         };
 
+        Role? userRole = (await _userService.GetUserAsync(dbUser.Id, includeRelations: true)).Role;
+
+        if (userRole != null)
+        {
+            claims.Add(new(ClaimTypes.Role, userRole?.Name));
+        }
+
         string? token = _jwtAuthenticationService.GenerateToken(_configuration["Jwt:Key"]!, claims);
 
         User response = new User()
@@ -97,7 +106,8 @@ public class AuthenticationController : ControllerBase
             Id = dbUser.Id,
             FirstName = dbUser.FirstName,
             LastName = dbUser.LastName,
-            Email = dbUser.Email
+            Email = dbUser.Email,
+            Role = userRole,
         };
 
         Response.Cookies.Append(
