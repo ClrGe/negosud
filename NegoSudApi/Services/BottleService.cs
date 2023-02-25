@@ -421,7 +421,7 @@ public class BottleService : IBottleService
     }
 
     //</inheritdoc>  
-    public async Task<ICollection<Bottle>> MassUpdateBottleAsync(ICollection<Bottle>? bottles)
+    public async Task<ICollection<Bottle>?> MassUpdateBottleAsync(ICollection<Bottle>? bottles)
     {
         try
         {
