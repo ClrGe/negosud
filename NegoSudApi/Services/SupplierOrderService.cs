@@ -77,7 +77,12 @@ public class SupplierOrderService : ISupplierOrderService
                 }
             }
 
-            SupplierOrder newSupplierOrder = (await _context.SupplierOrders.AddAsync(supplierOrder)).Entity;
+            
+            SupplierOrder newSupplierOrder = new SupplierOrder
+            {
+                Description = supplierOrder.Description,
+                Supplier = supplierOrder.Supplier,
+            };
 
             if(supplierOrder.Lines != null)
             {
@@ -91,7 +96,7 @@ public class SupplierOrderService : ISupplierOrderService
                     }
 
                     // set the SupplierOrderId for the SupplierOrderLine
-                    orderLine.SupplierOrderId = newSupplierOrder.Id;
+                    orderLine.SupplierOrder = newSupplierOrder;
                 }
 
                 await _context.AddRangeAsync(supplierOrder.Lines);
@@ -146,10 +151,10 @@ public class SupplierOrderService : ISupplierOrderService
 
                     foreach (SupplierOrderLine Line in supplierOrder.Lines)
                     {
-                        if (Line.Bottle?.Id != null)
+                        if (Line.BottleId != null)
                         {
                             Bottle? bottle =
-                                await _bottleService.GetBottleAsync(Line.Bottle.Id, includeRelations: false);
+                                await _bottleService.GetBottleAsync((int) Line.BottleId, includeRelations: false);
                             if (bottle != null)
                             {
                                 Line.Bottle = bottle;

@@ -64,7 +64,7 @@ public class CustomerOrderController : ControllerBase
         
         List<IOrderLine> customerOrderLines = new List<IOrderLine>((dbCustomerOrder.Lines as List<CustomerOrderLine>)!);
         // Create a pfd invoice for the customer
-        var pdfBytes = new GeneratePdf(customerOrder.Reference!, customerDetails, customerOrderLines, _vatService).Save();
+        var pdfBytes = new GeneratePdf(customerOrder.Reference!, customerDetails, customerOrderLines, _vatService).SaveInvoice();
         var stream = new MemoryStream(pdfBytes);
         Response.Headers.Add("Content-Disposition", $"inline; filename=invoice_{customerOrder.Reference!}.pdf");
         Response.ContentType = "application/pdf";

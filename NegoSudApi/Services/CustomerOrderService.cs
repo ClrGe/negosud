@@ -91,8 +91,8 @@ public class CustomerOrderService : ICustomerOrderService
             {
                 foreach (CustomerOrderLine orderLine in customerOrder.Lines)
                 {
-                    if (orderLine.Bottle?.Id == null) continue;
-                    Bottle? dbBottle = await _bottleService.GetBottleAsync(orderLine.Bottle.Id, true);
+                    if (orderLine.BottleId == null) continue;
+                    Bottle? dbBottle = await _bottleService.GetBottleAsync((int) orderLine.BottleId, true);
                     if (dbBottle != null)
                     {
                        orderLine.Bottle = dbBottle;
@@ -130,7 +130,7 @@ public class CustomerOrderService : ICustomerOrderService
     private async Task<Dictionary<CustomerOrderLineStorageLocation, int>?> GetAvailableLocationsAndQuantities(Bottle bottle, CustomerOrderLine orderLine)
     {
         var availableLocations = bottle.BottleStorageLocations!
-            .Where(bsl => bsl.BottleId == orderLine.Bottle.Id && bsl.Quantity > 0)
+            .Where(bsl => bsl.BottleId == orderLine.BottleId && bsl.Quantity > 0)
             .OrderByDescending(bsl => bsl.Quantity)
             .ToList();
 
@@ -203,9 +203,9 @@ public class CustomerOrderService : ICustomerOrderService
                     foreach (CustomerOrderLine line in customerOrder.Lines)
                     {
 
-                        if (line.Bottle?.Id != null)
+                        if (line.BottleId != null)
                         {
-                            Bottle? bottle = await _bottleService.GetBottleAsync(line.Bottle.Id, includeRelations: false);
+                            Bottle? bottle = await _bottleService.GetBottleAsync((int) line.BottleId, includeRelations: false);
                             if (bottle != null)
                             {
                                 line.Bottle = bottle;

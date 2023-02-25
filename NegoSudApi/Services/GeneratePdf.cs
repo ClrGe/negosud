@@ -1,6 +1,3 @@
-using NegoSudApi.Models.Interfaces;
-using NegoSudApi.Services.Interfaces;
-
 namespace NegoSudApi.Services;
 
 using System.Globalization;
@@ -10,7 +7,18 @@ using System.Collections.Generic;
 using System.IO;
 using Aspose.Pdf;
 using Aspose.Pdf.Text;
+using NegoSudApi.Models.Interfaces;
+using NegoSudApi.Services.Interfaces;
 
+/// <summary>
+///  /// <summary>
+/// Class uses to generate an invoice PDF 
+/// </summary>
+/// <param name="invoiceNumber">The number of the invoice. Include the date and the Customer's id</param>
+/// <param name="billTo">The Customer info</param>
+/// <param name="orderLines">The details of the order</param>
+/// <param name="vatService">The value added Tax for the bottle(s)</param>
+/// </summary>
 public class GeneratePdf : IDisposable
 {
     private readonly CultureInfo _cultureInfo;
@@ -31,7 +39,7 @@ public class GeneratePdf : IDisposable
     private readonly IVatService _vatService;
 
     /// <summary>
-    /// Class uses to generate an invoice PDF 
+    /// Instantiate a new instance of the generate pdf class
     /// </summary>
     /// <param name="invoiceNumber">The number of the invoice. Include the date and the Customer's id</param>
     /// <param name="billTo">The Customer info</param>
@@ -68,25 +76,33 @@ public class GeneratePdf : IDisposable
         _timeNewRomanFont = FontRepository.FindFont("Times New Roman");
     }
 
-    public byte[] Save()
+    /// <summary>
+    /// Saves the invoice as a PDF in a memory stream and returns the byte array representation of the PDF.
+    /// </summary>
+    /// <returns>The byte array representation of the generated PDF.</returns>
+    public byte[] SaveInvoice()
     {
         HeaderSection();
-        AddressSection();
-        GridSection();
-        TermsSection();
+        AddressSectionInvoice();
+        GridSectionInvoice();
+        TermsSectionInvoice();
         FooterSection();
 
         using var stream = new MemoryStream();
         _pdfDocument.Save(stream);
         return stream.ToArray();
     }
-    
-    public string SaveLocally()
+
+    /// <summary>
+    /// Saves the purchase order as a PDF file in the local file system.
+    /// </summary>
+    /// <returns>The path to the saved PDF file.</returns>
+    public string SavePurchaseOrderLocally()
     {
         HeaderSection();
-        AddressSection();
-        GridSection();
-        TermsSection();
+        AddressSectionPurchaseOrder();
+        GridSectionPurchaseOrder();
+        TermsSectionPurchaseOrder();
         FooterSection();
 
         string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "temp.pdf");
@@ -95,6 +111,9 @@ public class GeneratePdf : IDisposable
         return filePath;
     }
 
+    /// <summary>
+    /// THe header section used by invoice and purchase order
+    /// </summary>
     private void HeaderSection()
     {
         var lines = new TextFragment[2];
@@ -111,7 +130,7 @@ public class GeneratePdf : IDisposable
 
         _pdfPage.Paragraphs.Add(lines[0]);
 
-        lines[1] = new TextFragment($"DATE: {DateTime.Today:MM/dd/yyyy}");
+        lines[1] = new TextFragment($"DATE: {DateTime.Today:dd/MM/yyyy}");
         for (var i = 1; i < lines.Length; i++)
         {
             // Set text properties                
@@ -148,7 +167,10 @@ public class GeneratePdf : IDisposable
         _pdfPage.Contents.Add(new Do(xImage.Name));
     }
 
-    private void AddressSection()
+    /// <summary>
+    /// The address section for an invoice 
+    /// </summary>
+    private void AddressSectionInvoice()
     {
         var box = new FloatingBox(524, 120)
         {
@@ -209,7 +231,74 @@ public class GeneratePdf : IDisposable
         _pdfPage.Paragraphs.Add(box);
     }
 
-    private void GridSection()
+    /// <summary>
+    /// The address section for a purchase order 
+    /// </summary>
+    private void AddressSectionPurchaseOrder()
+    {
+        var box = new FloatingBox(524, 120)
+        {
+            ColumnInfo =
+            {
+                ColumnCount = 2,
+                ColumnWidths = "252 252"
+            },
+            Padding =
+            {
+                Top = 20
+            }
+        };
+        TextFragment fragment;
+
+        _billFrom.Insert(0, "");
+        foreach (var str in _billFrom)
+        {
+            fragment = new TextFragment(str)
+            {
+                TextState =
+                {
+                    Font = _timeNewRomanFont,
+                    FontSize = 12
+                }
+            };
+            // Add fragment to paragraph
+            box.Paragraphs.Add(fragment);
+        }
+
+        fragment = new TextFragment("Facturé à")
+        {
+            IsFirstParagraphInColumn = true,
+            TextState =
+            {
+                Font = _timeNewRomanFont,
+                FontSize = 12,
+                HorizontalAlignment = HorizontalAlignment.Right
+            }
+        };
+        box.Paragraphs.Add(fragment);
+
+        foreach (var str in _billTo)
+        {
+            fragment = new TextFragment(str)
+            {
+                TextState =
+                {
+                    Font = _timeNewRomanFont,
+                    FontSize = 12,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                }
+            };
+            // Add fragment to paragraph
+            box.Paragraphs.Add(fragment);
+        }
+
+        _pdfPage.Paragraphs.Add(box);
+    }
+
+    /// <summary>
+    /// The grid of each bottle to be ordered
+    /// </summary>
+    private void GridSectionInvoice()
     {
         decimal vatRAte = 0;
 
@@ -248,7 +337,7 @@ public class GeneratePdf : IDisposable
 
         foreach (var orderLine in _orderLines)
         {
-            vatRAte = (decimal) _vatService.GetVatAsync(orderLine.Bottle.Vat.Id).Result.Value;
+            vatRAte = (decimal) _vatService.GetVatAsync((int) orderLine.Bottle.VatId).Result.Value;
             var row = table.Rows.Add();
             cell = row.Cells.Add(numberLine.ToString());
             cell.Alignment = HorizontalAlignment.Center;
@@ -281,8 +370,84 @@ public class GeneratePdf : IDisposable
         _pdfPage.Paragraphs.Add(table);
     }
 
+    /// <summary>
+    /// The grid of each bottle to be ordered
+    /// </summary>
+    private void GridSectionPurchaseOrder()
+    {
+        decimal vatRAte = 0;
 
-private void TermsSection()
+        // Initializes a new instance of the Table
+        var table = new Table
+        {
+            ColumnWidths = "26 257 78 78 78",
+            Border = new BorderInfo(BorderSide.Box, 1f, _textColor),
+            DefaultCellBorder = new BorderInfo(BorderSide.Box, 0.5f, _textColor),
+            DefaultCellPadding = new MarginInfo(4.5, 4.5, 4.5, 4.5),
+            Margin =
+            {
+                Bottom = 10
+            },
+            DefaultCellTextState =
+            {
+                Font = _timeNewRomanFont
+            }
+        };
+
+        var headerRow = table.Rows.Add();
+        var cell = headerRow.Cells.Add("#");
+        cell.Alignment = HorizontalAlignment.Center;
+        headerRow.Cells.Add("Produits");
+        headerRow.Cells.Add("Quantité");
+        headerRow.Cells.Add("Total");
+        foreach (Cell headerRowCell in headerRow.Cells)
+        {
+            headerRowCell.BackgroundColor = _backColor;
+            headerRowCell.DefaultCellTextState.ForegroundColor = Color.White;
+        }
+
+        var lineTotal = new List<decimal>();
+        var numberLine = 1;
+
+        foreach (var orderLine in _orderLines)
+        {
+            vatRAte = (decimal) _vatService.GetVatAsync((int) orderLine.Bottle.VatId).Result.Value;
+            var row = table.Rows.Add();
+            cell = row.Cells.Add(numberLine.ToString());
+            cell.Alignment = HorizontalAlignment.Center;
+            row.Cells.Add(orderLine.Bottle.FullName);
+            cell = row.Cells.Add(((decimal) orderLine.Bottle.SupplierPrice).ToString("C2", _cultureInfo));
+            cell.Alignment = HorizontalAlignment.Right;
+            cell = row.Cells.Add(orderLine.Quantity.ToString());
+            cell.Alignment = HorizontalAlignment.Right;
+            cell = row.Cells.Add(
+                ((decimal) (orderLine.Bottle.SupplierPrice * orderLine.Quantity)).ToString("C2", _cultureInfo));
+            lineTotal.Add((decimal) (orderLine.Bottle.SupplierPrice * orderLine.Quantity));
+            cell.Alignment = HorizontalAlignment.Right;
+            numberLine++;
+        }
+
+
+        var subTotal = lineTotal.Sum();
+        _totalsRow.Add(new TotalRow("Sous total", subTotal));
+        _totalsRow.Add(new TotalRow($"TVA à {vatRAte:P0}", subTotal * vatRAte));
+        _totalsRow.Add(new TotalRow("Total", subTotal * (1 + vatRAte)));
+        foreach (var totalRow in _totalsRow)
+        {
+            var row = table.Rows.Add();
+            var nameCell = row.Cells.Add(totalRow.Text);
+            nameCell.ColSpan = 4;
+            var textCell = row.Cells.Add(totalRow.Value.ToString("C2", _cultureInfo));
+            textCell.Alignment = HorizontalAlignment.Right;
+        }
+
+        _pdfPage.Paragraphs.Add(table);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void TermsSectionInvoice()
     {
         foreach (var fragment in _details.Select(detail => new TextFragment(detail)
                  {
@@ -297,6 +462,27 @@ private void TermsSection()
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    private void TermsSectionPurchaseOrder()
+    {
+        foreach (var fragment in _details.Select(detail => new TextFragment(detail)
+                 {
+                     TextState =
+                     {
+                         Font = _timeNewRomanFont,
+                         FontSize = 12
+                     }
+                 }))
+        {
+            _pdfPage.Paragraphs.Add(fragment);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     private void FooterSection()
     {
         var fragment = new TextFragment(_footer);
@@ -343,7 +529,7 @@ public class TotalRow
     {
         Text = text;
         Value = value;
-    }                
+    }
 }
 
 public class LogoImage

@@ -97,30 +97,30 @@ public class BottleService : IBottleService
                 }
             }
 
-            if (bottle.WineLabel?.Id != null)
+            if (bottle.WineLabelId != null)
             {
                 WineLabel? wineLabel =
-                    await _wineLabelService.GetWineLabelAsync(bottle.WineLabel.Id, includeRelations: false);
+                    await _wineLabelService.GetWineLabelAsync((int) bottle.WineLabelId, includeRelations: false);
                 if (wineLabel != null)
                 {
                     bottle.WineLabel = wineLabel;
                 }
             }
 
-            if (bottle.Producer?.Id != null)
+            if (bottle.ProducerId != null)
             {
                 Producer? producer =
-                    await _producerService.GetProducerAsync(bottle.Producer.Id, includeRelations: false);
+                    await _producerService.GetProducerAsync((int) bottle.ProducerId, includeRelations: false);
                 if (producer != null)
                 {
                     bottle.Producer = producer;
                 }
             } 
             
-            if (bottle.Vat?.Id != null)
+            if (bottle.VatId != null)
             {
                 VAT? dbVat =
-                    await _vatService.GetVatAsync(bottle.Vat.Id);
+                    await _vatService.GetVatAsync((int) bottle.VatId);
                 if (dbVat != null)
                 {
                     bottle.Vat = dbVat;
@@ -172,10 +172,10 @@ public class BottleService : IBottleService
                 dbBottle.CustomerPrice = bottle.CustomerPrice;
 
 
-                if (bottle.Producer != null)
+                if (bottle.ProducerId != null)
                 {
                     Producer? producer =
-                        await _producerService.GetProducerAsync(bottle.Producer.Id, includeRelations: false);
+                        await _producerService.GetProducerAsync((int) bottle.ProducerId, includeRelations: false);
                     // If we found a producer in the database
                     if (producer != null)
                     {
@@ -183,9 +183,9 @@ public class BottleService : IBottleService
                     }
                 }
 
-                if (bottle.Vat != null)
+                if (bottle.VatId != null)
                 {
-                    dbBottle.Vat = await _vatService.GetVatAsync(bottle.Vat.Id) ?? dbBottle.Vat;
+                    dbBottle.Vat = await _vatService.GetVatAsync((int) bottle.VatId) ?? dbBottle.Vat;
 
                 }
                 

@@ -6,6 +6,7 @@ public class CustomerOrderLine : IModelBase, IOrderLine
 {
     public int Id { get; set; }
     public int? Quantity { get; set; }
+    public int? BottleId { get; set; }
     public virtual Bottle? Bottle { get; set; }
     public DateTime? CreatedAt { get ; set ; }
     public DateTime? UpdatedAt { get ; set; }
