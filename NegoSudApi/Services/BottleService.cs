@@ -153,7 +153,7 @@ public class BottleService : IBottleService
     }
     
     //</inheritdoc>  
-    public async Task<ICollection<Bottle>> MassAddBottleAsync(ICollection<Bottle>? bottles)
+    public async Task<ICollection<Bottle>?> MassAddBottleAsync(ICollection<Bottle>? bottles)
     {
         try
         {
