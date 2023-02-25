@@ -80,7 +80,6 @@ public class BottleController : ControllerBase
     public async Task<IActionResult> MassUpdateBottleAsync(ICollection<Bottle> bottles)
     {
         if (bottles == null) return BadRequest();
-        // TODO BULK
 
         ICollection<Bottle>? dbBottles = await _bottleService.MassUpdateBottleAsync(bottles);
 
