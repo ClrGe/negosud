@@ -8,7 +8,6 @@ using NegoSudApi.Services.Interfaces;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class ProducerController : ControllerBase
 {
     private readonly IProducerService _producerService;

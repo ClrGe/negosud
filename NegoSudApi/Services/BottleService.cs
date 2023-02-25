@@ -49,7 +49,7 @@ public class BottleService : IBottleService
     {
         try
         {
-            return await _context.Bottles.ToListAsync();
+            return await _context.Bottles.Include(b => b.Producer).ToListAsync();
         }
         catch (Exception ex)
         {
