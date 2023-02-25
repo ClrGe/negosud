@@ -427,6 +427,7 @@ public class BottleService : IBottleService
         {
             if (bottles != null)
             {
+                // same logic as individual update wrapped in a loop
                 foreach (Bottle bottle in bottles)
                 {
                     Bottle? dbBottle = await this.GetBottleAsync(bottle.Id);
@@ -448,31 +449,25 @@ public class BottleService : IBottleService
                         {
                             Producer? producer =
                                 await _producerService.GetProducerAsync(bottle.Producer.Id, includeRelations: false);
-                            // If we found a producer in the database
                             if (producer != null)
                             {
                                 dbBottle.Producer = producer;
                             }
                         }
-
                         if (bottle.Vat != null)
                         {
                             dbBottle.Vat = await _vatService.GetVatAsync(bottle.Vat.Id) ?? dbBottle.Vat;
-
                         }
-
                         if (bottle.BottleStorageLocations != null && dbBottle.BottleStorageLocations != null)
                         {
                             ICollection<BottleStorageLocation> dbBottleStorageLocations =
                                 dbBottle.BottleStorageLocations.ToList();
-
                             foreach (BottleStorageLocation bottleStorageLocation in bottle.BottleStorageLocations)
                             {
                                 BottleStorageLocation? existingBottleStorageLocation =
                                     dbBottleStorageLocations.FirstOrDefault(bl =>
                                         bl.BottleId == bottleStorageLocation.BottleId &&
                                         bl.StorageLocationId == bottleStorageLocation.StorageLocationId);
-
                                 if (existingBottleStorageLocation != null)
                                 {
                                     existingBottleStorageLocation.Quantity = bottleStorageLocation.Quantity;
@@ -509,7 +504,6 @@ public class BottleService : IBottleService
                                 BottleSupplier? existingBottleSupplier = dbBottleSuppliers.FirstOrDefault(bs =>
                                     bs.BottleId == bottleSupplier.BottleId &&
                                     bs.SupplierId == bottleSupplier.SupplierId);
-
                                 if (existingBottleSupplier != null)
                                 {
                                     existingBottleSupplier.Supplier = bottleSupplier.Supplier;
@@ -537,20 +531,15 @@ public class BottleService : IBottleService
                                 dbBottle.BottleSuppliers.Remove(bottleSupplierToDelete);
                             }
                         }
-
                         if (bottle.BottleGrapes != null && dbBottle.BottleGrapes != null)
                         {
                             ICollection<BottleGrape> dbBottleGrapes = dbBottle.BottleGrapes.ToList();
-
                             foreach (BottleGrape bottleGrape in bottle.BottleGrapes)
                             {
-                                //if the BottleGrape already exists
                                 BottleGrape? existingBottleGrape = dbBottleGrapes.FirstOrDefault(bl =>
                                     bl.BottleId == bottleGrape.BottleId && bl.GrapeId == bottleGrape.GrapeId);
-
                                 if (existingBottleGrape != null)
                                 {
-                                    //update the existing BottleGrape
                                     existingBottleGrape.GrapePercentage = bottleGrape.GrapePercentage;
                                     _context.Entry(existingBottleGrape).State = EntityState.Modified;
                                     dbBottleGrapes.Remove(existingBottleGrape);
@@ -568,20 +557,17 @@ public class BottleService : IBottleService
                                             bottleGrape.Bottle = bottle;
                                         }
                                     }
-
-                                    // otherwise, add the new BottleGrape to the current bottle
                                     dbBottle.BottleGrapes.Add(bottleGrape);
                                 }
                             }
 
                             foreach (BottleGrape bottleGrapeToDelete in dbBottleGrapes)
                             {
-                                //currentBottle.BottleGrapes.Remove(bottleGrapeToDelete);
                                 dbBottle.BottleGrapes.Remove(bottleGrapeToDelete);
                             }
                         }
-
                         await _context.BulkUpdateAsync(bottles);
+                        return bottles;
                     }
                 }
             }
