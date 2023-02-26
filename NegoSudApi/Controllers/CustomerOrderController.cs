@@ -20,11 +20,11 @@ public class CustomerOrderController : ControllerBase
         _vatService = vatService;
     }
 
-        [Authorize(Policy = RolePermissions.CanGetCustomerOrder)]
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCustomerOrderAsync(int id)
-        {
-            CustomerOrder? dbCustomerOrder = await _customerOrderService.GetCustomerOrderAsync(id);
+    [Authorize(Policy = RolePermissions.CanGetCustomerOrder)]
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCustomerOrderAsync(int id)
+    {
+        CustomerOrder? dbCustomerOrder = await _customerOrderService.GetCustomerOrderAsync(id);
 
         if (dbCustomerOrder == null)
         {
@@ -34,11 +34,11 @@ public class CustomerOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
     }
 
-        [Authorize(Policy = RolePermissions.CanGetCustomerOrders)]
-        [HttpGet]
-        public async Task<IActionResult> GetCustomerOrdersAsync()
-        {
-            var dbCustomerOrders = await _customerOrderService.GetCustomerOrdersAsync();
+    [Authorize(Policy = RolePermissions.CanGetCustomerOrders)]
+    [HttpGet]
+    public async Task<IActionResult> GetCustomerOrdersAsync()
+    {
+        var dbCustomerOrders = await _customerOrderService.GetCustomerOrdersAsync();
 
         if (dbCustomerOrders == null)
         {
@@ -48,20 +48,25 @@ public class CustomerOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCustomerOrders);
     }
 
-        [Authorize(Policy = RolePermissions.CanAddCustomerOrder)]
-        [HttpPost("AddCustomerOrder")]
-        public async Task<ActionResult<CustomerOrder>> AddCustomerOrder(CustomerOrder customerOrder)
-        {
-            CustomerOrder? dbCustomerOrder = await _customerOrderService.AddCustomerOrderAsync(customerOrder);
+    [Authorize(Policy = RolePermissions.CanAddCustomerOrder)]
+    [HttpPost("AddCustomerOrder")]
+    public async Task<ActionResult<CustomerOrder>> AddCustomerOrder(CustomerOrder customerOrder)
+    {
+        CustomerOrder? dbCustomerOrder = await _customerOrderService.AddCustomerOrderAsync(customerOrder);
 
         if (dbCustomerOrder == null)
         {
             return StatusCode(StatusCodes.Status404NotFound, $"{customerOrder.Reference} could not be added.");
         }
         
-        var customerDetails = new List<String>
+        var customerDetails = new List<string>
         {
-            customerOrder.Customer.FirstName, customerOrder.Customer.LastName, customerOrder.DeliveryAddress.Label!, customerOrder.DeliveryAddress.FirstLine!, customerOrder.DeliveryAddress.City!.Name!, customerOrder.DeliveryAddress.City.ZipCode.ToString()!
+            customerOrder.Customer.FirstName, 
+            customerOrder.Customer.LastName, 
+            customerOrder.DeliveryAddress.Label!, 
+            customerOrder.DeliveryAddress.FirstLine!, 
+            customerOrder.DeliveryAddress.City!.Name!, 
+            customerOrder.DeliveryAddress.City.ZipCode.ToString()!
         };
         
         // Create a pfd invoice for the customer
@@ -75,14 +80,14 @@ public class CustomerOrderController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, dbCustomerOrder);
     }
 
-        [Authorize(Policy = RolePermissions.CanEditCustomerOrder)]
-        [HttpPost("UpdateCustomerOrder")]
-        public async Task<IActionResult> UpdateCustomerOrderAsync(CustomerOrder customerOrder)
+    [Authorize(Policy = RolePermissions.CanEditCustomerOrder)]
+    [HttpPost("UpdateCustomerOrder")]
+    public async Task<IActionResult> UpdateCustomerOrderAsync(CustomerOrder customerOrder)
+    {
+        if (customerOrder == null)
         {
-            if (customerOrder == null)
-            {
-                return BadRequest();
-            }
+            return BadRequest();
+        }
 
         CustomerOrder? dbCustomerOrder = await _customerOrderService.UpdateCustomerOrderAsync(customerOrder);
 
@@ -94,11 +99,11 @@ public class CustomerOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
     }
 
-        [Authorize(Policy = RolePermissions.CanDeleteCustomerOrder)]
-        [HttpPost("DeleteCustomerOrder")]
-        public async Task<IActionResult> DeleteCustomerOrderAsync(int id)
-        {
-            bool? status = await _customerOrderService.DeleteCustomerOrderAsync(id);
+    [Authorize(Policy = RolePermissions.CanDeleteCustomerOrder)]
+    [HttpPost("DeleteCustomerOrder")]
+    public async Task<IActionResult> DeleteCustomerOrderAsync(int id)
+    {
+        bool? status = await _customerOrderService.DeleteCustomerOrderAsync(id);
 
         if (status == false)
         {

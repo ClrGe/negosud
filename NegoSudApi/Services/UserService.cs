@@ -20,7 +20,7 @@ public class UserService : IUserService
     }
 
     // </inheritdoc>
-    public async Task<User?> GetUserAsync(int id, bool includeRelations = false)
+    public async Task<User?> GetUserAsync(int id, bool includeRelations = true)
     {
         try
         {

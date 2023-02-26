@@ -54,16 +54,23 @@ public class AuthenticationController : ControllerBase
                 Role = userRole,
             };
 
-            Response.Cookies.Append(
-            "session",
-            token,
-            new CookieOptions()
+            var cookieOptions = new CookieOptions()
             {
                 IsEssential = true,
                 HttpOnly = false,
                 Secure = false,
                 SameSite = SameSiteMode.Lax,
-            }
+            };
+
+            Response.Cookies.Append(
+            "session",
+            token,
+            cookieOptions
+            );
+            Response.Cookies.Append(
+            "user_Id",
+            response.Id.ToString(),
+            cookieOptions
             );
             return StatusCode(StatusCodes.Status200OK, token);
         }
@@ -111,18 +118,25 @@ public class AuthenticationController : ControllerBase
             Role = userRole,
         };
 
-        Response.Cookies.Append(
-            "session",
-            token,
-            new CookieOptions()
-            {
-                IsEssential = true,
-                HttpOnly = false,
-                Secure = false,
-                SameSite = SameSiteMode.Lax,
-            }
-            );
+        var cookieOptions = new CookieOptions()
+        {
+            IsEssential = true,
+            HttpOnly = false,
+            Secure = false,
+            SameSite = SameSiteMode.Lax,
+        };
 
+        Response.Cookies.Append(
+        "session",
+        token,
+        cookieOptions
+        );
+        Response.Cookies.Append(
+        "user_Id",
+        response.Id.ToString(),
+        cookieOptions
+        );
+        
         return StatusCode(StatusCodes.Status201Created, response);
     }
 }
