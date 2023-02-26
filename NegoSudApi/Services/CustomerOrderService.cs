@@ -107,7 +107,7 @@ public class CustomerOrderService : ICustomerOrderService
                         .OrderByDescending(bsl => bsl.Quantity)
                         .ToList();
                     
-                    if (CheckBottleQuantity(dbBottle, orderLine, availableLocations))
+                    if (CheckBottleQuantity(dbBottle, availableLocations))
                     {
                         orderLine.Bottle = dbBottle;
                         var availableLocationsAndQuantities = GetAvailableLocationsAndQuantities(dbBottle, orderLine, availableLocations);
@@ -292,10 +292,9 @@ public class CustomerOrderService : ICustomerOrderService
     /// Checks if there is enough quantity of a given bottle to fulfill a customer order line.
     /// </summary>
     /// <param name="bottle">The bottle being checked.</param>
-    /// <param name="customerOrderLine">The customer order line specifying the quantity required.</param>
     /// <param name="availableLocations">The available locations where the bottle is stored.</param>
     /// <returns>True if there is enough quantity of the bottle to fulfill the customer order line, false otherwise.</returns>
-    private bool CheckBottleQuantity(Bottle bottle, CustomerOrderLine customerOrderLine, List<BottleStorageLocation>? availableLocations)
+    private bool CheckBottleQuantity(Bottle bottle, List<BottleStorageLocation>? availableLocations)
     {
         var quantityTotalBottle = bottle.BottleStorageLocations.Sum(b => b.Quantity);
 

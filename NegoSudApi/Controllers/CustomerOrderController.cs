@@ -38,7 +38,7 @@ public class CustomerOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
     }
 
-        [Authorize(Policy = RolePermissions.CanGetCustomerOrders)]
+        [Authorize(Policy = RolePermissions.CanGetCustomerOrder)]
         [HttpGet]
         public async Task<IActionResult> GetCustomerOrdersAsync()
         {
