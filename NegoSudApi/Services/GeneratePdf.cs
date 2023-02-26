@@ -40,7 +40,7 @@ public class GeneratePdf : IDisposable
     /// <param name="orderLines">The details of the order</param>
     /// <param name="billFrom">Who's ht supplier</param>
     /// <param name="vatService">The value added Tax for the bottle(s)</param>
-    public GeneratePdf(string invoiceNumber, List<string> billTo, List<IOrderLine> orderLines,List<string> billFrom, IVatService vatService)
+    public GeneratePdf(string invoiceNumber, List<string> billTo, List<IOrderLine> orderLines,List<string> billFrom, IVatService vatService, List<string> terms)
     {
         _invoiceNumber = invoiceNumber;
         _billFrom = billFrom;
@@ -48,14 +48,7 @@ public class GeneratePdf : IDisposable
         _orderLines = orderLines;
         _vatService = vatService;
         _totalsRow = new List<TotalRow>();
-        _details = new List<string>
-        {
-            "Termes et conditions",
-            string.Empty,
-            "Si vous avez la moindre question concernant votre facture, n'hesitez pas nous contacter via le formulaire de contact : url formulaire.",
-            string.Empty,
-            "Merci pour votre achat chez NegoSud"
-        };
+        _details = terms;
         _footer = "site e-commerce link";
         _logo = new LogoImage(160, 120);
         _cultureInfo = new CultureInfo("fr-FR");
@@ -182,7 +175,7 @@ public class GeneratePdf : IDisposable
         _billFrom.Insert(0, "");
         foreach (var str in _billFrom)
         {
-            fragment = new TextFragment(str)
+            fragment = new TextFragment(str?? String.Empty)
             {
                 TextState =
                 {
@@ -208,7 +201,7 @@ public class GeneratePdf : IDisposable
 
         foreach (var str in _billTo)
         {
-            fragment = new TextFragment(str)
+            fragment = new TextFragment(str?? String.Empty)
             {
                 TextState =
                 {
@@ -246,7 +239,7 @@ public class GeneratePdf : IDisposable
         _billFrom.Insert(0, "");
         foreach (var str in _billFrom)
         {
-            fragment = new TextFragment(str)
+            fragment = new TextFragment(str ?? String.Empty)
             {
                 TextState =
                 {
@@ -272,7 +265,7 @@ public class GeneratePdf : IDisposable
 
         foreach (var str in _billTo)
         {
-            fragment = new TextFragment(str)
+            fragment = new TextFragment(str?? String.Empty)
             {
                 TextState =
                 {
@@ -439,7 +432,7 @@ public class GeneratePdf : IDisposable
     }
 
     /// <summary>
-    /// 
+    /// Terms and conditions for the invoice
     /// </summary>
     private void TermsSectionInvoice()
     {
@@ -457,7 +450,7 @@ public class GeneratePdf : IDisposable
     }
 
     /// <summary>
-    /// 
+    /// Terms and conditions pr the purchase order
     /// </summary>
     private void TermsSectionPurchaseOrder()
     {

@@ -143,7 +143,15 @@ public class SupplierOrderService : ISupplierOrderService
     {
         List<IOrderLine> supplierOrderLines = supplierOrder.Lines.Cast<IOrderLine>().ToList();
 
-        var negoSudDetails = _configuration.GetSection("NegoSudDetails:Address").Value.Split(" ").ToList();
+        var negoSudDetails = _configuration.GetSection("NegoSudDetails");
+        var negoSudAddress = new List<string>
+        {
+            negoSudDetails.GetValue<string>("Address"),
+            negoSudDetails.GetValue<string>("City"),
+            negoSudDetails.GetValue<string>("ZipCode"),
+            negoSudDetails.GetValue<string>("Country"),
+        };
+        
         var supplierDetails = new List<string>
         {
             supplierOrder.Supplier.Address.AddressLine1,
@@ -152,8 +160,22 @@ public class SupplierOrderService : ISupplierOrderService
             supplierOrder.Supplier.Address.City.ZipCode.ToString(),
             supplierOrder.Supplier.Address.City.Country.Name
         };
+        
+        var terms = new List<string>
+        {
+            "Termes et conditions",
+            string.Empty,
+            "Si vous avez la moindre question concernant cette commande, merci de revenir vers nous.",
+            string.Empty,
+            "Merci pour votre service," ,
+            string.Empty,
+            "Cordialment,",
+            string.Empty,
+            "L'équipe de NegoSud"
+        };
+        
         var pdfPath =
-            new GeneratePdf(supplierOrder.Reference, negoSudDetails, supplierOrderLines, supplierDetails, _vatService)
+            new GeneratePdf(supplierOrder.Reference, negoSudAddress, supplierOrderLines, supplierDetails, _vatService, terms)
                 .SavePurchaseOrderLocally();
         var isEmailSent = await _emailService.SendPurchaseOrderEmailAsync(supplierOrder.Supplier.Email, $"Bon de commande",
             pdfPath, _configuration);

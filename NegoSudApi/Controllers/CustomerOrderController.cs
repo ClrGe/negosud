@@ -88,7 +88,7 @@ public class CustomerOrderController : ControllerBase
 
         // Create a pfd invoice for the customer if the order can be done immediately
         await GenerateInvoicePdf(customerOrder, dbCustomerOrder);
-        
+
         return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
     }
 
@@ -115,26 +115,43 @@ public class CustomerOrderController : ControllerBase
     /// <param name="dbCustomerOrder">The order saved in the database</param>
     private async Task GenerateInvoicePdf(CustomerOrder customerOrder, CustomerOrder dbCustomerOrder)
     {
-        if (dbCustomerOrder.DeliveryStatus.Value == 1)
+        var negoSudDetails = _configuration.GetSection("NegoSudDetails");
+        var negoSudAddress = new List<string>
         {
-            var customerDetails = new List<String>
-            {
-                customerOrder.Customer.FirstName, customerOrder.Customer.LastName,
-                customerOrder.DeliveryAddress.AddressLine1!, customerOrder.DeliveryAddress.AddressLine2!,
-                customerOrder.DeliveryAddress.City!.Name!, customerOrder.DeliveryAddress.City.ZipCode.ToString()!
-            };
+            negoSudDetails.GetValue<string>("Address"),
+            negoSudDetails.GetValue<string>("City"),
+            negoSudDetails.GetValue<string>("ZipCode"),
+            negoSudDetails.GetValue<string>("Country"),
+        };
 
-            var negoSudDetails = _configuration.GetSection("NegoSudDetails:Address").Value.Split(" ").ToList();
-            List<IOrderLine> customerOrderLines =
-                new List<IOrderLine>((dbCustomerOrder.Lines as List<CustomerOrderLine>)!);
-            var pdfBytes = new GeneratePdf(customerOrder.Reference!, customerDetails, customerOrderLines,
-                negoSudDetails,
-                _vatService).SaveInvoice();
-            var stream = new MemoryStream(pdfBytes);
-            Response.Headers.Add("Content-Disposition", $"inline; filename=invoice_{customerOrder.Reference!}.pdf");
-            Response.ContentType = "application/pdf";
-            Response.ContentLength = stream.Length;
-            await stream.CopyToAsync(Response.Body);
-        }
+        var negoSudContactForm = negoSudDetails.GetValue<string>("ContactForm");
+
+        var customerDetails = new List<String>
+        {
+            customerOrder.Customer.FirstName, customerOrder.Customer.LastName,
+            customerOrder.DeliveryAddress.AddressLine1!, customerOrder.DeliveryAddress.AddressLine2!,
+            customerOrder.DeliveryAddress.City!.Name!, customerOrder.DeliveryAddress.City.ZipCode.ToString()!
+        };
+
+        var terms = new List<string>
+        {
+            "Termes et conditions",
+            string.Empty,
+            $"Si vous avez la moindre question concernant votre facture, n'hesitez pas nous contacter via le formulaire de contact : {negoSudContactForm}.",
+            string.Empty,
+            "Merci pour votre achat chez NegoSud"
+        };
+
+
+        List<IOrderLine> customerOrderLines =
+            new List<IOrderLine>((customerOrder.Lines as List<CustomerOrderLine>)!);
+        var pdfBytes = new GeneratePdf(customerOrder.Reference!, customerDetails, customerOrderLines,
+            negoSudAddress,
+            _vatService, terms).SaveInvoice();
+        var stream = new MemoryStream(pdfBytes);
+        Response.Headers.Add("Content-Disposition", $"inline; filename=invoice_{customerOrder.Reference!}.pdf");
+        Response.ContentType = "application/pdf";
+        Response.ContentLength = stream.Length;
+        await stream.CopyToAsync(Response.Body);
     }
 }
