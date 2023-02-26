@@ -62,9 +62,9 @@ public class RegionService : IRegionService
         try
         {
             Country? country = null;
-            if(region.Country?.Id != null)
+            if(region.CountryId != null)
             {
-                country = await _countryService.GetCountryAsync(region.Country.Id, includeRelations: false);
+                country = await _countryService.GetCountryAsync((int) region.CountryId, includeRelations: false);
             }
             
             // If we found a country in the database
@@ -99,9 +99,9 @@ public class RegionService : IRegionService
     {
         try
         {
-            if (region.Country?.Id != null)
+            if (region.CountryId != null)
             {
-                Country? country = await _countryService.GetCountryAsync(region.Country.Id, includeRelations: false);
+                Country? country = await _countryService.GetCountryAsync((int) region.CountryId, includeRelations: false);
                 // If we found a country in the database
                 if (country != null)
                 {

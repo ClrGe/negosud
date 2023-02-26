@@ -78,7 +78,7 @@ public class WineLabelController : ControllerBase
 
     [Authorize(Policy = RolePermissions.CanDeleteWineLabel)]
     [HttpPost("DeleteWineLabel")]
-    public async Task<IActionResult> DeleteWineLabelAsync(int id)
+    public async Task<IActionResult> DeleteWineLabelAsync([FromBody]int id)
     {
         bool? status = await _wineLabelService.DeleteWineLabelAsync(id);
 

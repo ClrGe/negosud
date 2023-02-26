@@ -78,7 +78,7 @@ public class AddressController : ControllerBase
 
     [Authorize(Policy = RolePermissions.CanDeleteAddress)]
     [HttpPost("DeleteAddress")]
-    public async Task<IActionResult> DeleteAddressAsync(int id)
+    public async Task<IActionResult> DeleteAddressAsync([FromBody]int id)
     {
         bool? status = await _addressService.DeleteAddressAsync(id);
 

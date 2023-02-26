@@ -11,6 +11,7 @@ public class RoleService : IRoleService
     private readonly ILogger<RoleService> _logger;
     private readonly IPermissionService _permissionService;
 
+
     public RoleService(NegoSudDbContext context, ILogger<RoleService> logger, IPermissionService permissionService)
     {
         _context = context;

@@ -65,7 +65,7 @@ public class RoleController :ControllerBase
 
     [Authorize(Policy = RolePermissions.CanDeleteRole)]
     [HttpPost("DeleteRole")]
-    public async Task<IActionResult> DeleteRoleAsync(int id)
+    public async Task<IActionResult> DeleteRoleAsync([FromBody]int id)
     {
         bool? status = await _roleService.DeleteRoleAsync(id);
 

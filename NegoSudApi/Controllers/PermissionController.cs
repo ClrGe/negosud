@@ -80,7 +80,7 @@ public class PermissionController : ControllerBase
 
     [Authorize(Policy = RolePermissions.CanDeletePermission)]
     [HttpPost("DeletePermission/{id}")]
-    public async Task<IActionResult> DeletePermissionAsync(int id)
+    public async Task<IActionResult> DeletePermissionAsync([FromBody]int id)
     {
         bool? status = await _permissionService.DeletePermissionAsync(id);
 

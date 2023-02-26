@@ -12,7 +12,8 @@ public class SupplierService : ISupplierService
     private readonly IAddressService _addressService;
     private readonly IGetBottleService _getBottleService;
 
-    public SupplierService(NegoSudDbContext context, ILogger<SupplierService> logger, IAddressService addressService, IGetBottleService getBottleService)
+    public SupplierService(NegoSudDbContext context, ILogger<SupplierService> logger, IAddressService addressService,
+        IGetBottleService getBottleService)
     {
         _context = context;
         _logger = logger;
@@ -83,7 +84,7 @@ public class SupplierService : ISupplierService
         try
         {
             Supplier? dbSupplier = await this.GetSupplierAsync(supplier.Id);
-            
+
             if (dbSupplier != null)
             {
                 dbSupplier.Details = supplier.Details;
@@ -97,7 +98,7 @@ public class SupplierService : ISupplierService
                         dbSupplier.Address = dbAddress;
                     }
                 }
-                
+
                 if (supplier.BottleSuppliers != null && dbSupplier.BottleSuppliers != null)
                 {
                     ICollection<BottleSupplier> dbBottleSuppliers = dbSupplier.BottleSuppliers.ToList();
@@ -106,7 +107,7 @@ public class SupplierService : ISupplierService
                     {
                         //if the BottleSupplier already exists
                         BottleSupplier? existingSupplier = dbBottleSuppliers.FirstOrDefault(bs =>
-                            bs.BottleId == bottleSupplier.BottleId && bs.SupplierId == bottleSupplier.SupplierId);
+                            bs.BottleId == bottleSupplier.BottleId && bs.SupplierId == bottleSupplier.Supplier.Id);
 
                         if (existingSupplier != null)
                         {
@@ -117,16 +118,14 @@ public class SupplierService : ISupplierService
                         }
                         else
                         {
-                            if (bottleSupplier.Supplier?.Id != null)
+                            Bottle? bottle = await _getBottleService.GetBottleAsync(bottleSupplier.SupplierId,
+                                includeRelations: false);
+                            if (bottle != null)
                             {
-                                Bottle? bottle = await _getBottleService.GetBottleAsync(bottleSupplier.Supplier.Id,
-                                    includeRelations: false);
-                                if (bottle != null)
-                                {
-                                    bottleSupplier.Supplier = supplier;
-                                    bottleSupplier.Bottle = bottle;
-                                }
+                                bottleSupplier.Supplier = supplier;
+                                bottleSupplier.Bottle = bottle;
                             }
+
 
                             // otherwise, add the new BottleStorageLocation to the current bottle
                             dbSupplier.BottleSuppliers.Add(bottleSupplier);
@@ -139,12 +138,11 @@ public class SupplierService : ISupplierService
                     }
                 }
 
-                _context.Entry(supplier).State = EntityState.Modified;
+                _context.Entry(dbSupplier).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 return supplier;
             }
-           
         }
         catch (Exception ex)
         {

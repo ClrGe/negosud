@@ -1,4 +1,3 @@
-using System.Xml.Linq;
 using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
@@ -88,29 +87,29 @@ public class UserService : IUserService
     {
         try
         {
-            User? dbUser = await GetUserAsync(user.Id, includeRelations: true);
+            User? dbUser = await this.GetUserAsync(user.Id);
             if (dbUser != null)
             {
-                dbUser.FirstName = user.FirstName;
-                dbUser.LastName = user.LastName;
                 dbUser.Email = user.Email;
                 dbUser.Password = user.Password;
+                dbUser.FirstName = user.FirstName;
+                dbUser.LastName = user.LastName;
                 dbUser.RefreshToken = user.RefreshToken;
                 dbUser.RefreshTokenExpiryTime = user.RefreshTokenExpiryTime;
 
-                if(user.Role != null)
+                if (user.Role != null)
                 {
-                    Role? role = await _roleService.GetRoleAsync(user.Role.Id);
-                    if(role != null)
+                    Role? dbRole = await _roleService.GetRoleAsync(user.Role.Id);
+                    if (dbRole != null)
                     {
-                        dbUser.Role = role;
+                        dbUser.Role = dbRole;
                     }
                 }
 
-                _context.Entry(dbUser).State = EntityState.Modified;
+                _context.Entry(user).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return user;
-            }            
+            }
         }
         catch (Exception ex)
         {

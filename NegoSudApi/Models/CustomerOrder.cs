@@ -15,6 +15,7 @@ public class CustomerOrder : IModelBase
     public string? CreatedBy { get; set; }
     public string? UpdatedBy { get; set; }
     public string? CancelledBy { get; set; }
+    public int? DeliveryStatus { get; set; }
     public virtual Address? DeliveryAddress { get; set; }
     public virtual User? Customer { get; set; }
     public virtual ICollection<CustomerOrderLine>? Lines { get; set; }

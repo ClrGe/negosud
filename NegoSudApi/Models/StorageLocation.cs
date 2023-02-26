@@ -13,6 +13,5 @@ public class StorageLocation : IModelBase
    
     public virtual ICollection<BottleStorageLocation>? BottleStorageLocations { get; set; }
     public virtual ICollection<CustomerOrderLineStorageLocation>? CustomerOrderLineStorageLocations { get; set; }
-    public virtual ICollection<SupplierOrderLineStorageLocation>? SupplierOrderLineStorageLocations { get; set; }
 
 }

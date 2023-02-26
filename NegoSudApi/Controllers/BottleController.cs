@@ -1,4 +1,3 @@
-﻿using HeimGuard;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Data;
@@ -90,7 +89,7 @@ public class BottleController : ControllerBase
 
     [Authorize(Policy = RolePermissions.CanDeleteBottle)]
     [HttpPost("DeleteBottle")]
-    public async Task<IActionResult> DeleteBottleAsync(int id)
+    public async Task<IActionResult> DeleteBottleAsync([FromBody]int id)
     {
         bool? status = await _bottleService.DeleteBottleAsync(id);
 

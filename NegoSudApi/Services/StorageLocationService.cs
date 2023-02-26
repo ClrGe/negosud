@@ -54,7 +54,7 @@ public class StorageLocationService : IStorageLocationService
             {
                 foreach (BottleStorageLocation bottleStorageLocation in storageLocation.BottleStorageLocations)
                 {
-                    if (bottleStorageLocation.Bottle?.Id != null)
+                    if (bottleStorageLocation.Bottle.Id != null)
                     {
                         Bottle? bottle = await _getBottleService.GetBottleAsync(bottleStorageLocation.Bottle.Id, includeRelations: false);
                         if (bottle != null)
@@ -118,7 +118,7 @@ public class StorageLocationService : IStorageLocationService
 
                             if (BottleStorageLocation.Bottle?.Id != null)
                             {
-                                Bottle? bottle = await _getBottleService.GetBottleAsync(BottleStorageLocation.Bottle.Id, includeRelations: false);
+                                Bottle? bottle = await _getBottleService.GetBottleAsync(BottleStorageLocation.BottleId, includeRelations: false);
                                 if (bottle != null)
                                 {
                                     BottleStorageLocation.StorageLocation = storageLocation;

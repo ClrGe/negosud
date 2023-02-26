@@ -20,7 +20,7 @@ namespace NegoSudApi.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "text", nullable: true)
                 },
@@ -37,7 +37,7 @@ namespace NegoSudApi.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     grapetype = table.Column<string>(name: "grape_type", type: "text", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true)
                 },
@@ -54,7 +54,7 @@ namespace NegoSudApi.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true)
                 },
@@ -71,7 +71,7 @@ namespace NegoSudApi.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true)
                 },
@@ -88,13 +88,32 @@ namespace NegoSudApi.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_storage_location", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Supplier",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: true),
+                    details = table.Column<string>(type: "text", nullable: true),
+                    email = table.Column<string>(type: "text", nullable: true),
+                    createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
+                    createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
+                    updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_supplier", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -118,7 +137,7 @@ namespace NegoSudApi.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     label = table.Column<string>(type: "text", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true)
                 },
@@ -136,7 +155,7 @@ namespace NegoSudApi.Migrations
                     name = table.Column<string>(type: "text", nullable: true),
                     zipcode = table.Column<int>(name: "zip_code", type: "integer", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     countryid = table.Column<int>(name: "country_id", type: "integer", nullable: true)
@@ -159,7 +178,7 @@ namespace NegoSudApi.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     countryid = table.Column<int>(name: "country_id", type: "integer", nullable: true)
@@ -213,7 +232,7 @@ namespace NegoSudApi.Migrations
                     email = table.Column<string>(type: "text", nullable: true),
                     password = table.Column<string>(type: "text", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     refreshtoken = table.Column<string>(name: "refresh_token", type: "text", nullable: true),
@@ -231,17 +250,47 @@ namespace NegoSudApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SupplierOrder",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    reference = table.Column<string>(type: "text", nullable: true),
+                    description = table.Column<string>(type: "text", nullable: true),
+                    createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
+                    cancelledat = table.Column<DateTime>(name: "cancelled_at", type: "timestamp with time zone", nullable: true),
+                    createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
+                    updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
+                    cancelledby = table.Column<string>(name: "cancelled_by", type: "text", nullable: true),
+                    dateorder = table.Column<DateTime>(name: "date_order", type: "timestamp with time zone", nullable: true),
+                    datedelivery = table.Column<DateTime>(name: "date_delivery", type: "timestamp with time zone", nullable: true),
+                    deliverystatus = table.Column<int>(name: "delivery_status", type: "integer", nullable: true),
+                    supplierid = table.Column<int>(name: "supplier_id", type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_supplier_order", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_supplier_order_suppliers_supplier_id",
+                        column: x => x.supplierid,
+                        principalTable: "Supplier",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Address",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    label = table.Column<string>(type: "text", nullable: true),
-                    firstline = table.Column<string>(name: "first_line", type: "text", nullable: true),
+                    addressline1 = table.Column<string>(name: "address_line1", type: "text", nullable: true),
+                    addressline2 = table.Column<string>(name: "address_line2", type: "text", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
+                    supplierid = table.Column<int>(name: "supplier_id", type: "integer", nullable: true),
                     cityid = table.Column<int>(name: "city_id", type: "integer", nullable: true),
                     userid = table.Column<int>(name: "user_id", type: "integer", nullable: true)
                 },
@@ -253,6 +302,12 @@ namespace NegoSudApi.Migrations
                         column: x => x.cityid,
                         principalTable: "City",
                         principalColumn: "id");
+                    table.ForeignKey(
+                        name: "fk_address_suppliers_supplier_id",
+                        column: x => x.supplierid,
+                        principalTable: "Supplier",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "fk_address_users_user_id",
                         column: x => x.userid,
@@ -269,13 +324,14 @@ namespace NegoSudApi.Migrations
                     reference = table.Column<string>(type: "text", nullable: true),
                     description = table.Column<string>(type: "text", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     cancelledat = table.Column<DateTime>(name: "cancelled_at", type: "timestamp with time zone", nullable: true),
                     dateorder = table.Column<DateTime>(name: "date_order", type: "timestamp with time zone", nullable: true),
                     datedelivery = table.Column<DateTime>(name: "date_delivery", type: "timestamp with time zone", nullable: true),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     cancelledby = table.Column<string>(name: "cancelled_by", type: "text", nullable: true),
+                    deliverystatus = table.Column<int>(name: "delivery_status", type: "integer", nullable: true),
                     deliveryaddressid = table.Column<int>(name: "delivery_address_id", type: "integer", nullable: true),
                     customerid = table.Column<int>(name: "customer_id", type: "integer", nullable: true)
                 },
@@ -303,7 +359,7 @@ namespace NegoSudApi.Migrations
                     name = table.Column<string>(type: "text", nullable: true),
                     details = table.Column<string>(type: "text", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     regionid = table.Column<int>(name: "region_id", type: "integer", nullable: true),
@@ -325,30 +381,6 @@ namespace NegoSudApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Supplier",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: true),
-                    details = table.Column<string>(type: "text", nullable: true),
-                    createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
-                    createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
-                    updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_supplier", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_supplier_address_id",
-                        column: x => x.id,
-                        principalTable: "Address",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Bottle",
                 columns: table => new
                 {
@@ -364,8 +396,9 @@ namespace NegoSudApi.Migrations
                     customerprice = table.Column<decimal>(name: "customer_price", type: "numeric", nullable: true),
                     winetype = table.Column<string>(name: "wine_type", type: "text", nullable: true),
                     thresholdtoorder = table.Column<int>(name: "threshold_to_order", type: "integer", nullable: true),
+                    quantityminimumtoorder = table.Column<int>(name: "quantity_minimum_to_order", type: "integer", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     vatid = table.Column<int>(name: "vat_id", type: "integer", nullable: true),
@@ -393,34 +426,6 @@ namespace NegoSudApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SupplierOrder",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
-                    cancelledat = table.Column<DateTime>(name: "cancelled_at", type: "timestamp with time zone", nullable: true),
-                    createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
-                    updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
-                    cancelledby = table.Column<string>(name: "cancelled_by", type: "text", nullable: true),
-                    reference = table.Column<string>(type: "text", nullable: true),
-                    description = table.Column<string>(type: "text", nullable: true),
-                    dateorder = table.Column<DateTime>(name: "date_order", type: "timestamp with time zone", nullable: true),
-                    datedelivery = table.Column<DateTime>(name: "date_delivery", type: "timestamp with time zone", nullable: true),
-                    supplierid = table.Column<int>(name: "supplier_id", type: "integer", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_supplier_order", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_supplier_order_suppliers_supplier_id",
-                        column: x => x.supplierid,
-                        principalTable: "Supplier",
-                        principalColumn: "id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "BottleGrape",
                 columns: table => new
                 {
@@ -428,7 +433,7 @@ namespace NegoSudApi.Migrations
                     bottleid = table.Column<int>(name: "bottle_id", type: "integer", nullable: false),
                     grapepercentage = table.Column<decimal>(name: "grape_percentage", type: "numeric", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true)
                 },
@@ -457,7 +462,7 @@ namespace NegoSudApi.Migrations
                     bottleid = table.Column<int>(name: "bottle_id", type: "integer", nullable: false),
                     quantity = table.Column<int>(type: "integer", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true)
                 },
@@ -485,7 +490,7 @@ namespace NegoSudApi.Migrations
                     bottleid = table.Column<int>(name: "bottle_id", type: "integer", nullable: false),
                     supplierid = table.Column<int>(name: "supplier_id", type: "integer", nullable: false),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true)
                 },
@@ -515,7 +520,7 @@ namespace NegoSudApi.Migrations
                     quantity = table.Column<int>(type: "integer", nullable: true),
                     bottleid = table.Column<int>(name: "bottle_id", type: "integer", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
                     customerorderid = table.Column<int>(name: "customer_order_id", type: "integer", nullable: true)
@@ -543,11 +548,11 @@ namespace NegoSudApi.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     quantity = table.Column<int>(type: "integer", nullable: true),
                     bottleid = table.Column<int>(name: "bottle_id", type: "integer", nullable: true),
+                    supplierorderid = table.Column<int>(name: "supplier_order_id", type: "integer", nullable: true),
                     createdat = table.Column<DateTime>(name: "created_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
-                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    updatedat = table.Column<DateTime>(name: "updated_at", type: "timestamp(0) with time zone", precision: 0, nullable: true, defaultValueSql: "NOW()"),
                     createdby = table.Column<string>(name: "created_by", type: "character varying(200)", maxLength: 200, nullable: true),
-                    updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true),
-                    supplierorderid = table.Column<int>(name: "supplier_order_id", type: "integer", nullable: true)
+                    updatedby = table.Column<string>(name: "updated_by", type: "character varying(200)", maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -588,34 +593,16 @@ namespace NegoSudApi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "SupplierOrderLineStorageLocation",
-                columns: table => new
-                {
-                    supplierorderlineid = table.Column<int>(name: "supplier_order_line_id", type: "integer", nullable: false),
-                    storagelocationid = table.Column<int>(name: "storage_location_id", type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_supplier_order_line_storage_location", x => new { x.supplierorderlineid, x.storagelocationid });
-                    table.ForeignKey(
-                        name: "fk_supplier_order_line_storage_location_storage_location_storage_lo",
-                        column: x => x.storagelocationid,
-                        principalTable: "StorageLocation",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_supplier_order_line_storage_location_supplier_order_line_supplier",
-                        column: x => x.supplierorderlineid,
-                        principalTable: "SupplierOrderLine",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "ix_address_city_id",
                 table: "Address",
                 column: "city_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_address_supplier_id",
+                table: "Address",
+                column: "supplier_id",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_address_user_id",
@@ -723,11 +710,6 @@ namespace NegoSudApi.Migrations
                 column: "supplier_order_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_supplier_order_line_storage_location_storage_location_id",
-                table: "SupplierOrderLineStorageLocation",
-                column: "storage_location_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_user_role_id",
                 table: "User",
                 column: "role_id");
@@ -752,7 +734,7 @@ namespace NegoSudApi.Migrations
                 name: "PermissionRole");
 
             migrationBuilder.DropTable(
-                name: "SupplierOrderLineStorageLocation");
+                name: "SupplierOrderLine");
 
             migrationBuilder.DropTable(
                 name: "Grape");
@@ -761,22 +743,19 @@ namespace NegoSudApi.Migrations
                 name: "CustomerOrderLine");
 
             migrationBuilder.DropTable(
-                name: "Permission");
-
-            migrationBuilder.DropTable(
                 name: "StorageLocation");
 
             migrationBuilder.DropTable(
-                name: "SupplierOrderLine");
+                name: "Permission");
 
             migrationBuilder.DropTable(
-                name: "CustomerOrder");
+                name: "SupplierOrder");
 
             migrationBuilder.DropTable(
                 name: "Bottle");
 
             migrationBuilder.DropTable(
-                name: "SupplierOrder");
+                name: "CustomerOrder");
 
             migrationBuilder.DropTable(
                 name: "Producer");
@@ -788,16 +767,16 @@ namespace NegoSudApi.Migrations
                 name: "WineLabel");
 
             migrationBuilder.DropTable(
-                name: "Supplier");
+                name: "Address");
 
             migrationBuilder.DropTable(
                 name: "Region");
 
             migrationBuilder.DropTable(
-                name: "Address");
+                name: "City");
 
             migrationBuilder.DropTable(
-                name: "City");
+                name: "Supplier");
 
             migrationBuilder.DropTable(
                 name: "User");
