@@ -14,6 +14,7 @@
         #endregion
 
         #region Permissions
+        public const string CanGetAddresses = "CanGetAddresses";
         public const string CanEditAddress = "CanEditAddress";
         public const string CanDeleteAddress = "CanDeleteAddress";
 
@@ -30,6 +31,7 @@
         public const string CanDeleteCountry = "CanDeleteCountry";
 
         public const string CanGetCustomerOrder = "CanGetCustomerOrder";
+        public const string CanGetCustomerOrders = "CanGetCustomerOrders";
         public const string CanAddCustomerOrder = "CanAddCustomerOrder";
         public const string CanEditCustomerOrder = "CanEditCustomerOrder";
         public const string CanDeleteCustomerOrder = "CanDeleteCustomerOrder";
@@ -72,6 +74,7 @@
         public const string CanDeleteSupplierOrder = "CanDeleteSupplierOrder";
 
         public const string CanGetUser = "CanGetUser";
+        public const string CanGetUsers = "CanGetUsers";
         public const string CanAddUser = "CanAddUser";
         public const string CanEditUser = "CanEditUser";
         public const string CanDeleteUser = "CanDeleteUser";
@@ -98,6 +101,7 @@
             CanAddBottle, CanEditBottle, CanDeleteBottle, 
             CanAddCity, CanEditCity, CanDeleteCity,
             CanAddCountry, CanEditCountry, CanDeleteCountry,
+            CanGetCustomerOrders,
             CanAddProducer, CanEditProducer, CanDeleteProducer,
             CanGetRole,
             CanGetStorageLocation, CanAddStorageLocation, CanEditStorageLocation, CanDeleteStorageLocation,

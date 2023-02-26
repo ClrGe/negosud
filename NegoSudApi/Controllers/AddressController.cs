@@ -30,6 +30,7 @@ public class AddressController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbAddress);
     }
 
+    [Authorize(Policy = RolePermissions.CanGetAddresses)]
     [HttpGet]
     public async Task<IActionResult> GetAddressesAsync()
     {

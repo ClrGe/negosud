@@ -78,7 +78,7 @@ public class CityController : ControllerBase
 
     [Authorize(Policy = RolePermissions.CanDeleteCity)]
     [HttpPost("DeleteCity")]
-    public async Task<IActionResult> DeleteCityAsync(int id)
+    public async Task<IActionResult> DeleteCityAsync([FromBody]int id)
     {
         bool? status = await _cityService.DeleteCityAsync(id);
 

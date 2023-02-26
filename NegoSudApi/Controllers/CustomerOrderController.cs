@@ -38,10 +38,11 @@ public class CustomerOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetCustomerOrdersAsync()
-    {
-        var dbCustomerOrders = await _customerOrderService.GetCustomerOrdersAsync();
+        [Authorize(Policy = RolePermissions.CanGetCustomerOrder)]
+        [HttpGet]
+        public async Task<IActionResult> GetCustomerOrdersAsync()
+        {
+            var dbCustomerOrders = await _customerOrderService.GetCustomerOrdersAsync();
 
         if (dbCustomerOrders == null)
         {
@@ -94,7 +95,7 @@ public class CustomerOrderController : ControllerBase
 
     [Authorize(Policy = RolePermissions.CanDeleteCustomerOrder)]
     [HttpPost("DeleteCustomerOrder")]
-    public async Task<IActionResult> DeleteCustomerOrderAsync(int id)
+    public async Task<IActionResult> DeleteCustomerOrderAsync([FromBody]int id)
     {
         bool? status = await _customerOrderService.DeleteCustomerOrderAsync(id);
 

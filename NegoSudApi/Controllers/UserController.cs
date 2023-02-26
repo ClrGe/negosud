@@ -31,7 +31,7 @@ public class UserController :ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbUser);
     }
 
-    [Authorize(Policy = RolePermissions.CanGetUser)]
+    [Authorize(Policy = RolePermissions.CanGetUsers)]
     [HttpGet]
     public async Task<IActionResult> GetUsersAsync()
     {
