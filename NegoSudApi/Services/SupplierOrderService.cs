@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
+using NegoSudApi.Models.Interfaces;
 using NegoSudApi.Services.Interfaces;
 
 namespace NegoSudApi.Services;
@@ -11,17 +12,23 @@ public class SupplierOrderService : ISupplierOrderService
     private readonly ILogger<SupplierOrderService> _logger;
     private readonly ISupplierService _supplierService;
     private readonly IBottleService _bottleService;
-    
+    private readonly IConfiguration _configuration;
+    private readonly IEmailService _emailService;
+    private readonly IVatService _vatService;
+
 
     public SupplierOrderService(NegoSudDbContext context,
-                         ILogger<SupplierOrderService> logger,
-                         ISupplierService supplierService,
-                         IBottleService bottleService)
+        ILogger<SupplierOrderService> logger,
+        ISupplierService supplierService,
+        IBottleService bottleService, IConfiguration configuration, IEmailService emailService, IVatService vatService)
     {
         _context = context;
         _logger = logger;
         _supplierService = supplierService;
         _bottleService = bottleService;
+        _configuration = configuration;
+        _emailService = emailService;
+        _vatService = vatService;
     }
 
     //</inheritdoc>  
@@ -37,6 +44,7 @@ public class SupplierOrderService : ISupplierOrderService
                     .ThenInclude(l => l.Bottle)
                     .FirstOrDefaultAsync(cO => cO.Id == id);
             }
+
             return await _context.SupplierOrders.FindAsync(id);
         }
         catch (Exception ex)
@@ -67,41 +75,51 @@ public class SupplierOrderService : ISupplierOrderService
     {
         try
         {
-      
             if(supplierOrder.Supplier?.Id != null)
             {
-                Supplier? supplier = await _supplierService.GetSupplierAsync(supplierOrder.Supplier.Id, includeRelations: false);
-                if(supplier != null)
+                Supplier? dbSupplier = await _supplierService.GetSupplierAsync(supplierOrder.Supplier.Id);
+                if (dbSupplier != null)
                 {
-                    supplierOrder.Supplier = supplier;
+                    supplierOrder.Supplier = dbSupplier;
                 }
             }
 
-            if (supplierOrder.Lines != null)
+            
+            SupplierOrder newSupplierOrder = new SupplierOrder
             {
-                foreach (SupplierOrderLine line in supplierOrder.Lines)
+                Description = supplierOrder.Description,
+                Supplier = supplierOrder.Supplier,
+            };
+
+            if(supplierOrder.Lines != null)
+            {
+                foreach (SupplierOrderLine orderLine in supplierOrder.Lines)
                 {
-                    if (line.Bottle?.Id != null)
+                    if (orderLine.BottleId == null) continue;
+                    Bottle? dbBottle = await _bottleService.GetBottleAsync((int) orderLine.BottleId);
+                    if (dbBottle != null)
                     {
-                        Bottle? bottle = await _bottleService.GetBottleAsync(line.Bottle.Id, includeRelations: false);
-                        if (bottle != null)
-                        {
-                            line.Bottle = bottle;
-                        }
+                        orderLine.Bottle = dbBottle;
                     }
+
+                    // set the SupplierOrderId for the SupplierOrderLine
+                    orderLine.SupplierOrder = newSupplierOrder;
                 }
-            }
 
-            SupplierOrder newSupplierOrder = (await _context.SupplierOrders.AddAsync(supplierOrder)).Entity;
-
-            if (supplierOrder.Lines != null)
-            {
                 await _context.AddRangeAsync(supplierOrder.Lines);
+                
+                await SendPurchaseOrder(supplierOrder);
             }
+
+            supplierOrder.DeliveryStatus = DeliveryStatus.Pending.GetHashCode();
 
             await _context.SaveChangesAsync();
-
+        if (supplierOrder.Lines != null)
+        {
+            
+        }
             return newSupplierOrder;
+
         }
         catch (Exception ex)
         {
@@ -111,18 +129,73 @@ public class SupplierOrderService : ISupplierOrderService
         return null;
     }
 
+    /// <summary>
+    /// Sends a purchase order to a supplier and saves a copy of the purchase order as a PDF.
+    /// </summary>
+    /// <param name="supplierOrder">The SupplierOrder object containing the order information.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>
+    /// <remarks>
+    /// This method generates a PDF file containing the purchase order information, and sends it to the supplier's email address
+    /// specified in the SupplierOrder object using the EmailService. The email subject is "Bon de commande".
+    /// The PDF file is saved locally using the GeneratePdf class, and is deleted after the email is successfully sent.
+    /// </remarks>
+    private async Task SendPurchaseOrder(SupplierOrder supplierOrder)
+    {
+        List<IOrderLine> supplierOrderLines = supplierOrder.Lines.Cast<IOrderLine>().ToList();
+
+        var negoSudDetails = _configuration.GetSection("NegoSudDetails");
+        var negoSudAddress = new List<string>
+        {
+            negoSudDetails.GetValue<string>("Address"),
+            negoSudDetails.GetValue<string>("City"),
+            negoSudDetails.GetValue<string>("ZipCode"),
+            negoSudDetails.GetValue<string>("Country"),
+        };
+        
+        var supplierDetails = new List<string>
+        {
+            supplierOrder.Supplier.Address.AddressLine1,
+            supplierOrder.Supplier.Address.AddressLine2,
+            supplierOrder.Supplier.Address.City.Name,
+            supplierOrder.Supplier.Address.City.ZipCode.ToString(),
+            supplierOrder.Supplier.Address.City.Country.Name
+        };
+        
+        var terms = new List<string>
+        {
+            "Termes et conditions",
+            string.Empty,
+            "Si vous avez la moindre question concernant cette commande, merci de revenir vers nous.",
+            string.Empty,
+            "Merci pour votre service," ,
+            string.Empty,
+            "Cordialment,",
+            string.Empty,
+            "L'équipe de NegoSud"
+        };
+        
+        var pdfPath =
+            new GeneratePdf(supplierOrder.Reference, negoSudAddress, supplierOrderLines, supplierDetails, _vatService, terms)
+                .SavePurchaseOrderLocally();
+        var isEmailSent = await _emailService.SendPurchaseOrderEmailAsync(supplierOrder.Supplier.Email, $"Bon de commande",
+            pdfPath, _configuration);
+
+        if (!string.IsNullOrEmpty(pdfPath) && isEmailSent)
+        {
+            System.IO.File.Delete(pdfPath);
+        }
+    }
+
     //</inheritdoc>  
     public async Task<SupplierOrder?> UpdateSupplierOrderAsync(SupplierOrder supplierOrder)
     {
         try
         {
-
             // get the current supplierOrder from db
             SupplierOrder? dbSupplierOrder = await this.GetSupplierOrderAsync(supplierOrder.Id);
 
             if (dbSupplierOrder != null)
             {
-
                 dbSupplierOrder.Reference = supplierOrder.Reference;
                 dbSupplierOrder.Description = supplierOrder.Description;
                 dbSupplierOrder.DateOrder = supplierOrder.DateOrder;
@@ -131,7 +204,8 @@ public class SupplierOrderService : ISupplierOrderService
 
                 if (supplierOrder.Supplier != null)
                 {
-                    Supplier? supplier = await _supplierService.GetSupplierAsync(supplierOrder.Supplier.Id, includeRelations: false);
+                    Supplier? supplier =
+                        await _supplierService.GetSupplierAsync(supplierOrder.Supplier.Id, includeRelations: false);
                     // If we found a supplier in the database
                     if (supplier != null)
                     {
@@ -142,15 +216,14 @@ public class SupplierOrderService : ISupplierOrderService
 
                 if (supplierOrder.Lines != null && dbSupplierOrder.Lines != null)
                 {
-
                     ICollection<SupplierOrderLine>? dbLines = dbSupplierOrder.Lines.ToList();
 
                     foreach (SupplierOrderLine Line in supplierOrder.Lines)
                     {
-
-                        if (Line.Bottle?.Id != null)
+                        if (Line.BottleId != null)
                         {
-                            Bottle? bottle = await _bottleService.GetBottleAsync(Line.Bottle.Id, includeRelations: false);
+                            Bottle? bottle =
+                                await _bottleService.GetBottleAsync((int) Line.BottleId, includeRelations: false);
                             if (bottle != null)
                             {
                                 Line.Bottle = bottle;
@@ -173,14 +246,12 @@ public class SupplierOrderService : ISupplierOrderService
                             // otherwise, add the new Line to the current supplierOrder
                             dbSupplierOrder.Lines.Add(Line);
                         }
-
                     }
 
                     foreach (SupplierOrderLine LineToDelete in dbLines)
                     {
                         dbSupplierOrder.Lines.Remove(LineToDelete);
                     }
-
                 }
 
                 _context.Entry(dbSupplierOrder).State = EntityState.Modified;

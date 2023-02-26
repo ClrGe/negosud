@@ -13,7 +13,6 @@ public class User : IModelBase
     public DateTime? UpdatedAt { get; set; }
     public string? CreatedBy { get; set; }
     public string? UpdatedBy { get; set; }
-    
     public string? RefreshToken { get; set; }
     public DateTime? RefreshTokenExpiryTime { get; set; }
     public virtual ICollection<Address>? Addresses { get; set; }

@@ -13,5 +13,17 @@
   "Jwt": {
     "Key":"ThisIsMySecretKey",
     "Issuer":"Test.com"
+  },
+  "EmailSettings": {
+    "Username": "YourUserName",
+    "Password": "YourPassWord"
+  },
+  "NegoSudDetails": {
+    "Address": "80 avenue Edmund Halley",
+    "City": "Saint-Étienne-du-Rouvray",
+    "ZipCode": "76800",
+    "Country": "France",
+    "SiteWeb": "UrlWebSite",
+    "ContactForm": "UrlContactForm"
   }
 }

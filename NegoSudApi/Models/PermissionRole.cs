@@ -1,4 +1,4 @@
-﻿using NegoSudApi.Models.Interfaces;
+using NegoSudApi.Models.Interfaces;
 
 namespace NegoSudApi.Models;
 

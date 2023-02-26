@@ -15,7 +15,7 @@ public interface IVatService
     /// Get an IEnumerable of VATes from the database
     /// </summary>
     /// <returns>A collection of VAT</returns>
-    Task<IEnumerable<VAT>?> GetVaTsAsync();
+    Task<IEnumerable<VAT>?> GetVatsAsync();
 
     /// <summary>
     /// Create a new VAT entity in the database

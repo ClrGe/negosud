@@ -33,7 +33,7 @@ public class VatService :IVatService
     }
     
     /// <inheritdoc />
-    public async Task<IEnumerable<VAT>?> GetVaTsAsync()
+    public async Task<IEnumerable<VAT>?> GetVatsAsync()
     {
         try
         {

@@ -107,7 +107,7 @@ public class ProducerController : ControllerBase
     /// <returns>Status code</returns>
     [Authorize(Policy = RolePermissions.CanDeleteProducer)]
     [HttpPost("DeleteProducer")]
-    public async Task<IActionResult> DeleteProducerAsync(int id)
+    public async Task<IActionResult> DeleteProducerAsync([FromBody]int id)
     {
         Producer? producer = await _producerService.GetProducerAsync(id);
 

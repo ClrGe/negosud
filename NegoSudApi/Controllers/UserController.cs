@@ -56,7 +56,7 @@ public class UserController :ControllerBase
 
     [Authorize(Policy = RolePermissions.CanEditUser)]
     [HttpPost("UpdateUser")]
-    public async Task<IActionResult> UpdateUserAsync(int id, User user)
+    public async Task<IActionResult> UpdateUserAsync(User user)
     {
         if (user == null) return BadRequest();
         user.Password = _securePassword.Hash(user);
@@ -70,7 +70,7 @@ public class UserController :ControllerBase
 
     [Authorize(Policy = RolePermissions.CanDeleteUser)]
     [HttpPost("DeleteUser")]
-    public async Task<IActionResult> DeleteUserAsync(int id)
+    public async Task<IActionResult> DeleteUserAsync([FromBody]int id)
     {
         bool? status = await _userService.DeleteUserAsync(id);
 
