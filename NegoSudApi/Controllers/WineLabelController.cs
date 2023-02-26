@@ -8,7 +8,6 @@ namespace NegoSudApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class WineLabelController : ControllerBase
 {
     private readonly IWineLabelService _wineLabelService;

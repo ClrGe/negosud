@@ -8,7 +8,6 @@ namespace NegoSudApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class SupplierOrderController : ControllerBase
 {
     private readonly ISupplierOrderService _supplierOrderService;

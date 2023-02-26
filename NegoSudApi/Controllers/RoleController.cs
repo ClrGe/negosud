@@ -8,7 +8,6 @@ namespace NegoSudApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class RoleController :ControllerBase
 {
     private readonly IRoleService _roleService;

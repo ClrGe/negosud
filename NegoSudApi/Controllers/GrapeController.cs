@@ -8,7 +8,6 @@ namespace NegoSudApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class GrapeController : ControllerBase
 {
     private readonly IGrapeService _grapeService;
