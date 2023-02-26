@@ -38,6 +38,20 @@ public class CustomerOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
     }
 
+    [Authorize(Policy = RolePermissions.CanGetCustomerOrder)]
+    [HttpGet("Own/{userId}")]
+    public async Task<IActionResult> GetOwnCustomerOrdersAsync(int userId)
+    {        
+        var dbCustomerOrder = await _customerOrderService.GetOwnCustomerOrdersAsync(userId);
+
+        if (dbCustomerOrder == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, $"No customerOrder found for user id: {userId}");
+        }
+
+        return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
+    }
+
     [Authorize(Policy = RolePermissions.CanGetCustomerOrders)]
     [HttpGet]
     public async Task<IActionResult> GetCustomerOrdersAsync()

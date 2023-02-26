@@ -59,7 +59,7 @@ public class AuthenticationController : ControllerBase
             );
             Response.Cookies.Append(
             "user_Id",
-            response.Id.ToString(),
+            dbUser.Id.ToString(),
             cookieOptions
             );
             return StatusCode(StatusCodes.Status200OK, token);

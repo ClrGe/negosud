@@ -52,6 +52,31 @@ public class CustomerOrderService : ICustomerOrderService
     }
 
     //</inheritdoc>  
+    public async Task<IEnumerable<CustomerOrder>?> GetOwnCustomerOrdersAsync(int userId, bool includeRelations = true)
+    {
+        try
+        {
+            if (includeRelations)
+            {
+                return await _context.CustomerOrders
+                    .Include(cO => cO.Customer)
+                    .Include(cO => cO.Lines)
+                    .ThenInclude(l => l.Bottle)
+                    .Include(co => co.Lines)
+                    .ThenInclude(cl => cl.CustomerOrderLineStorageLocations)
+                    .Where(cO => cO.Customer.Id == userId).ToListAsync();
+            }
+            return await _context.CustomerOrders.Include(cO => cO.Customer).Where(cO => cO.Customer.Id == userId).ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
+        }
+
+        return null;
+    }
+
+    //</inheritdoc>  
     public async Task<IEnumerable<CustomerOrder>?> GetCustomerOrdersAsync()
     {
         try

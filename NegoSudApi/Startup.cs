@@ -100,7 +100,7 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, NegoSudDbContext dbContext)
     {
-        dbContext.Database.Migrate();
+        //dbContext.Database.Migrate();
         DbInitializer.SeedPermission(dbContext);
         
         dbContext.SaveChanges();
