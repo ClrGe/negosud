@@ -38,10 +38,11 @@ public class CustomerOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetCustomerOrdersAsync()
-    {
-        var dbCustomerOrders = await _customerOrderService.GetCustomerOrdersAsync();
+        [Authorize(Policy = RolePermissions.CanGetCustomerOrder)]
+        [HttpGet]
+        public async Task<IActionResult> GetCustomerOrdersAsync()
+        {
+            var dbCustomerOrders = await _customerOrderService.GetCustomerOrdersAsync();
 
         if (dbCustomerOrders == null)
         {

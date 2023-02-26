@@ -22,7 +22,7 @@ public class BottleService : IBottleService
         IProducerService producerService,
         IGrapeService grapeService,
         IWineLabelService wineLabelService,
-        ISupplierService supplierService, 
+        ISupplierService supplierService,
         IGetBottleService getBottleService,
         IGetStorageLocationService getStorageLocationService, IVatService vatService)
     {
@@ -115,8 +115,8 @@ public class BottleService : IBottleService
                 {
                     bottle.Producer = producer;
                 }
-            } 
-            
+            }
+
             if (bottle.VatId != null)
             {
                 VAT? dbVat =
@@ -150,7 +150,7 @@ public class BottleService : IBottleService
 
         return null;
     }
-    
+
     //</inheritdoc>  
     public async Task<ICollection<Bottle>?> MassAddBottleAsync(ICollection<Bottle>? bottles)
     {
@@ -166,30 +166,35 @@ public class BottleService : IBottleService
                         {
                             if (bottleStorageLocation.StorageLocation?.Id != null)
                             {
-                                StorageLocation? location = await _getStorageLocationService.GetStorageLocationAsync(bottleStorageLocation.StorageLocation.Id, includeRelations: false);
+                                StorageLocation? location =
+                                    await _getStorageLocationService.GetStorageLocationAsync(
+                                        bottleStorageLocation.StorageLocation.Id, includeRelations: false);
                                 if (location != null)
                                 {
                                     bottleStorageLocation.StorageLocation = location;
                                     bottleStorageLocation.Bottle = bottle;
                                 }
                             }
+
                             await _context.AddRangeAsync(bottle.BottleStorageLocations);
                         }
                     }
-                    
+
                     if (bottle.BottleGrapes != null)
                     {
                         foreach (BottleGrape bottleGrape in bottle.BottleGrapes)
                         {
                             if (bottleGrape.Grape?.Id != null)
                             {
-                                Grape? grape = await _grapeService.GetGrapeAsync(bottleGrape.Grape.Id, includeRelations: false);
+                                Grape? grape =
+                                    await _grapeService.GetGrapeAsync(bottleGrape.Grape.Id, includeRelations: false);
                                 if (grape != null)
                                 {
                                     bottleGrape.Grape = grape;
                                     bottleGrape.Bottle = bottle;
                                 }
                             }
+
                             await _context.AddRangeAsync(bottle.BottleGrapes);
                         }
                     }
@@ -212,8 +217,8 @@ public class BottleService : IBottleService
                         {
                             bottle.Producer = producer;
                         }
-                    } 
-            
+                    }
+
                     if (bottle.Vat?.Id != null)
                     {
                         VAT? dbVat =
@@ -224,6 +229,7 @@ public class BottleService : IBottleService
                         }
                     }
                 }
+
                 await _context.BulkInsertAsync(bottles);
                 return bottles;
 
@@ -274,7 +280,7 @@ public class BottleService : IBottleService
                     dbBottle.Vat = await _vatService.GetVatAsync((int) bottle.VatId) ?? dbBottle.Vat;
 
                 }
-                
+
                 if (bottle.BottleStorageLocations != null && dbBottle.BottleStorageLocations != null)
                 {
                     ICollection<BottleStorageLocation> dbBottleStorageLocations =
@@ -453,10 +459,12 @@ public class BottleService : IBottleService
                                 dbBottle.Producer = producer;
                             }
                         }
+
                         if (bottle.Vat != null)
                         {
                             dbBottle.Vat = await _vatService.GetVatAsync(bottle.Vat.Id) ?? dbBottle.Vat;
                         }
+
                         if (bottle.BottleStorageLocations != null && dbBottle.BottleStorageLocations != null)
                         {
                             ICollection<BottleStorageLocation> dbBottleStorageLocations =
@@ -486,14 +494,17 @@ public class BottleService : IBottleService
                                             bottleStorageLocation.Bottle = bottle;
                                         }
                                     }
+
                                     dbBottle.BottleStorageLocations.Add(bottleStorageLocation);
                                 }
                             }
+
                             foreach (BottleStorageLocation bottleStorageLocationToDelete in dbBottleStorageLocations)
                             {
                                 dbBottle.BottleStorageLocations.Remove(bottleStorageLocationToDelete);
                             }
                         }
+
                         if (bottle.BottleSuppliers != null && dbBottle.BottleSuppliers != null)
                         {
                             ICollection<BottleSupplier> dbBottleSuppliers = dbBottle.BottleSuppliers.ToList();
@@ -522,14 +533,17 @@ public class BottleService : IBottleService
                                             bottleSupplier.Bottle = bottle;
                                         }
                                     }
+
                                     dbBottle.BottleSuppliers.Add(bottleSupplier);
                                 }
                             }
+
                             foreach (BottleSupplier bottleSupplierToDelete in dbBottleSuppliers)
                             {
                                 dbBottle.BottleSuppliers.Remove(bottleSupplierToDelete);
                             }
                         }
+
                         if (bottle.BottleGrapes != null && dbBottle.BottleGrapes != null)
                         {
                             ICollection<BottleGrape> dbBottleGrapes = dbBottle.BottleGrapes.ToList();
@@ -556,6 +570,7 @@ public class BottleService : IBottleService
                                             bottleGrape.Bottle = bottle;
                                         }
                                     }
+
                                     dbBottle.BottleGrapes.Add(bottleGrape);
                                 }
                             }
@@ -565,6 +580,7 @@ public class BottleService : IBottleService
                                 dbBottle.BottleGrapes.Remove(bottleGrapeToDelete);
                             }
                         }
+
                         await _context.BulkUpdateAsync(bottles);
                         return bottles;
                     }
@@ -579,7 +595,7 @@ public class BottleService : IBottleService
         return null;
     }
 
-    
+
     //</inheritdoc>  
     public async Task<bool?> DeleteBottleAsync(int id)
     {
@@ -604,4 +620,32 @@ public class BottleService : IBottleService
 
         return false;
     }
-}
+
+    //</inheritdoc>  
+    public async Task<ICollection<Bottle>?> MassDeleteBottleAsync(ICollection<Bottle>? bottles)
+    {
+
+            try
+            {
+
+                // same logic as individual update wrapped in a loop
+                foreach (Bottle bottle in bottles)
+                {
+                    Bottle? dbBottle = await this.GetBottleAsync(bottle.Id);
+
+                    _context.Bottles.Remove(dbBottle);
+                    await _context.BulkDeleteAsync(bottles);
+                    return bottles;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Information, ex.ToString());
+                return null;
+
+            } 
+            return null;
+        }
+    }
