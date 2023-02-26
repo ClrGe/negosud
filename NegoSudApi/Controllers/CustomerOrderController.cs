@@ -95,7 +95,7 @@ public class CustomerOrderController : ControllerBase
 
     [Authorize(Policy = RolePermissions.CanDeleteCustomerOrder)]
     [HttpPost("DeleteCustomerOrder")]
-    public async Task<IActionResult> DeleteCustomerOrderAsync(int id)
+    public async Task<IActionResult> DeleteCustomerOrderAsync([FromBody]int id)
     {
         bool? status = await _customerOrderService.DeleteCustomerOrderAsync(id);
 
