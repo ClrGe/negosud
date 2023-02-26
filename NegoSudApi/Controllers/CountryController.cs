@@ -78,7 +78,7 @@ public class CountryController : ControllerBase
 
         [Authorize(Policy = RolePermissions.CanDeleteCountry)]
         [HttpPost("DeleteCountry")]
-        public async Task<IActionResult> DeleteCountryAsync(int id)
+        public async Task<IActionResult> DeleteCountryAsync([FromBody]int id)
         {
             bool? status = await _countryService.DeleteCountryAsync(id);
 

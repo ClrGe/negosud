@@ -69,7 +69,7 @@ public class GrapeController : ControllerBase
 
         [Authorize(Policy = RolePermissions.CanDeleteGrape)]
         [HttpPost("DeleteGrape")]
-        public async Task<IActionResult> DeleteGrapeAsync(int id)
+        public async Task<IActionResult> DeleteGrapeAsync([FromBody]int id)
         {
             Grape? dbGrape = await _grapeService.GetGrapeAsync(id);
             if (dbGrape == null)
