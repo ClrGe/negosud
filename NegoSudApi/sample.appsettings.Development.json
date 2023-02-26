@@ -19,7 +19,11 @@
     "Password": "YourPassWord"
   },
   "NegoSudDetails": {
-    "Address": "adresse",
-    "SiteWeb": "url"
+    "Address": "80 avenue Edmund Halley",
+    "City": "Saint-Étienne-du-Rouvray",
+    "ZipCode": "76800",
+    "Country": "France",
+    "SiteWeb": "UrlWebSite",
+    "ContactForm": "UrlContactForm"
   }
 }
