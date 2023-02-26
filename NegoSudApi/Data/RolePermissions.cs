@@ -93,7 +93,7 @@
         public static List<string> DefaultCustomerPermissions = new()
         {
             CanEditAddress, CanDeleteAddress, CanAddCustomerOrder, CanGetCustomerOrder, CanEditCustomerOrder, CanDeleteCustomerOrder,
-            CanGetUser, CanEditUser, CanDeleteUser,CanGetVat, CanAddVat, CanEditVat
+            CanGetUser, CanEditUser, CanDeleteUser,CanGetVat
         };
 
         public static List<string> DefaultEmployeePermissions = new(DefaultCustomerPermissions)
@@ -107,7 +107,7 @@
             CanGetStorageLocation, CanAddStorageLocation, CanEditStorageLocation, CanDeleteStorageLocation,
             CanGetSupplier, CanAddSupplier, CanEditSupplier, CanDeleteSupplier,
             CanGetSupplierOrder, CanAddSupplierOrder, CanEditSupplierOrder, CanDeleteSupplierOrder,
-            CanAddWineLabel, CanEditWineLabel, CanDeleteWineLabel,CanGetVat
+            CanAddWineLabel, CanEditWineLabel, CanDeleteWineLabel, CanAddVat, CanEditVat
 
         }; 
 
