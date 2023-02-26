@@ -79,12 +79,18 @@
         public const string CanAddWineLabel = "CanAddWineLabel";
         public const string CanEditWineLabel = "CanEditWineLabel";
         public const string CanDeleteWineLabel = "CanDeleteWineLabel";
+        
+        public const string CanGetVat = "CanGetVat";
+        public const string CanAddVat = "CanAddVat";
+        public const string CanEditVat = "CanEditVat";
+        public const string CanDeleteVat = "CanDeleteVat";
+        
         #endregion
 
         public static List<string> DefaultCustomerPermissions = new()
         {
             CanEditAddress, CanDeleteAddress, CanAddCustomerOrder, CanGetCustomerOrder, CanEditCustomerOrder, CanDeleteCustomerOrder,
-            CanGetUser, CanEditUser, CanDeleteUser,
+            CanGetUser, CanEditUser, CanDeleteUser,CanGetVat, CanAddVat, CanEditVat
         };
 
         public static List<string> DefaultEmployeePermissions = new(DefaultCustomerPermissions)
@@ -97,7 +103,8 @@
             CanGetStorageLocation, CanAddStorageLocation, CanEditStorageLocation, CanDeleteStorageLocation,
             CanGetSupplier, CanAddSupplier, CanEditSupplier, CanDeleteSupplier,
             CanGetSupplierOrder, CanAddSupplierOrder, CanEditSupplierOrder, CanDeleteSupplierOrder,
-            CanAddWineLabel, CanEditWineLabel, CanDeleteWineLabel,
+            CanAddWineLabel, CanEditWineLabel, CanDeleteWineLabel,CanGetVat
+
         }; 
 
     }

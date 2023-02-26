@@ -1,4 +1,3 @@
-using System.Net;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using NegoSudApi.Models;
@@ -43,28 +42,19 @@ public class AuthenticationController : ControllerBase
                 claims.Add(new(ClaimTypes.Role, userRole?.Name));
             }
 
-            string? token = _jwtAuthenticationService.GenerateToken(_configuration["Jwt:Key"]!, claims);
-
-            User response = new User()
-            {
-                Id = dbUser.Id,
-                FirstName = dbUser.FirstName,
-                LastName = dbUser.LastName,
-                Email = dbUser.Email,
-                Role = userRole,
-            };
+            string token = _jwtAuthenticationService.GenerateToken(_configuration["Jwt:Key"]!, claims);
 
             Response.Cookies.Append(
             "session",
             token,
-            new CookieOptions()
+            new CookieOptions
             {
                 IsEssential = true,
                 HttpOnly = false,
                 Secure = false,
                 SameSite = SameSiteMode.Lax,
-            }
-            );
+            });
+            
             return StatusCode(StatusCodes.Status200OK, token);
         }
         return StatusCode(StatusCodes.Status401Unauthorized);

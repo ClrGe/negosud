@@ -1,4 +1,3 @@
-using System.Xml.Linq;
 using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
