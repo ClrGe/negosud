@@ -100,7 +100,7 @@ public class BottleService : IBottleService
             if (bottle.WineLabelId != null)
             {
                 WineLabel? wineLabel =
-                    await _wineLabelService.GetWineLabelAsync((int) bottle.WineLabelId, includeRelations: false);
+                    await _wineLabelService.GetWineLabelAsync((int)bottle.WineLabelId, includeRelations: false);
                 if (wineLabel != null)
                 {
                     bottle.WineLabel = wineLabel;
@@ -110,7 +110,7 @@ public class BottleService : IBottleService
             if (bottle.ProducerId != null)
             {
                 Producer? producer =
-                    await _producerService.GetProducerAsync((int) bottle.ProducerId, includeRelations: false);
+                    await _producerService.GetProducerAsync((int)bottle.ProducerId, includeRelations: false);
                 if (producer != null)
                 {
                     bottle.Producer = producer;
@@ -120,7 +120,7 @@ public class BottleService : IBottleService
             if (bottle.VatId != null)
             {
                 VAT? dbVat =
-                    await _vatService.GetVatAsync((int) bottle.VatId);
+                    await _vatService.GetVatAsync((int)bottle.VatId);
                 if (dbVat != null)
                 {
                     bottle.Vat = dbVat;
@@ -267,7 +267,7 @@ public class BottleService : IBottleService
                 if (bottle.ProducerId != null)
                 {
                     Producer? producer =
-                        await _producerService.GetProducerAsync((int) bottle.ProducerId, includeRelations: false);
+                        await _producerService.GetProducerAsync((int)bottle.ProducerId, includeRelations: false);
                     // If we found a producer in the database
                     if (producer != null)
                     {
@@ -277,7 +277,7 @@ public class BottleService : IBottleService
 
                 if (bottle.VatId != null)
                 {
-                    dbBottle.Vat = await _vatService.GetVatAsync((int) bottle.VatId) ?? dbBottle.Vat;
+                    dbBottle.Vat = await _vatService.GetVatAsync((int)bottle.VatId) ?? dbBottle.Vat;
 
                 }
 
@@ -625,27 +625,57 @@ public class BottleService : IBottleService
     public async Task<ICollection<Bottle>?> MassDeleteBottleAsync(ICollection<Bottle>? bottles)
     {
 
-            try
+        try
+        {
+
+            // same logic as individual update wrapped in a loop
+            foreach (Bottle bottle in bottles)
             {
+                Bottle? dbBottle = await this.GetBottleAsync(bottle.Id);
 
-                // same logic as individual update wrapped in a loop
-                foreach (Bottle bottle in bottles)
-                {
-                    Bottle? dbBottle = await this.GetBottleAsync(bottle.Id);
-
-                    _context.Bottles.Remove(dbBottle);
-                    await _context.BulkDeleteAsync(bottles);
-                    return bottles;
-
-                }
+                _context.Bottles.Remove(dbBottle);
+                await _context.BulkDeleteAsync(bottles);
+                return bottles;
 
             }
-            catch (Exception ex)
-            {
-                _logger.Log(LogLevel.Information, ex.ToString());
-                return null;
 
-            } 
-            return null;
         }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
+            return null;
+
+        }
+        return null;
     }
+
+    public async Task<bool?> CheckBottlesStock()
+    {
+        try
+        {
+            List<Bottle>? bottleList = await _context.Bottles.Include(b => b.BottleStorageLocations).ToListAsync();
+
+            foreach (Bottle bottle in bottleList)
+            {
+
+
+                if (bottle.BottleStorageLocations != null && bottle.ThresholdToOrder != null)
+                {
+                    int? currentStock = bottle.BottleStorageLocations.Sum(bsl => bsl.Quantity);
+
+                    if (currentStock <= bottle.ThresholdToOrder)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
+        }
+
+        return false;
+
+    }
+}

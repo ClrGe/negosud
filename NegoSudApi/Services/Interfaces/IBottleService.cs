@@ -62,4 +62,10 @@ public interface IBottleService
     /// <returns></returns>
     Task<ICollection<Bottle>?> MassUpdateBottleAsync(ICollection<Bottle>? bottles);
 
+    /// <summary>
+    /// Check if there is any bottle out of stock
+    /// </summary>
+    /// <returns>true if there is any bottle out of stock; false if ther's none</returns>
+    Task<bool?> CheckBottlesStock();
+
 }

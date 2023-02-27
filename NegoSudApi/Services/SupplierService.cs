@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
+using System.Net;
 
 namespace NegoSudApi.Services;
 
@@ -10,14 +11,15 @@ public class SupplierService : ISupplierService
     private readonly NegoSudDbContext _context;
     private readonly ILogger<SupplierService> _logger;
     private readonly IAddressService _addressService;
+    private readonly ICityService _cityService;
     private readonly IGetBottleService _getBottleService;
 
-    public SupplierService(NegoSudDbContext context, ILogger<SupplierService> logger, IAddressService addressService,
-        IGetBottleService getBottleService)
+    public SupplierService(NegoSudDbContext context, ILogger<SupplierService> logger, IAddressService addressService, ICityService cityService, IGetBottleService getBottleService)
     {
         _context = context;
         _logger = logger;
         _addressService = addressService;
+        _cityService = cityService;
         _getBottleService = getBottleService;
     }
 
@@ -31,6 +33,9 @@ public class SupplierService : ISupplierService
                 return await _context.Suppliers
                     .Include(p => p.BottleSuppliers)
                     .ThenInclude(bs => bs.Bottle)
+                    .Include(s => s.Address)
+                    .ThenInclude(a => a.City)
+                    .ThenInclude(c => c.Country)
                     .FirstOrDefaultAsync(p => p.Id == id);
             }
 
@@ -64,6 +69,23 @@ public class SupplierService : ISupplierService
     {
         try
         {
+
+            if (supplier.Address != null)
+            {
+
+                if (supplier.Address.CityId != null)
+                {
+                    City? city = null;
+                    city = await _cityService.GetCityAsync((int)supplier.Address.CityId, includeRelations: false);
+
+                    if (city != null)
+                    {
+                        supplier.Address.City = city;
+                    }
+                }
+
+            }
+
             Supplier newSupplier = (await _context.Suppliers.AddAsync(supplier)).Entity;
 
             await _context.SaveChangesAsync();
@@ -89,15 +111,35 @@ public class SupplierService : ISupplierService
             {
                 dbSupplier.Details = supplier.Details;
                 dbSupplier.Name = supplier.Name;
+                dbSupplier.Email = supplier.Email;
 
                 if (supplier.Address != null)
                 {
                     Address? dbAddress = await _addressService.GetAddressAsync(supplier.Address.Id, false);
                     if (dbAddress != null)
                     {
+                        if (supplier.Address.CityId != null)
+                        {
+                            City? city = null;
+                            city = await _cityService.GetCityAsync((int)supplier.Address.CityId, includeRelations: false);
+
+                            if (city != null)
+                            {
+                                supplier.Address.City = city;
+                            }
+                        }
+
+                        dbAddress.AddressLine1 = supplier.Address.AddressLine1;
+                        dbAddress.AddressLine2 = supplier.Address.AddressLine2;
+                        dbAddress.City = supplier.Address.City;
+
                         dbSupplier.Address = dbAddress;
+                        
                     }
                 }
+
+
+
 
                 if (supplier.BottleSuppliers != null && dbSupplier.BottleSuppliers != null)
                 {

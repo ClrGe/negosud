@@ -59,22 +59,23 @@ public class AddressService : IAddressService
     // <inheritdoc />
     public async Task<Address?> AddAddressAsync(Address address)
     {
-        City? city = null;
-        if (address.City?.Id != null)
+        if (address.CityId != null)
         {
-            city = await _cityService.GetCityAsync(address.City.Id, includeRelations: false);
+            City? city = null;
+            city = await _cityService.GetCityAsync((int)address.CityId, includeRelations: false);
+
+            if (city != null)
+            {
+                address.City = city;
+            }
         }
 
         // If we found a city in the database
-        if (city != null)
-        {
-            address.City = city;
-        }
-        // If we want to add a new city into the database from the AddAddress form
-        else if (address.City != null)
-        {
-            address.City = await _cityService.AddCityAsync(address.City);
-        }
+        //// If we want to add a new city into the database from the AddAddress form
+        //else if (address.City != null)
+        //{
+        //    address.City = await _cityService.AddCityAsync(address.City);
+        //}
 
         // Create the region in the database
         Address newAddress = (await _context.Addresses.AddAsync(address)).Entity;

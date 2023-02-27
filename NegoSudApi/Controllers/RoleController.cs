@@ -58,7 +58,7 @@ public class RoleController :ControllerBase
         Role? dbRole = await _roleService.UpdateRoleAsync(role);
 
         if (dbRole == null)
-            return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {role.Id} - could not update.");
+            return StatusCode(StatusCodes.Status404NotFound, $"No Role found for id: {role.Id} - could not update.");
 
         return StatusCode(StatusCodes.Status200OK, dbRole);
     }

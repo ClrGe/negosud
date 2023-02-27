@@ -2,6 +2,7 @@
 using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Services.Interfaces;
+using System.Net;
 
 namespace NegoSudApi.Services;
 
@@ -9,12 +10,15 @@ public class CityService : ICityService
 {
     private readonly NegoSudDbContext _context;
     private readonly ILogger<CityService> _logger;
+    private readonly ICountryService _countryService;
 
-    public CityService(NegoSudDbContext context, ILogger<CityService> logger)
+    public CityService(NegoSudDbContext context, ILogger<CityService> logger, ICountryService countryService)
     {
         _context = context;
         _logger = logger;
+        _countryService = countryService;
     }
+
     
     // </inheritdoc>
     public async Task<City?> GetCityAsync(int id, bool includeRelations = true)
@@ -58,6 +62,17 @@ public class CityService : ICityService
     {
         try
         {
+
+            if (city.CountryId != null)
+            {
+            Country? country =  await _countryService.GetCountryAsync((int) city.CountryId, includeRelations: false);
+                
+                if (country != null)
+                {
+                    city.Country = country;
+                }
+            }
+
             City newCity = (await _context.Cities.AddAsync(city)).Entity;
             await _context.SaveChangesAsync();
             return newCity;
