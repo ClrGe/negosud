@@ -64,7 +64,8 @@ public class CustomerOrderService : ICustomerOrderService
                     .ThenInclude(l => l.Bottle)
                     .Include(co => co.Lines)
                     .ThenInclude(cl => cl.CustomerOrderLineStorageLocations)
-                    .Where(cO => cO.Customer.Id == userId).ToListAsync();
+                    .Where(cO => cO.Customer.Id == userId)
+                    .ToListAsync();
             }
             return await _context.CustomerOrders.Include(cO => cO.Customer).Where(cO => cO.Customer.Id == userId).ToListAsync();
         }
@@ -120,15 +121,14 @@ public class CustomerOrderService : ICustomerOrderService
             {
                 foreach (CustomerOrderLine orderLine in customerOrder.Lines)
                 {
-                    if (orderLine.BottleId == null) continue;
-                    
+                    if (orderLine.Bottle?.Id == null) continue;                    
                    
-                    Bottle? dbBottle = await _bottleService.GetBottleAsync((int) orderLine.BottleId, true);
+                    Bottle? dbBottle = await _bottleService.GetBottleAsync((int) orderLine.Bottle.Id, true);
                     
                     if (dbBottle == null) continue;
                         
                     var availableLocations = dbBottle.BottleStorageLocations
-                        .Where(bsl => bsl.BottleId == orderLine.BottleId && bsl.Quantity > 0)
+                        .Where(bsl => bsl.BottleId == orderLine.Bottle.Id && bsl.Quantity > 0)
                         .OrderByDescending(bsl => bsl.Quantity)
                         .ToList();
                     

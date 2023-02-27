@@ -87,13 +87,14 @@
         public const string CanAddVat = "CanAddVat";
         public const string CanEditVat = "CanEditVat";
         public const string CanDeleteVat = "CanDeleteVat";
-        
+        public const string CandSendEmail = "CanSendEmail";
+
         #endregion
 
         public static List<string> DefaultCustomerPermissions = new()
         {
             CanEditAddress, CanDeleteAddress, CanAddCustomerOrder, CanGetCustomerOrder, CanEditCustomerOrder, CanDeleteCustomerOrder,
-            CanGetUser, CanEditUser, CanDeleteUser,CanGetVat
+            CanGetUser, CanEditUser, CanDeleteUser,CanGetVat, CandSendEmail,
         };
 
         public static List<string> DefaultEmployeePermissions = new(DefaultCustomerPermissions)

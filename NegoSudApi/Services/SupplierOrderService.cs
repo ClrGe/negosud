@@ -151,7 +151,9 @@ public class SupplierOrderService : ISupplierOrderService
             negoSudDetails.GetValue<string>("ZipCode"),
             negoSudDetails.GetValue<string>("Country"),
         };
-        
+
+        string negosudURL = negoSudDetails.GetValue<string>("SiteWeb");
+
         var supplierDetails = new List<string>
         {
             supplierOrder.Supplier.Address.AddressLine1,
@@ -175,7 +177,7 @@ public class SupplierOrderService : ISupplierOrderService
         };
         
         var pdfPath =
-            new GeneratePdf(supplierOrder.Reference, negoSudAddress, supplierOrderLines, supplierDetails, _vatService, terms)
+            new GeneratePdf(supplierOrder.Reference, negoSudAddress, supplierOrderLines, supplierDetails, _vatService, terms, negosudURL)
                 .SavePurchaseOrderLocally();
         var isEmailSent = await _emailService.SendPurchaseOrderEmailAsync(supplierOrder.Supplier.Email, $"Bon de commande",
             pdfPath, _configuration);

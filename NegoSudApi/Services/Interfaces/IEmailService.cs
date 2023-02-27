@@ -1,7 +1,16 @@
+using NegoSudApi.Data;
+
 namespace NegoSudApi.Services.Interfaces;
 
 public interface IEmailService
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="contactForm"></param>
+    /// <returns></returns>
+    public Task<bool> SendEmail(ContactForm contactForm, IConfiguration configuration);
+
     /// <summary>
     /// Sends an email message with a PDF attachment to the specified recipient email address.
     /// </summary>

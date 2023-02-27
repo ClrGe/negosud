@@ -106,7 +106,7 @@ public class UserService : IUserService
                     }
                 }
 
-                _context.Entry(user).State = EntityState.Modified;
+                _context.Entry(dbUser).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return user;
             }
