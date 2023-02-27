@@ -70,12 +70,12 @@ public class SupplierService : ISupplierService
         try
         {
 
+            City? city = null;
             if (supplier.Address != null)
             {
 
-                if (supplier.Address.CityId != null)
+                if (supplier.Address.CityId != null && supplier.Address.CityId > 0)
                 {
-                    City? city = null;
                     city = await _cityService.GetCityAsync((int)supplier.Address.CityId, includeRelations: false);
 
                     if (city != null)
@@ -84,6 +84,10 @@ public class SupplierService : ISupplierService
                     }
                 }
 
+            }
+            if (city == null)
+            {
+                supplier.Address = null;
             }
 
             Supplier newSupplier = (await _context.Suppliers.AddAsync(supplier)).Entity;
@@ -115,76 +119,81 @@ public class SupplierService : ISupplierService
 
                 if (supplier.Address != null)
                 {
+
+                    if (supplier.Address.CityId != null && supplier.Address.CityId > 0)
+                    {
+                        City? city = null;
+                        city = await _cityService.GetCityAsync((int)supplier.Address.CityId, includeRelations: false);
+
+                        if (city != null)
+                        {
+                            supplier.Address.City = city;
+                        }
+                    }
+
+                    if (dbSupplier.Address == null)
+                    {
+                        dbSupplier.Address = supplier.Address;
+                    }
+
                     Address? dbAddress = await _addressService.GetAddressAsync(supplier.Address.Id, false);
                     if (dbAddress != null)
                     {
-                        if (supplier.Address.CityId != null)
-                        {
-                            City? city = null;
-                            city = await _cityService.GetCityAsync((int)supplier.Address.CityId, includeRelations: false);
-
-                            if (city != null)
-                            {
-                                supplier.Address.City = city;
-                            }
-                        }
 
                         dbAddress.AddressLine1 = supplier.Address.AddressLine1;
                         dbAddress.AddressLine2 = supplier.Address.AddressLine2;
                         dbAddress.City = supplier.Address.City;
 
                         dbSupplier.Address = dbAddress;
-                        
+
                     }
                 }
 
 
+            if (supplier.BottleSuppliers != null && dbSupplier.BottleSuppliers != null)
+            {
+                ICollection<BottleSupplier> dbBottleSuppliers = dbSupplier.BottleSuppliers.ToList();
 
-
-                if (supplier.BottleSuppliers != null && dbSupplier.BottleSuppliers != null)
+                foreach (BottleSupplier bottleSupplier in supplier.BottleSuppliers)
                 {
-                    ICollection<BottleSupplier> dbBottleSuppliers = dbSupplier.BottleSuppliers.ToList();
+                    //if the BottleSupplier already exists
+                    BottleSupplier? existingSupplier = dbBottleSuppliers.FirstOrDefault(bs =>
+                        bs.BottleId == bottleSupplier.BottleId && bs.SupplierId == bottleSupplier.Supplier.Id);
 
-                    foreach (BottleSupplier bottleSupplier in supplier.BottleSuppliers)
+                    if (existingSupplier != null)
                     {
-                        //if the BottleSupplier already exists
-                        BottleSupplier? existingSupplier = dbBottleSuppliers.FirstOrDefault(bs =>
-                            bs.BottleId == bottleSupplier.BottleId && bs.SupplierId == bottleSupplier.Supplier.Id);
-
-                        if (existingSupplier != null)
-                        {
-                            //update the existing BottleStorageLocation
-                            existingSupplier.Supplier = bottleSupplier.Supplier;
-                            _context.Entry(existingSupplier).State = EntityState.Modified;
-                            dbBottleSuppliers.Remove(existingSupplier);
-                        }
-                        else
-                        {
-                            Bottle? bottle = await _getBottleService.GetBottleAsync(bottleSupplier.SupplierId,
-                                includeRelations: false);
-                            if (bottle != null)
-                            {
-                                bottleSupplier.Supplier = supplier;
-                                bottleSupplier.Bottle = bottle;
-                            }
-
-
-                            // otherwise, add the new BottleStorageLocation to the current bottle
-                            dbSupplier.BottleSuppliers.Add(bottleSupplier);
-                        }
+                        //update the existing BottleStorageLocation
+                        existingSupplier.Supplier = bottleSupplier.Supplier;
+                        _context.Entry(existingSupplier).State = EntityState.Modified;
+                        dbBottleSuppliers.Remove(existingSupplier);
                     }
-
-                    foreach (BottleSupplier bottleSupplierToDelete in dbBottleSuppliers)
+                    else
                     {
-                        dbSupplier.BottleSuppliers.Remove(bottleSupplierToDelete);
+                        Bottle? bottle = await _getBottleService.GetBottleAsync(bottleSupplier.SupplierId,
+                            includeRelations: false);
+                        if (bottle != null)
+                        {
+                            bottleSupplier.Supplier = supplier;
+                            bottleSupplier.Bottle = bottle;
+                        }
+
+
+                        // otherwise, add the new BottleStorageLocation to the current bottle
+                        dbSupplier.BottleSuppliers.Add(bottleSupplier);
                     }
                 }
 
-                _context.Entry(dbSupplier).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-
-                return supplier;
+                foreach (BottleSupplier bottleSupplierToDelete in dbBottleSuppliers)
+                {
+                    dbSupplier.BottleSuppliers.Remove(bottleSupplierToDelete);
+                }
             }
+
+            _context.Entry(dbSupplier).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return supplier;
+        }
         }
         catch (Exception ex)
         {
@@ -196,26 +205,26 @@ public class SupplierService : ISupplierService
 
     //</inheritdoc> 
     public async Task<bool?> DeleteSupplierAsync(int id)
+{
+    try
     {
-        try
+        Supplier? supplierResult = await _context.Suppliers.FindAsync(id);
+
+        if (supplierResult == null)
         {
-            Supplier? supplierResult = await _context.Suppliers.FindAsync(id);
-
-            if (supplierResult == null)
-            {
-                return false;
-            }
-
-            _context.Suppliers.Remove(supplierResult);
-            await _context.SaveChangesAsync();
-
-            return true;
-        }
-        catch (Exception ex)
-        {
-            _logger.Log(LogLevel.Information, ex.ToString());
+            return false;
         }
 
-        return false;
+        _context.Suppliers.Remove(supplierResult);
+        await _context.SaveChangesAsync();
+
+        return true;
     }
+    catch (Exception ex)
+    {
+        _logger.Log(LogLevel.Information, ex.ToString());
+    }
+
+    return false;
+}
 }
