@@ -44,7 +44,7 @@ public class WineLabelController : ControllerBase
     }
 
     [Authorize(Policy = RolePermissions.CanAddWineLabel)]
-    [HttpPost("WineLabel")]
+    [HttpPost("AddWineLabel")]
     public async Task<ActionResult<WineLabel>> AddWineLabelAsync(WineLabel wineLabel)
     {
         WineLabel? dbWineLabel = await _wineLabelService.AddWineLabelAsync(wineLabel);
