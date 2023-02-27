@@ -52,6 +52,32 @@ public class CustomerOrderService : ICustomerOrderService
     }
 
     //</inheritdoc>  
+    public async Task<IEnumerable<CustomerOrder>?> GetOwnCustomerOrdersAsync(int userId, bool includeRelations = true)
+    {
+        try
+        {
+            if (includeRelations)
+            {
+                return await _context.CustomerOrders
+                    .Include(cO => cO.Customer)
+                    .Include(cO => cO.Lines)
+                    .ThenInclude(l => l.Bottle)
+                    .Include(co => co.Lines)
+                    .ThenInclude(cl => cl.CustomerOrderLineStorageLocations)
+                    .Where(cO => cO.Customer.Id == userId)
+                    .ToListAsync();
+            }
+            return await _context.CustomerOrders.Include(cO => cO.Customer).Where(cO => cO.Customer.Id == userId).ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.Information, ex.ToString());
+        }
+
+        return null;
+    }
+
+    //</inheritdoc>  
     public async Task<IEnumerable<CustomerOrder>?> GetCustomerOrdersAsync()
     {
         try
@@ -95,15 +121,14 @@ public class CustomerOrderService : ICustomerOrderService
             {
                 foreach (CustomerOrderLine orderLine in customerOrder.Lines)
                 {
-                    if (orderLine.BottleId == null) continue;
-                    
+                    if (orderLine.Bottle?.Id == null) continue;                    
                    
-                    Bottle? dbBottle = await _bottleService.GetBottleAsync((int) orderLine.BottleId, true);
+                    Bottle? dbBottle = await _bottleService.GetBottleAsync((int) orderLine.Bottle.Id, true);
                     
                     if (dbBottle == null) continue;
                         
                     var availableLocations = dbBottle.BottleStorageLocations
-                        .Where(bsl => bsl.BottleId == orderLine.BottleId && bsl.Quantity > 0)
+                        .Where(bsl => bsl.BottleId == orderLine.Bottle.Id && bsl.Quantity > 0)
                         .OrderByDescending(bsl => bsl.Quantity)
                         .ToList();
                     

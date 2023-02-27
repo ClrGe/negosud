@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NegoSudApi.Migrations
 {
     [DbContext(typeof(NegoSudDbContext))]
-    [Migration("20230226105456_NewOne")]
+    [Migration("20230226195829_New_One")]
     partial class NewOne
     {
         /// <inheritdoc />

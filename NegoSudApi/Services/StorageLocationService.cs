@@ -118,7 +118,7 @@ public class StorageLocationService : IStorageLocationService
 
                             if (BottleStorageLocation.Bottle?.Id != null)
                             {
-                                Bottle? bottle = await _getBottleService.GetBottleAsync(BottleStorageLocation.BottleId, includeRelations: false);
+                                Bottle? bottle = await _getBottleService.GetBottleAsync(BottleStorageLocation.Bottle.Id, includeRelations: false);
                                 if (bottle != null)
                                 {
                                     BottleStorageLocation.StorageLocation = storageLocation;
