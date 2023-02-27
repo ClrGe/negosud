@@ -107,4 +107,16 @@ public class BottleController : ControllerBase
 
         return bottles == null ? StatusCode(StatusCodes.Status404NotFound, "No match, no deletion.") : StatusCode(StatusCodes.Status200OK, dbBottles);
     }
+
+    [HttpGet("CheckBottlesStock")]
+    public async Task<IActionResult> CheckBottlesStock()
+    {
+        bool? result = await _bottleService.CheckBottlesStock();
+
+        if (result == null)
+            return StatusCode(StatusCodes.Status404NotFound, $"Error on checking bottles stock");
+
+        //return StatusCode(StatusCodes.Status200OK);
+        return new JsonResult(result);
+    }
 }

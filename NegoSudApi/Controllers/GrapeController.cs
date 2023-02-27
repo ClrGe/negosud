@@ -62,7 +62,7 @@ public class GrapeController : ControllerBase
         Grape? dbGrape = await _grapeService.UpdateGrapeAsync(grape);
         if (dbGrape == null)
         {
-            return StatusCode(StatusCodes.Status404NotFound, $"No Country found for id: {grape.Id} - could not update.");
+            return StatusCode(StatusCodes.Status404NotFound, $"No Grape found for id: {grape.Id} - could not update.");
         }
         return StatusCode(StatusCodes.Status200OK, dbGrape);
     }
