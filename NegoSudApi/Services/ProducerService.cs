@@ -12,13 +12,15 @@ public class ProducerService : IProducerService
     private readonly ILogger<ProducerService> _logger;
     private readonly IRegionService _regionService;
     private readonly IAddressService _addressService;
+    private readonly IGetBottleService _getbottleService;
 
-    public ProducerService(NegoSudDbContext context, ILogger<ProducerService> logger, IRegionService regionService, IAddressService addressService)
+    public ProducerService(NegoSudDbContext context, ILogger<ProducerService> logger, IRegionService regionService, IAddressService addressService, IGetBottleService getBottleService)
     {
         _context = context;
         _logger = logger;
         _regionService = regionService;
         _addressService = addressService;
+        _getbottleService = getBottleService;
     }
 
     //</inheritdoc> 
@@ -96,6 +98,27 @@ public class ProducerService : IProducerService
             else if (producer.Address != null)
             {
                 producer.Address = await _addressService.AddAddressAsync(producer.Address);
+            }
+
+            List<Bottle>? bottles = new List<Bottle>();
+            if (producer.Bottles != null)
+            {
+                foreach(var bottle in producer.Bottles)
+                {
+                    if (bottle.Id != null)
+                    {
+                        Bottle? dbBottle = await _getbottleService.GetBottleAsync(bottle.Id);
+                        if(dbBottle != null)
+                        {
+                            bottles.Add(dbBottle);
+                        }
+                    }
+                }
+            }
+
+            if(bottles.Any())
+            {
+                producer.Bottles = bottles;
             }
 
             // Create the producer in the database

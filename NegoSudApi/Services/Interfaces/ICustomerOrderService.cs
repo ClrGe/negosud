@@ -14,6 +14,14 @@ public interface ICustomerOrderService
     Task<CustomerOrder?> GetCustomerOrderAsync(int id, bool includeRelations = true);
 
     /// <summary>
+    /// Get a CustomerOrder entity from the database by its user id, , including or not subobjects and collections
+    /// </summary>
+    /// <param name="id">The CustomerOrder's user id</param>
+    /// <param name="includeRelations">Indicates whether or not subobjects and collections should be loaded (true if not specified)</param>
+    /// <returns>A collection of CustomerOrder with the desired user id, or null if it doesn't exist</returns>
+    Task<IEnumerable<CustomerOrder>?> GetOwnCustomerOrdersAsync(int id, bool includeRelations = true);
+
+    /// <summary>
     /// Get an IEnumerable of CustomerOrders from the database
     /// </summary>
     /// <returns>A collection of CustomerOrder</returns>

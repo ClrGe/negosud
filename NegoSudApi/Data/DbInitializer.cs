@@ -29,43 +29,48 @@ public class DbInitializer
         List<Role> dbRoles = dbContext.Roles.ToList();
         foreach (var role in RolePermissions.Roles)
         {
+            Role? dbRole = null;
             if (!dbRoles.Any(r => r.Name == role))
             {
                 Role newRole = new Role()
                 {
                     Name = role,
                 };
-                var newDbRole = dbContext.Roles.Add(newRole).Entity;
-                if (role == RolePermissions.Customer)
+                dbRole = dbContext.Roles.Add(newRole).Entity;                
+            }
+            else
+            {
+                dbRole = dbContext.Roles.FirstOrDefault(r => r.Name == role);
+            }
+            if (role == RolePermissions.Customer)
+            {
+                foreach (var perm in RolePermissions.DefaultCustomerPermissions)
                 {
-                    foreach (var perm in RolePermissions.DefaultCustomerPermissions)
+                    if (!dbContext.PermissionRoles.Any(
+                            pr => pr.RoleId == dbRole.Id && pr.Permission.Name == perm))
                     {
-                        if (!dbContext.PermissionRoles.Any(
-                                pr => pr.RoleId == newDbRole.Id && pr.Permission.Name == perm))
+                        PermissionRole newPermissionRole = new PermissionRole()
                         {
-                            PermissionRole newPermissionRole = new PermissionRole()
-                            {
-                                Role = newDbRole,
-                                Permission = dbContext.Permissions.FirstOrDefault(p => p.Name == perm),
-                            };
-                            dbContext.PermissionRoles.Add(newPermissionRole);
-                        }
+                            Role = dbRole,
+                            Permission = dbContext.Permissions.FirstOrDefault(p => p.Name == perm),
+                        };
+                        dbContext.PermissionRoles.Add(newPermissionRole);
                     }
                 }
-                else if (role == RolePermissions.Employee)
+            }
+            else if (role == RolePermissions.Employee)
+            {
+                foreach (var perm in RolePermissions.DefaultEmployeePermissions)
                 {
-                    foreach (var perm in RolePermissions.DefaultEmployeePermissions)
+                    if (!dbContext.PermissionRoles.Any(
+                            pr => pr.RoleId == dbRole.Id && pr.Permission.Name == perm))
                     {
-                        if (!dbContext.PermissionRoles.Any(
-                                pr => pr.RoleId == newDbRole.Id && pr.Permission.Name == perm))
+                        PermissionRole newPermissionRole = new PermissionRole()
                         {
-                            PermissionRole newPermissionRole = new PermissionRole()
-                            {
-                                Role = newDbRole,
-                                Permission = dbContext.Permissions.FirstOrDefault(p => p.Name == perm),
-                            };
-                            dbContext.PermissionRoles.Add(newPermissionRole);
-                        }
+                            Role = dbRole,
+                            Permission = dbContext.Permissions.FirstOrDefault(p => p.Name == perm),
+                        };
+                        dbContext.PermissionRoles.Add(newPermissionRole);
                     }
                 }
             }

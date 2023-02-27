@@ -13,15 +13,17 @@ namespace NegoSudApi.Controllers;
 public class CustomerOrderController : ControllerBase
 {
     private readonly ICustomerOrderService _customerOrderService;
+    private readonly IGetBottleService _getBottleService;
     private readonly IVatService _vatService;
     private readonly IConfiguration _configuration;
 
     public CustomerOrderController(ICustomerOrderService customerOrderService, IVatService vatService,
-        IConfiguration configuration)
+        IConfiguration configuration, IGetBottleService getBottleService)
     {
         _customerOrderService = customerOrderService;
         _vatService = vatService;
         _configuration = configuration;
+        _getBottleService = getBottleService;
     }
 
     [Authorize(Policy = RolePermissions.CanGetCustomerOrder)]
@@ -38,11 +40,25 @@ public class CustomerOrderController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
     }
 
-        [Authorize(Policy = RolePermissions.CanGetCustomerOrder)]
-        [HttpGet]
-        public async Task<IActionResult> GetCustomerOrdersAsync()
+    [Authorize(Policy = RolePermissions.CanGetCustomerOrder)]
+    [HttpGet("Own/{userId}")]
+    public async Task<IActionResult> GetOwnCustomerOrdersAsync(int userId)
+    {        
+        var dbCustomerOrder = await _customerOrderService.GetOwnCustomerOrdersAsync(userId);
+
+        if (dbCustomerOrder == null)
         {
-            var dbCustomerOrders = await _customerOrderService.GetCustomerOrdersAsync();
+            return StatusCode(StatusCodes.Status404NotFound, $"No customerOrder found for user id: {userId}");
+        }
+
+        return StatusCode(StatusCodes.Status200OK, dbCustomerOrder);
+    }
+
+    [Authorize(Policy = RolePermissions.CanGetCustomerOrders)]
+    [HttpGet]
+    public async Task<IActionResult> GetCustomerOrdersAsync()
+    {
+        var dbCustomerOrders = await _customerOrderService.GetCustomerOrdersAsync();
 
         if (dbCustomerOrders == null)
         {
@@ -69,7 +85,6 @@ public class CustomerOrderController : ControllerBase
 
         return StatusCode(StatusCodes.Status201Created, dbCustomerOrder);
     }
-
 
     [Authorize(Policy = RolePermissions.CanEditCustomerOrder)]
     [HttpPost("UpdateCustomerOrder")]
@@ -127,11 +142,16 @@ public class CustomerOrderController : ControllerBase
 
         var negoSudContactForm = negoSudDetails.GetValue<string>("ContactForm");
 
+        string negosudURL = negoSudDetails.GetValue<string>("SiteWeb");
+
         var customerDetails = new List<String>
         {
-            customerOrder.Customer.FirstName, customerOrder.Customer.LastName,
-            customerOrder.DeliveryAddress.AddressLine1!, customerOrder.DeliveryAddress.AddressLine2!,
-            customerOrder.DeliveryAddress.City!.Name!, customerOrder.DeliveryAddress.City.ZipCode.ToString()!
+            customerOrder.Customer.FirstName, 
+            customerOrder.Customer.LastName,
+            customerOrder.DeliveryAddress.AddressLine1!, 
+            customerOrder.DeliveryAddress.AddressLine2!,
+            customerOrder.DeliveryAddress.City!.Name!, 
+            customerOrder.DeliveryAddress.City.ZipCode.ToString()!
         };
 
         var terms = new List<string>
@@ -148,7 +168,7 @@ public class CustomerOrderController : ControllerBase
             new List<IOrderLine>((customerOrder.Lines as List<CustomerOrderLine>)!);
         var pdfBytes = new GeneratePdf(customerOrder.Reference!, customerDetails, customerOrderLines,
             negoSudAddress,
-            _vatService, terms).SaveInvoice();
+            _vatService, terms, negosudURL).SaveInvoice();
         var stream = new MemoryStream(pdfBytes);
         Response.Headers.Add("Content-Disposition", $"inline; filename=invoice_{customerOrder.Reference!}.pdf");
         Response.ContentType = "application/pdf";

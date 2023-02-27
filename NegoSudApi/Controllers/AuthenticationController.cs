@@ -44,17 +44,24 @@ public class AuthenticationController : ControllerBase
 
             string token = _jwtAuthenticationService.GenerateToken(_configuration["Jwt:Key"]!, claims);
 
-            Response.Cookies.Append(
-            "session",
-            token,
-            new CookieOptions
+            var cookieOptions = new CookieOptions()
             {
                 IsEssential = true,
                 HttpOnly = false,
                 Secure = false,
                 SameSite = SameSiteMode.Lax,
-            });
-            
+            };
+
+            Response.Cookies.Append(
+            "session",
+            token,
+            cookieOptions
+            );
+            Response.Cookies.Append(
+            "user_Id",
+            dbUser.Id.ToString(),
+            cookieOptions
+            );
             return StatusCode(StatusCodes.Status200OK, token);
         }
         return StatusCode(StatusCodes.Status401Unauthorized);
@@ -101,18 +108,25 @@ public class AuthenticationController : ControllerBase
             Role = userRole,
         };
 
-        Response.Cookies.Append(
-            "session",
-            token,
-            new CookieOptions()
-            {
-                IsEssential = true,
-                HttpOnly = false,
-                Secure = false,
-                SameSite = SameSiteMode.Lax,
-            }
-            );
+        var cookieOptions = new CookieOptions()
+        {
+            IsEssential = true,
+            HttpOnly = false,
+            Secure = false,
+            SameSite = SameSiteMode.Lax,
+        };
 
+        Response.Cookies.Append(
+        "session",
+        token,
+        cookieOptions
+        );
+        Response.Cookies.Append(
+        "user_Id",
+        response.Id.ToString(),
+        cookieOptions
+        );
+        
         return StatusCode(StatusCodes.Status201Created, response);
     }
 }

@@ -40,7 +40,7 @@ public class GeneratePdf : IDisposable
     /// <param name="orderLines">The details of the order</param>
     /// <param name="billFrom">Who's ht supplier</param>
     /// <param name="vatService">The value added Tax for the bottle(s)</param>
-    public GeneratePdf(string invoiceNumber, List<string> billTo, List<IOrderLine> orderLines,List<string> billFrom, IVatService vatService, List<string> terms)
+    public GeneratePdf(string invoiceNumber, List<string> billTo, List<IOrderLine> orderLines,List<string> billFrom, IVatService vatService, List<string> terms, string url)
     {
         _invoiceNumber = invoiceNumber;
         _billFrom = billFrom;
@@ -49,7 +49,7 @@ public class GeneratePdf : IDisposable
         _vatService = vatService;
         _totalsRow = new List<TotalRow>();
         _details = terms;
-        _footer = "site e-commerce link";
+        _footer = url;
         _logo = new LogoImage(160, 120);
         _cultureInfo = new CultureInfo("fr-FR");
         _pdfDocument = new Document();
