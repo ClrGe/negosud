@@ -81,7 +81,7 @@ public class CustomerOrderController : ControllerBase
 
 
         // Create a pfd invoice for the customer if the order can be done immediately
-        //await GenerateInvoicePdf(customerOrder, dbCustomerOrder);
+        await GenerateInvoicePdf(customerOrder, dbCustomerOrder);
 
         return StatusCode(StatusCodes.Status201Created, dbCustomerOrder);
     }
