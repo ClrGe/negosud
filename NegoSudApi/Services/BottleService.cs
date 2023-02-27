@@ -256,6 +256,9 @@ public class BottleService : IBottleService
                 dbBottle.FullName = bottle.FullName;
                 dbBottle.Description = bottle.Description;
                 dbBottle.WineLabel = bottle.WineLabel;
+                dbBottle.WineType = bottle.WineType;
+                dbBottle.ThresholdToOrder = bottle.ThresholdToOrder;
+                dbBottle.QuantityMinimumToOrder = bottle.QuantityMinimumToOrder;
                 dbBottle.Volume = bottle.Volume;
                 dbBottle.Picture = bottle.Picture;
                 dbBottle.YearProduced = bottle.YearProduced;

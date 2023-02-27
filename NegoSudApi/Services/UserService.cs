@@ -19,7 +19,7 @@ public class UserService : IUserService
     }
 
     // </inheritdoc>
-    public async Task<User?> GetUserAsync(int id, bool includeRelations = false)
+    public async Task<User?> GetUserAsync(int id, bool includeRelations = true)
     {
         try
         {
@@ -106,7 +106,7 @@ public class UserService : IUserService
                     }
                 }
 
-                _context.Entry(user).State = EntityState.Modified;
+                _context.Entry(dbUser).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return user;
             }
