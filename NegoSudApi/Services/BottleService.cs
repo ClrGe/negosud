@@ -48,7 +48,10 @@ public class BottleService : IBottleService
     {
         try
         {
-            return await _context.Bottles.Include(b => b.Producer).ToListAsync();
+            return await _context.Bottles
+                .Include(b => b.Producer)
+                .Include(b=> b.BottleStorageLocations)
+                .ToListAsync();
         }
         catch (Exception ex)
         {
