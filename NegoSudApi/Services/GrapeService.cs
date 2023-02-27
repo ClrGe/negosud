@@ -75,54 +75,13 @@ public class GrapeService : IGrapeService
     //</inheritdoc>
     public async Task<Grape?> UpdateGrapeAsync(Grape grape)
     {
+        
         try
         {
-            Grape? dbGrape = await this.GetGrapeAsync(grape.Id);
+            _context.Entry(grape).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
-            if (dbGrape != null)
-            {
-                dbGrape.GrapeType = grape.GrapeType;
-
-                if (dbGrape.BottleGrapes != null && grape.BottleGrapes != null)
-                {
-                    ICollection<BottleGrape> dbBottleGrapes = dbGrape.BottleGrapes.ToList();
-
-                    foreach (BottleGrape bottleGrape in grape.BottleGrapes)
-                    {
-                        BottleGrape? existingBottleGrape = dbBottleGrapes.FirstOrDefault(bg =>
-                            bg.GrapeId == bottleGrape.GrapeId && bg.BottleId == bottleGrape.BottleId);
-                        if (existingBottleGrape != null)
-                        {
-                            //update the existing BottleGrape
-                            existingBottleGrape.GrapePercentage = bottleGrape.GrapePercentage;
-                            _context.Entry(existingBottleGrape).State = EntityState.Modified;
-                            dbBottleGrapes.Remove(existingBottleGrape);
-                        }
-                        else
-                        {
-                            if (bottleGrape.Bottle?.Id != null)
-                            {
-                                Bottle? bottle = await _getBottleService.GetBottleAsync(bottleGrape.Bottle.Id, includeRelations: false);
-                                if (bottle != null)
-                                {
-                                    bottleGrape.Grape = grape;
-                                    bottleGrape.Bottle = bottle;
-                                }
-                            }
-                            // otherwise, add the new BottleGrape to the current bottle
-                            dbGrape.BottleGrapes.Add(bottleGrape);
-                        }
-                    }
-
-                    foreach (var bottleGrapeToDelete in dbBottleGrapes)
-                    {
-                        dbGrape.BottleGrapes.Remove(bottleGrapeToDelete); 
-                    }
-                }
-                _context.Entry(grape).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return grape;
-            }
+            return grape;
         }
         catch (Exception ex)
         {
