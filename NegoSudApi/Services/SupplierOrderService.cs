@@ -218,6 +218,7 @@ public class SupplierOrderService : ISupplierOrderService
                 dbSupplierOrder.Description = supplierOrder.Description;
                 dbSupplierOrder.DateOrder = supplierOrder.DateOrder;
                 dbSupplierOrder.DateDelivery = supplierOrder.DateDelivery;
+                dbSupplierOrder.DeliveryStatus= supplierOrder.DeliveryStatus;
 
 
                 if (supplierOrder.Supplier != null)
