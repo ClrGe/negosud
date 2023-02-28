@@ -116,14 +116,14 @@ public class SupplierOrderService : ISupplierOrderService
 
             await _context.SaveChangesAsync();
 
-            try
-            {
-                await SendPurchaseOrder(supplierOrder);
-            }
-            catch (Exception ex)
-            {
-                _logger.Log(LogLevel.Information, ex.ToString());
-            }
+            //try
+            //{
+            //    await SendPurchaseOrder(supplierOrder);
+            //}
+            //catch (Exception ex)
+            //{
+            //    _logger.Log(LogLevel.Information, ex.ToString());
+            //}
 
             //return newSupplierOrder;
             return supplierOrder;

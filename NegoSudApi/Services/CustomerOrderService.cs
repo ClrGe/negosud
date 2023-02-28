@@ -14,9 +14,10 @@ public class CustomerOrderService : ICustomerOrderService
     private readonly IBottleService _bottleService;
     private readonly IUserService _userService;
     private readonly IAddressService _addressService;
+    private readonly ICityService _cityService;
     private readonly ISupplierOrderService _supplierOrderService;
 
-    public CustomerOrderService(NegoSudDbContext context, ILogger<CustomerOrderService> logger, IBottleService bottleService, IUserService userService, IAddressService addressService, ISupplierOrderService supplierOrderService)
+    public CustomerOrderService(NegoSudDbContext context, ILogger<CustomerOrderService> logger, IBottleService bottleService, IUserService userService, IAddressService addressService, ISupplierOrderService supplierOrderService, ICityService cityService)
     {
         _context = context;
         _logger = logger;
@@ -24,6 +25,7 @@ public class CustomerOrderService : ICustomerOrderService
         _userService = userService;
         _addressService = addressService;
         _supplierOrderService = supplierOrderService;
+        _cityService = cityService;
     }
 
     //</inheritdoc>  
@@ -112,6 +114,30 @@ public class CustomerOrderService : ICustomerOrderService
                 if (dbAddress != null)
                 {
                     customerOrder.DeliveryAddress = dbAddress;
+                }
+                else
+                {
+                    City? city = null;
+                    if (customerOrder.DeliveryAddress != null)
+                    {
+
+                        if (customerOrder.DeliveryAddress.CityId != null && customerOrder.DeliveryAddress.CityId > 0)
+                        {
+                            city = await _cityService.GetCityAsync((int)customerOrder.DeliveryAddress.CityId, includeRelations: false);
+
+                            if (city != null)
+                            {
+                                customerOrder.DeliveryAddress.City = city;
+                            }
+                        }
+
+                    }
+                    if (city == null)
+                    {
+                        customerOrder.DeliveryAddress = null;
+                    }
+
+                    customerOrder.DeliveryAddress = null;
                 }
             }
 
