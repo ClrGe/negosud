@@ -76,7 +76,10 @@ public class GeneratePdf : IDisposable
 
         using var stream = new MemoryStream();
         _pdfDocument.Save(stream);
-        return stream.ToArray();
+        var streamArray = stream.ToArray();
+        _pdfDocument.Dispose();
+        stream.Dispose();
+        return streamArray;
     }
 
     /// <summary>
@@ -94,6 +97,8 @@ public class GeneratePdf : IDisposable
         string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "temp.pdf");
         using var stream = new FileStream(filePath, FileMode.Create);
         _pdfDocument.Save(stream);
+        stream.Dispose();
+        this.Dispose();
         return filePath;
     }
 
@@ -151,6 +156,7 @@ public class GeneratePdf : IDisposable
         var xImage = _pdfPage.Resources.Images[_pdfPage.Resources.Images.Count];
         // Using Do operator: this operator draws image
         _pdfPage.Contents.Add(new Do(xImage.Name));
+        imageStream.Dispose();
     }
 
     /// <summary>
