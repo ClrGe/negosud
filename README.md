@@ -62,5 +62,7 @@ commande et quand son statut sera livré, la quantité s’ajoutera au stock.
 - Bonus : le réapprovisionnement automatique pourra être désactivé à
 l’aide d’une action utilisateur, via l’interface de gestion
 
+Schéma simplifié du fonctionnement de notre solution :
+
 ![image](https://user-images.githubusercontent.com/90383697/221852031-793428be-fad0-468d-8fcf-2a83ea8da58b.png)
 
