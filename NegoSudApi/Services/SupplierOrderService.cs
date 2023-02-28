@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Aspose.Pdf.Operators;
+using Microsoft.EntityFrameworkCore;
 using NegoSudApi.Data;
 using NegoSudApi.Models;
 using NegoSudApi.Models.Interfaces;
@@ -85,11 +86,11 @@ public class SupplierOrderService : ISupplierOrderService
             }
 
             
-            SupplierOrder newSupplierOrder = new SupplierOrder
-            {
-                Description = supplierOrder.Description,
-                Supplier = supplierOrder.Supplier,
-            };
+            //SupplierOrder newSupplierOrder = new SupplierOrder
+            //{
+            //    Description = supplierOrder.Description,
+            //    Supplier = supplierOrder.Supplier,
+            //};
 
             if(supplierOrder.Lines != null)
             {
@@ -103,22 +104,29 @@ public class SupplierOrderService : ISupplierOrderService
                     }
 
                     // set the SupplierOrderId for the SupplierOrderLine
-                    orderLine.SupplierOrder = newSupplierOrder;
+                    //orderLine.SupplierOrder = newSupplierOrder;
+                    orderLine.SupplierOrder = supplierOrder;
                 }
 
                 await _context.AddRangeAsync(supplierOrder.Lines);
-                
-                await SendPurchaseOrder(supplierOrder);
+
             }
 
             supplierOrder.DeliveryStatus = DeliveryStatus.Pending.GetHashCode();
 
             await _context.SaveChangesAsync();
-        if (supplierOrder.Lines != null)
-        {
-            
-        }
-            return newSupplierOrder;
+
+            try
+            {
+                await SendPurchaseOrder(supplierOrder);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Information, ex.ToString());
+            }
+
+            //return newSupplierOrder;
+            return supplierOrder;
 
         }
         catch (Exception ex)
@@ -182,9 +190,17 @@ public class SupplierOrderService : ISupplierOrderService
         var isEmailSent = await _emailService.SendPurchaseOrderEmailAsync(supplierOrder.Supplier.Email, $"Bon de commande",
             pdfPath, _configuration);
 
+
         if (!string.IsNullOrEmpty(pdfPath) && isEmailSent)
         {
+            try
+            {
             System.IO.File.Delete(pdfPath);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Information, ex.ToString());
+            }
         }
     }
 
@@ -202,6 +218,7 @@ public class SupplierOrderService : ISupplierOrderService
                 dbSupplierOrder.Description = supplierOrder.Description;
                 dbSupplierOrder.DateOrder = supplierOrder.DateOrder;
                 dbSupplierOrder.DateDelivery = supplierOrder.DateDelivery;
+                dbSupplierOrder.DeliveryStatus= supplierOrder.DeliveryStatus;
 
 
                 if (supplierOrder.Supplier != null)
